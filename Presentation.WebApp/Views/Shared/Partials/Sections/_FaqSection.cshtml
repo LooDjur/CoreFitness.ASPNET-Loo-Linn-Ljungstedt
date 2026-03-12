@@ -1,0 +1,13 @@
+﻿@{
+    var items = faqService.GetFaqItems();
+}
+
+<section class="faq-section">
+    @foreach(var faq in items)
+    {
+        <div>
+            <div>@faq.Id</div>
+            <p>@faq.Description</p>
+        </div>
+    }
+</section>
