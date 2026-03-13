@@ -24,9 +24,15 @@ public sealed class BookingEntity : BaseEntity, IAggregateRoot
         Status = BookingStatus.Confirmed;
     }
 
-    public static BookingEntity Create(BookingSessionId sessionId, BookingMemberId memberId)
+    public static Result<BookingEntity> Create(BookingSessionId sessionId, BookingMemberId memberId)
     {
-        return new BookingEntity(sessionId, memberId);
+        if (sessionId is null || memberId is null)
+        {
+            return Result.Failure<BookingEntity>("Booking requires both a valid session and member.");
+        }
+
+        var booking = new BookingEntity(sessionId, memberId);
+        return booking;
     }
 
     public void Cancel()

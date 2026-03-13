@@ -26,9 +26,16 @@ public sealed class SessionEntity : BaseEntity, IAggregateRoot
         Description = description;
     }
 
-    public static SessionEntity Create(SessionTitle title, SessionInstructor instructor, SessionCategory category, SessionTimeSlot schedule, SessionCapacity maxCapacity, SessionDescription description)
+    public static Result<SessionEntity> Create(SessionTitle title, SessionInstructor instructor, SessionCategory category, SessionTimeSlot schedule, SessionCapacity maxCapacity, SessionDescription description)
     {
-        return new SessionEntity(title, instructor, category, schedule, maxCapacity, description);
+        if (schedule.StartTime < DateTime.UtcNow)
+        {
+            return Result.Failure<SessionEntity>("You can only create upcoming sessions.");
+        }
+
+        var session = new SessionEntity(title, instructor, category, schedule, maxCapacity, description);
+
+        return session;
     }
 
     public void UpdateDetails(SessionTitle title, SessionInstructor instructor, SessionDescription description, SessionCategory category, SessionTimeSlot schedule, SessionCapacity maxCapacity)

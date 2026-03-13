@@ -37,11 +37,53 @@ public sealed class MembershipEntity : BaseEntity, IAggregateRoot
         ExpiryDate = DateTime.UtcNow.AddYears(1);
     }
 
-    public static MembershipEntity Create(string memberId, MembershipFirstName firstName, MembershipLastName lastName, MembershipEmailAddress email)
+    public static Result<MembershipEntity> Create(string memberId, MembershipFirstName firstName, MembershipLastName lastName, MembershipEmailAddress email)
     {
-        return new MembershipEntity(memberId, firstName, lastName, email);
+        if (string.IsNullOrWhiteSpace(memberId))
+        {
+            return Result.Failure<MembershipEntity>("User ID must be provided from Identity.");
+        }
+
+        var membership = new MembershipEntity(memberId, firstName, lastName, email);
+        return membership;
     }
 
+    public Result UpdateProfile(MembershipFirstName firstName, MembershipLastName lastName, MembershipEmailAddress email, string? imageUrl)
+    {
+        if (Status == MembershipStatus.Suspended)
+        {
+            return Result.Failure("Cannot update profile for a suspended membership.");
+        }
+
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        ProfileImageUrl = imageUrl;
+        Modified = DateTime.UtcNow;
+
+        return Result.Success();
+    }
+
+    public Result AdminExtendMembership(int months)
+    {
+        if (months <= 0)
+        {
+            return Result.Failure("Extension period must be at least 1 month.");
+        }
+
+        if (months > 2)
+        {
+            return Result.Failure("Cannot extend membership more than 2 motnhs at a time.");
+        }
+
+        ExpiryDate = ExpiryDate < DateTime.UtcNow
+            ? DateTime.UtcNow.AddMonths(months)
+            : ExpiryDate.AddMonths(months);
+
+        Modified = DateTime.UtcNow;
+
+        return Result.Success();
+    }
     public void AdminUpdateStatus(MembershipStatus newStatus)
     {
         Status = newStatus;
@@ -51,23 +93,6 @@ public sealed class MembershipEntity : BaseEntity, IAggregateRoot
     public void AdminChangeType(MembershipType newType)
     {
         Type = newType;
-        Modified = DateTime.UtcNow;
-    }
-
-    public void UpdateProfile(MembershipFirstName firstName, MembershipLastName lastName, MembershipEmailAddress email, string? imageUrl)
-    {
-        FirstName = firstName;
-        LastName = lastName;
-        Email = email;
-        ProfileImageUrl = imageUrl;
-        Modified = DateTime.UtcNow;
-    }
-
-    public void AdminExtendMembership(int months)
-    {
-        ExpiryDate = ExpiryDate < DateTime.UtcNow
-            ? DateTime.UtcNow.AddMonths(months)
-            : ExpiryDate.AddMonths(months);
         Modified = DateTime.UtcNow;
     }
 }
