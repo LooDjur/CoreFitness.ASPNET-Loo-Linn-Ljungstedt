@@ -25,4 +25,9 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Unit\Bookings\" />
+    <Folder Include="Unit\Memberships\" />
+  </ItemGroup>
+
 </Project>
