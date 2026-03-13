@@ -4,4 +4,7 @@ using System.Text;
 
 namespace Domain.Common.Exceptions;
 
-public class DomainException(string message) : Exception(message);
+public class DomainException(Error error) : Exception(error.Description)
+{
+    public Error Error { get; } = error;
+}
