@@ -16,12 +16,17 @@ public sealed class BookingEntity : BaseEntity, IAggregateRoot
 
     private BookingEntity() { }
 
-    public BookingEntity(BookingSessionId sessionId, BookingMemberId memberId)
+    private BookingEntity(BookingSessionId sessionId, BookingMemberId memberId)
     {
         SessionId = sessionId;
         MemberId = memberId;
         BookedAt = DateTime.UtcNow;
         Status = BookingStatus.Confirmed;
+    }
+
+    public static BookingEntity Create(BookingSessionId sessionId, BookingMemberId memberId)
+    {
+        return new BookingEntity(sessionId, memberId);
     }
 
     public void Cancel()

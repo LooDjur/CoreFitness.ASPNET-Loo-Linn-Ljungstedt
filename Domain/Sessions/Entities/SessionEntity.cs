@@ -12,11 +12,11 @@ public sealed class SessionEntity : BaseEntity, IAggregateRoot
     public SessionCategory Category { get; private set; }
     public SessionTimeSlot Schedule { get; private set; } = null!;
     public SessionCapacity MaxCapacity { get; private set; } = null!;
-    public bool IsDeleted { get; private set; }
+    public bool IsDeleted { get; private set; } = false;
 
     private SessionEntity() { }
 
-    public SessionEntity(SessionTitle title, SessionInstructor instructor, SessionCategory category, SessionTimeSlot schedule, SessionCapacity maxCapacity, SessionDescription description)
+    private SessionEntity(SessionTitle title, SessionInstructor instructor, SessionCategory category, SessionTimeSlot schedule, SessionCapacity maxCapacity, SessionDescription description)
     {
         Title = title;
         Instructor = instructor;
@@ -24,6 +24,11 @@ public sealed class SessionEntity : BaseEntity, IAggregateRoot
         Schedule = schedule;
         MaxCapacity = maxCapacity;
         Description = description;
+    }
+
+    public static SessionEntity Create(SessionTitle title, SessionInstructor instructor, SessionCategory category, SessionTimeSlot schedule, SessionCapacity maxCapacity, SessionDescription description)
+    {
+        return new SessionEntity(title, instructor, category, schedule, maxCapacity, description);
     }
 
     public void UpdateDetails(SessionTitle title, SessionInstructor instructor, SessionDescription description, SessionCategory category, SessionTimeSlot schedule, SessionCapacity maxCapacity)

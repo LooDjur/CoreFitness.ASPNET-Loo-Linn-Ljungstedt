@@ -26,14 +26,20 @@ public sealed class MembershipEntity : BaseEntity, IAggregateRoot
 
     private MembershipEntity() { }
 
-    public MembershipEntity(string memberId, MembershipFirstName firstName, MembershipLastName lastName, MembershipEmailAddress email)
+    private MembershipEntity(string memberId, MembershipFirstName firstName, MembershipLastName lastName, MembershipEmailAddress email)
     {
         MemberId = memberId;
         FirstName = firstName;
         LastName = lastName;
         Email = email;
         Status = MembershipStatus.Active;
+        Type = MembershipType.Standard;
         ExpiryDate = DateTime.UtcNow.AddYears(1);
+    }
+
+    public static MembershipEntity Create(string memberId, MembershipFirstName firstName, MembershipLastName lastName, MembershipEmailAddress email)
+    {
+        return new MembershipEntity(memberId, firstName, lastName, email);
     }
 
     public void AdminUpdateStatus(MembershipStatus newStatus)
