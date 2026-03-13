@@ -1,5 +1,7 @@
-﻿using Domain.Common;
+﻿using Domain.Bookings.ValueObjects;
+using Domain.Common;
 using Domain.Common.Exceptions;
+using Domain.Common.ValueObjects.Shared;
 using Domain.Memberships.Enums;
 using Domain.Memberships.ValueObjects;
 using System;
@@ -11,11 +13,10 @@ namespace Domain.Memberships.Entities;
 
 public sealed class MembershipEntity : BaseEntity, IAggregateRoot
 {
-    public string MemberId { get; private set; } = null!;
-
-    public MembershipFirstName FirstName { get; private set; } = null!;
-    public MembershipLastName LastName { get; private set; } = null!;
-    public MembershipEmailAddress Email { get; private set; } = null!;
+    public MemberId MemberId { get; private set; } = null!;
+    public FirstName FirstName { get; private set; } = null!;
+    public LastName LastName { get; private set; } = null!;
+    public Email Email { get; private set; } = null!;
     public string? ProfileImageUrl { get; private set; }
 
     public MembershipStatus Status { get; private set; }
@@ -26,7 +27,7 @@ public sealed class MembershipEntity : BaseEntity, IAggregateRoot
 
     private MembershipEntity() { }
 
-    private MembershipEntity(string memberId, MembershipFirstName firstName, MembershipLastName lastName, MembershipEmailAddress email)
+    private MembershipEntity(MemberId memberId, FirstName firstName, LastName lastName, Email email)
     {
         MemberId = memberId;
         FirstName = firstName;
@@ -37,22 +38,17 @@ public sealed class MembershipEntity : BaseEntity, IAggregateRoot
         ExpiryDate = DateTime.UtcNow.AddYears(1);
     }
 
-    public static Result<MembershipEntity> Create(string memberId, MembershipFirstName firstName, MembershipLastName lastName, MembershipEmailAddress email)
+    public static Result<MembershipEntity> Create(MemberId memberId, FirstName firstName, LastName lastName, Email email)
     {
-        if (string.IsNullOrWhiteSpace(memberId))
-        {
-            return Result.Failure<MembershipEntity>("User ID must be provided from Identity.");
-        }
-
         var membership = new MembershipEntity(memberId, firstName, lastName, email);
         return membership;
     }
 
-    public Result UpdateProfile(MembershipFirstName firstName, MembershipLastName lastName, MembershipEmailAddress email, string? imageUrl)
+    public Result UpdateProfile(FirstName firstName, LastName lastName, Email email, string? imageUrl)
     {
         if (Status == MembershipStatus.Suspended)
         {
-            return Result.Failure("Cannot update profile for a suspended membership.");
+            return Result.Failure(DomainErrors.Membership.Ineligible);
         }
 
         FirstName = firstName;
@@ -68,12 +64,12 @@ public sealed class MembershipEntity : BaseEntity, IAggregateRoot
     {
         if (months <= 0)
         {
-            return Result.Failure("Extension period must be at least 1 month.");
+            return Result.Failure(DomainErrors.Validation.InvalidFormat);
         }
 
         if (months > 2)
         {
-            return Result.Failure("Cannot extend membership more than 2 motnhs at a time.");
+            return Result.Failure(DomainErrors.Membership.LimitReached);
         }
 
         ExpiryDate = ExpiryDate < DateTime.UtcNow
@@ -88,7 +84,7 @@ public sealed class MembershipEntity : BaseEntity, IAggregateRoot
     {
         if (Status == newStatus)
         {
-            return Result.Failure($"Membership is already {newStatus}.");
+            return Result.Failure(DomainErrors.Membership.Ineligible);
         }
 
         Status = newStatus;
@@ -101,7 +97,7 @@ public sealed class MembershipEntity : BaseEntity, IAggregateRoot
     {
         if (Type == newType)
         {
-            return Result.Failure($"Membership is already of type {newType}.");
+            return Result.Failure(DomainErrors.Membership.Ineligible);
         }
 
         Type = newType;

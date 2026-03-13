@@ -1,6 +1,7 @@
 ﻿using Domain.Bookings.Enum;
 using Domain.Bookings.ValueObjects;
 using Domain.Common;
+using Domain.Common.ValueObjects.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,14 +10,14 @@ namespace Domain.Bookings.Entity;
 
 public sealed class BookingEntity : BaseEntity, IAggregateRoot
 {
-    public BookingSessionId SessionId { get; private set; } = null!;
-    public BookingMemberId MemberId { get; private set; } = null!;
+    public SessionId SessionId { get; private set; } = null!;
+    public MemberId MemberId { get; private set; } = null!;
     public DateTime BookedAt { get; private set; }
     public BookingStatus Status { get; private set; }
 
     private BookingEntity() { }
 
-    private BookingEntity(BookingSessionId sessionId, BookingMemberId memberId)
+    private BookingEntity(SessionId sessionId, MemberId memberId)
     {
         SessionId = sessionId;
         MemberId = memberId;
@@ -24,11 +25,11 @@ public sealed class BookingEntity : BaseEntity, IAggregateRoot
         Status = BookingStatus.Confirmed;
     }
 
-    public static Result<BookingEntity> Create(BookingSessionId sessionId, BookingMemberId memberId)
+    public static Result<BookingEntity> Create(SessionId sessionId, MemberId memberId)
     {
         if (sessionId is null || memberId is null)
         {
-            return Result.Failure<BookingEntity>("Booking requires both a valid session and member.");
+            return Result.Failure<BookingEntity>(DomainErrors.Validation.Required);
         }
 
         var booking = new BookingEntity(sessionId, memberId);
@@ -39,7 +40,7 @@ public sealed class BookingEntity : BaseEntity, IAggregateRoot
     {
         if (Status == BookingStatus.Cancelled)
         {
-            return Result.Failure("Booking is already cancelled.");
+            return Result.Failure(DomainErrors.Session.ActionNotAllowed);
         }
 
         Status = BookingStatus.Cancelled;

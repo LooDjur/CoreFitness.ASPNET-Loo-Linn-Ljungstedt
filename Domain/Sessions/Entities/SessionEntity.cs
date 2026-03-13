@@ -6,17 +6,17 @@ namespace Domain.Sessions.Entities;
 
 public sealed class SessionEntity : BaseEntity, IAggregateRoot
 {
-    public SessionTitle Title { get; private set; } = null!;
-    public SessionDescription Description { get; private set; } = null!;
-    public SessionInstructor Instructor { get; private set; } = null!;
+    public Title Title { get; private set; } = null!;
+    public Description Description { get; private set; } = null!;
+    public Instructor Instructor { get; private set; } = null!;
     public SessionCategory Category { get; private set; }
-    public SessionTimeSlot Schedule { get; private set; } = null!;
-    public SessionCapacity MaxCapacity { get; private set; } = null!;
+    public TimeSlot Schedule { get; private set; } = null!;
+    public Capacity MaxCapacity { get; private set; } = null!;
     public bool IsDeleted { get; private set; } = false;
 
     private SessionEntity() { }
 
-    private SessionEntity(SessionTitle title, SessionInstructor instructor, SessionCategory category, SessionTimeSlot schedule, SessionCapacity maxCapacity, SessionDescription description)
+    private SessionEntity(Title title, Instructor instructor, SessionCategory category, TimeSlot schedule, Capacity maxCapacity, Description description)
     {
         Title = title;
         Instructor = instructor;
@@ -26,11 +26,11 @@ public sealed class SessionEntity : BaseEntity, IAggregateRoot
         Description = description;
     }
 
-    public static Result<SessionEntity> Create(SessionTitle title, SessionInstructor instructor, SessionCategory category, SessionTimeSlot schedule, SessionCapacity maxCapacity, SessionDescription description)
+    public static Result<SessionEntity> Create(Title title, Instructor instructor, SessionCategory category, TimeSlot schedule, Capacity maxCapacity, Description description)
     {
         if (schedule.StartTime < DateTime.UtcNow)
         {
-            return Result.Failure<SessionEntity>("You can only create upcoming sessions.");
+            return Result.Failure<SessionEntity>(DomainErrors.Session.InvalidDate);
         }
 
         var session = new SessionEntity(title, instructor, category, schedule, maxCapacity, description);
@@ -39,23 +39,17 @@ public sealed class SessionEntity : BaseEntity, IAggregateRoot
     }
 
     public Result UpdateDetails(
-        SessionTitle title,
-        SessionInstructor instructor,
-        SessionDescription description,
+        Title title,
+        Instructor instructor,
+        Description description,
         SessionCategory category,
-        SessionTimeSlot schedule,
-        SessionCapacity maxCapacity)
+        TimeSlot schedule,
+        Capacity maxCapacity)
     {
-        if (Schedule.StartTime < DateTime.UtcNow)
-        {
-            return Result.Failure("Cannot update a session that has already taken place.");
-        }
-
         if (schedule.StartTime < DateTime.UtcNow)
         {
-            return Result.Failure("The new session time cannot be in the past.");
+            return Result.Failure(DomainErrors.Session.InvalidDate);
         }
-
         Title = title;
         Instructor = instructor;
         Description = description;
@@ -70,14 +64,14 @@ public sealed class SessionEntity : BaseEntity, IAggregateRoot
 
     public Result Delete()
     {
-        if (Schedule.StartTime < DateTime.UtcNow && !IsDeleted)
-        {
-            return Result.Failure("Cannot delete a completed session from history.");
-        }
-
         if (IsDeleted)
         {
-            return Result.Failure("Session is already deleted.");
+            return Result.Failure(DomainErrors.Session.ActionNotAllowed);
+        }
+
+        if (Schedule.StartTime < DateTime.UtcNow)
+        {
+            return Result.Failure(DomainErrors.Session.ActionNotAllowed);
         }
 
         IsDeleted = true;
