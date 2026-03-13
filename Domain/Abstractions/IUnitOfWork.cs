@@ -1,5 +1,6 @@
-﻿using Domain.Memberships.Repository;
-using Domain.Sessions.Repository;
+﻿using Domain.Bookings.Repositories;
+using Domain.Memberships.Repository;
+using Domain.Sessions.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;

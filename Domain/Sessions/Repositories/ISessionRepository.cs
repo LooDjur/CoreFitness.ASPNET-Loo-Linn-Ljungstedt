@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Sessions.Repository;
+namespace Domain.Sessions.Repositories;
 
 public interface ISessionRepository : IRepositoryBase<SessionEntity>
 {

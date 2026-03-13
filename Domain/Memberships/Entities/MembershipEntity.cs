@@ -11,7 +11,7 @@ namespace Domain.Memberships.Entities;
 
 public sealed class MembershipEntity : BaseEntity, IAggregateRoot
 {
-    public string UserId { get; private set; } = null!;
+    public string MemberId { get; private set; } = null!;
 
     public MembershipFirstName FirstName { get; private set; } = null!;
     public MembershipLastName LastName { get; private set; } = null!;
@@ -26,9 +26,9 @@ public sealed class MembershipEntity : BaseEntity, IAggregateRoot
 
     private MembershipEntity() { }
 
-    public MembershipEntity(string userId, MembershipFirstName firstName, MembershipLastName lastName, MembershipEmailAddress email)
+    public MembershipEntity(string memberId, MembershipFirstName firstName, MembershipLastName lastName, MembershipEmailAddress email)
     {
-        UserId = userId;
+        MemberId = memberId;
         FirstName = firstName;
         LastName = lastName;
         Email = email;
