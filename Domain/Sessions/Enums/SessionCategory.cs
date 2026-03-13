@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Courses.Enums;
+namespace Domain.Sessions.Enums;
 
-public enum CourseCategory
+public enum SessionCategory
 {
     Yoga,
     Spinning,

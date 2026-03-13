@@ -1,5 +1,5 @@
-﻿using Domain.Courses.Repository;
-using Domain.Memberships.Repository;
+﻿using Domain.Memberships.Repository;
+using Domain.Sessions.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +8,7 @@ namespace Domain.Abstractions
 {
     public interface IUnitOfWork : IDisposable
     {
-        ICourseRepository Courses { get; }
+        ISessionRepository Sessions { get; }
         IBookingRepository Bookings { get; }
         IMembershipRepository Memberships { get; }
 

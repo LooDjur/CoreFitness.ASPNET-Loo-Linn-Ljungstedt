@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Courses.ValueObjects;
+namespace Domain.Sessions.ValueObjects;
 
-public record class TimeSlot
+public record class SessionTimeSlot
 {
     public DateTime StartTime { get; init; }
     public DateTime EndTime { get; init; }
 
-    public TimeSlot(DateTime startTime, DateTime endTime)
+    public SessionTimeSlot(DateTime startTime, DateTime endTime)
     {
         if (endTime <= startTime)
             throw new ArgumentException("Endtime must be after starttime.");
