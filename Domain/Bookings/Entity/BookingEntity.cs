@@ -35,9 +35,16 @@ public sealed class BookingEntity : BaseEntity, IAggregateRoot
         return booking;
     }
 
-    public void Cancel()
+    public Result Cancel()
     {
+        if (Status == BookingStatus.Cancelled)
+        {
+            return Result.Failure("Booking is already cancelled.");
+        }
+
         Status = BookingStatus.Cancelled;
         Modified = DateTime.UtcNow;
+
+        return Result.Success();
     }
 }

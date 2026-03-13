@@ -38,8 +38,24 @@ public sealed class SessionEntity : BaseEntity, IAggregateRoot
         return session;
     }
 
-    public void UpdateDetails(SessionTitle title, SessionInstructor instructor, SessionDescription description, SessionCategory category, SessionTimeSlot schedule, SessionCapacity maxCapacity)
+    public Result UpdateDetails(
+        SessionTitle title,
+        SessionInstructor instructor,
+        SessionDescription description,
+        SessionCategory category,
+        SessionTimeSlot schedule,
+        SessionCapacity maxCapacity)
     {
+        if (Schedule.StartTime < DateTime.UtcNow)
+        {
+            return Result.Failure("Cannot update a session that has already taken place.");
+        }
+
+        if (schedule.StartTime < DateTime.UtcNow)
+        {
+            return Result.Failure("The new session time cannot be in the past.");
+        }
+
         Title = title;
         Instructor = instructor;
         Description = description;
@@ -48,10 +64,25 @@ public sealed class SessionEntity : BaseEntity, IAggregateRoot
         MaxCapacity = maxCapacity;
 
         Modified = DateTime.UtcNow;
+
+        return Result.Success();
     }
-    public void Delete()
+
+    public Result Delete()
     {
+        if (Schedule.StartTime < DateTime.UtcNow && !IsDeleted)
+        {
+            return Result.Failure("Cannot delete a completed session from history.");
+        }
+
+        if (IsDeleted)
+        {
+            return Result.Failure("Session is already deleted.");
+        }
+
         IsDeleted = true;
         Modified = DateTime.UtcNow;
+
+        return Result.Success();
     }
 }

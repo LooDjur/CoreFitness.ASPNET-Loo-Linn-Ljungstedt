@@ -84,15 +84,29 @@ public sealed class MembershipEntity : BaseEntity, IAggregateRoot
 
         return Result.Success();
     }
-    public void AdminUpdateStatus(MembershipStatus newStatus)
+    public Result AdminUpdateStatus(MembershipStatus newStatus)
     {
+        if (Status == newStatus)
+        {
+            return Result.Failure($"Membership is already {newStatus}.");
+        }
+
         Status = newStatus;
         Modified = DateTime.UtcNow;
+
+        return Result.Success();
     }
 
-    public void AdminChangeType(MembershipType newType)
+    public Result AdminChangeType(MembershipType newType)
     {
+        if (Type == newType)
+        {
+            return Result.Failure($"Membership is already of type {newType}.");
+        }
+
         Type = newType;
         Modified = DateTime.UtcNow;
+
+        return Result.Success();
     }
 }
