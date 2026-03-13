@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Domain.Common;
 
 namespace Domain.Abstractions;
 
-public interface IRepositoryBase<T> where T : class
+public interface IRepositoryBase<T> where T : class, IAggregateRoot
 {
     Task<T?> GetByIdAsync(string id, CancellationToken ct = default);
+    Task<T?> GetByGuidIdAsync(Guid id, CancellationToken ct = default);
     Task<IEnumerable<T>> GetAllAsync(CancellationToken ct = default);
 
     Task AddAsync(T entity, CancellationToken ct = default);
