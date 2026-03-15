@@ -1,4 +1,5 @@
 using Application.Faq;
+using Presentation.WebApp.Controllers.MiddleWare;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,8 @@ builder.Services.AddRouting(x => x.LowercaseUrls = true);
 builder.Services.AddScoped<IFaqService, FaqService>();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHsts();
 app.UseHttpsRedirection();
