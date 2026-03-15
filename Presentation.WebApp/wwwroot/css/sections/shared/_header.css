@@ -1,0 +1,46 @@
+﻿header {
+    background-color: var(--header-bg-color);
+    background-image: url('/images/dark-section-img.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    color: var(--header-text-color);
+    border-radius: 1.25rem;
+    padding: 1.5rem 2rem;
+    min-height: 100px;
+    display: grid;
+    align-items: center;
+}
+
+.header-section {
+    display: grid;
+    align-items: center;
+    grid-template-columns: auto 1fr;
+}
+
+@media (width >= 1280px) {
+    .header-section {
+        grid-template-columns: 2fr 3fr 2fr;
+    }
+}
+
+.menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.menu-item-link {
+    color: var(--menu-item-link-text-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.15s ease-in-out;
+}
+
+    .menu-item-link:hover {
+        color: var(--primary-color);
+    }
+

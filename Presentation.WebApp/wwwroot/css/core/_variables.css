@@ -1,0 +1,30 @@
+﻿:root {
+
+    --font-default: "DM Sans", sans-serif;
+    --font-heading: "Poppins", sans-serif;
+    --font-fa-regular: "Font Awesome 7 Pro Regular";
+    --font-fa-solid: "Font Awesome 7 Pro Solid";
+
+    --primary-color: #d7eb31;
+    --dark-color: #27252f;
+    --gray-color: #6f6f6f;
+    --light-gray-color: #cecece;
+    --extra-light-gray-color: #e6e6e6;
+    --light-color: #f7f7f7;
+    --white-color: #ffffff;
+    --danger-color: #ce2b2baf;
+
+    --body-bg-color: var(--light-color);
+    --body-text-color: var(--dark-color);
+    --heading-text-color: var(--dark-color);
+    --link-text-color: var(--dark-color);
+    --link-hover-text-color: var(--primary-color);
+    --header-bg-color: var(--dark-color);
+    --header-text-color: var(--white-color);
+
+    --menu-item-text-color: var(--white-color);
+    --menu-item-link-text-color: var(--white-color);
+    --menu-item-link-hover-text-color: var(--primary-color);
+    --menu-item-button-bg-color: var(--primary-color);
+    --menu-item-button-text-color: var(--dark-color);
+}
