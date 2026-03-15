@@ -13,7 +13,14 @@
                 <a class="menu-item-link" asp-action="Index" asp-controller="Memberships">Memberships</a>
             </li>
             <li class="menu-item dropdown">
-                <a class="menu-item-link" asp-action="Index" asp-controller="Training">Training</a>
+                <a class="menu-item-link" asp-action="Index" asp-controller="Training">
+                    Training <i class="fa-solid fa-chevron-down"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a asp-action="SPersonalTraining" asp-controller="Training">Personal Training</a></li>
+                    <li><a asp-action="GroupTraining" asp-controller="Training">Group Training</a></li>
+                    <li><a asp-action="Padel" asp-controller="Training">Padel</a></li>
+                </ul>
             </li>
             <li class="menu-item">
                 <a class="menu-item-link" asp-action="Index" asp-controller="CustomerService">Customer Service</a>
@@ -25,12 +32,25 @@
     </nav>
     <nav class="account-menu">
         <ul class="menu">
-            <li class="menu-item">
-                <a class="menu-item-link" asp-action="SignUp" asp-controller="Authentication">Become Member</a>
-            </li>
-            <li class="menu-item">
-                <a class="menu-item-button" asp-action="My" asp-controller="Account">My Account</a>
-            </li>
+            @if (User.Identity!.IsAuthenticated)
+            {
+                <li class="menu-item">
+                    <a class="menu-item-link" asp-action="Sessions" asp-controller="Training">Our Classes</a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-item-button" asp-action="My" asp-controller="Account">My Account</a>
+                </li>
+            }
+            else
+            {
+                <li class="menu-item">
+                    <a class="menu-item-link" asp-action="SignUp" asp-controller="Authentication">Become Member</a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-item-button" asp-action="SignIn" asp-controller="Authentication">Sign In</a>
+                </li>
+                
+            }
         </ul>
     </nav>
 </section>
