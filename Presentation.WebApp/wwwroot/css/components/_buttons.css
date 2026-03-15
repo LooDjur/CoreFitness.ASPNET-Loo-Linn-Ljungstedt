@@ -1,0 +1,27 @@
+﻿.btn, .menu-item-button {
+    display: inline-block;
+    padding: 1rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.15s ease-in-out;
+    border: 1px solid transparent;
+}
+
+    .btn::after, .menu-item-button::after {
+        content: "\f054";
+        font-family: var(--font-fa-solid);
+        margin-left: 0.5rem;
+    }
+
+.menu-item-button {
+    background-color: var(--menu-item-button-bg-color);
+    color: var(--menu-item-button-text-color);
+    border-color: var(--menu-item-button-bg-color);
+}
+
+    .menu-item-button:hover {
+        background-color: var(--white-color);
+        border-color: var(--white-color);
+    }
