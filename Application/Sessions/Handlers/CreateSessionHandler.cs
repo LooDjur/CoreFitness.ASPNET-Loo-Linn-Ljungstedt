@@ -12,15 +12,28 @@ public sealed class CreateSessionHandler(IUnitOfWork unitOfWork)
 {
     public async Task<Result<Guid>> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
     {
-        var sessionResult = SessionEntity.Create(
-            new Title(request.Title),
-            new Instructor(request.Instructor),
-            request.Category,
-            new TimeSlot(request.StartTime, request.EndTime),
-            new Capacity(request.MaxCapacity),
-            new Description(request.Description));
+        var titleRes = Title.Create(request.Title);
+        var instructorRes = Instructor.Create(request.Instructor);
+        var timeRes = TimeSlot.Create(request.StartTime, request.EndTime);
+        var capacityRes = Capacity.Create(request.MaxCapacity);
+        var descriptionRes = Description.Create(request.Description);
 
-        if (sessionResult.IsFailure) return sessionResult.Error;
+        if (Result.FirstFailureOrSuccess(titleRes, instructorRes, timeRes, capacityRes, descriptionRes)
+            is var failure && failure.IsFailure)
+        {
+            return Result.Failure<Guid>(failure.Error);
+        }
+
+        var sessionResult = SessionEntity.Create(
+            titleRes.Value,
+            instructorRes.Value,
+            request.Category,
+            timeRes.Value,
+            capacityRes.Value,
+            descriptionRes.Value);
+
+        if (sessionResult.IsFailure)
+            return Result.Failure<Guid>(sessionResult.Error);
 
         var session = sessionResult.Value;
 

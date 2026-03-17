@@ -39,32 +39,57 @@ public class CreateSessionHandlerUT
             SessionCategory.Yoga,
             tomorrow,
             tomorrow.AddHours(1),
-            -5); // Felaktig kapacitet
+            -5); // Felaktig kapacitet (< 0)
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        // Nu kollar vi på Result istället för att vänta på en krasch!
         Assert.True(result.IsFailure);
         Assert.Equal(DomainErrors.Session.InvalidCapacity, result.Error);
 
-        // Verifiera att vi aldrig försökte spara
+        // Verifiera att vi aldrig anropade AddAsync eller SaveChanges
+        await _sessionRepository.DidNotReceive().AddAsync(Arg.Any<SessionEntity>(), Arg.Any<CancellationToken>());
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_Should_ReturnFailure_When_TimeSlotIsInPast()
+    {
+        // Arrange
+        var past = DateTime.UtcNow.AddDays(-1);
+        var command = new CreateSessionCommand(
+            "Yoga",
+            "Beskrivning",
+            "Stina",
+            SessionCategory.Yoga,
+            past,
+            past.AddHours(1),
+            20);
+
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsFailure);
+        Assert.Equal(DomainErrors.Session.InvalidDate, result.Error);
     }
 
     [Fact]
     public async Task Handle_Should_ReturnSuccess_When_CommandIsValid()
     {
         // Arrange
-        var tomorrow = DateTime.UtcNow.AddDays(1);
+        // Vi använder en fast tid för att undvika "flickering" i tester
+        var futureStart = DateTime.UtcNow.AddDays(1);
+        var futureEnd = futureStart.AddHours(1);
+
         var command = new CreateSessionCommand(
             "Spinning",
             "Stärkande pass",
             "Olof",
             SessionCategory.Spinning,
-            tomorrow,
-            tomorrow.AddHours(1),
+            futureStart,
+            futureEnd,
             20);
 
         // Act
@@ -72,8 +97,9 @@ public class CreateSessionHandlerUT
 
         // Assert
         Assert.True(result.IsSuccess);
+        Assert.NotEqual(Guid.Empty, result.Value); // Vi förväntar oss ett giltigt ID tillbaka
 
-        // Verifiera att sessionen lades till i repot och sparades
+        // Verifiera flödet mot databaslagret
         await _sessionRepository.Received(1).AddAsync(Arg.Any<SessionEntity>(), Arg.Any<CancellationToken>());
         await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
