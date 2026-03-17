@@ -10,6 +10,10 @@
 /* Components */
 @import "components/_buttons.css";
 @import "components/_dropdown.css";
+@import "components/_forms.css";
+@import "components/_checkbox.css";
 
 /* Sections */
 @import "sections/shared/_header.css";
+@import "sections/_contact.css";
+@import "sections/_faq.css";
