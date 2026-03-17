@@ -1,27 +1,43 @@
 ﻿.btn, .menu-item-button {
-    display: inline-block;
+    display: inline-flex; /* Ändrat till inline-flex för bättre ikon-centrering */
+    align-items: center;
+    justify-content: center;
     padding: 1rem 1.5rem;
     border-radius: 25px;
     text-decoration: none;
     font-weight: 600;
     font-size: 1rem;
+    cursor: pointer;
     transition: all 0.15s ease-in-out;
     border: 1px solid transparent;
+    line-height: 1;
 }
 
-    .btn::after, .menu-item-button::after {
-        content: "\f054";
-        font-family: var(--font-fa-solid);
-        margin-left: 0.5rem;
+.btn {
+    background-color: var(--primary-color);
+    color: var(--dark-color);
+
+    &:hover {
+        background-color: var(--primary-color-hover, #e0e0e0);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
+}
 
 .menu-item-button {
     background-color: var(--menu-item-button-bg-color);
     color: var(--menu-item-button-text-color);
     border-color: var(--menu-item-button-bg-color);
-}
 
-    .menu-item-button:hover {
+    &:hover {
         background-color: var(--white-color);
+        color: var(--dark-color);
         border-color: var(--white-color);
     }
+}
+
+#contact-form button.btn {
+    grid-column: 1 / -1;
+    justify-self: start;
+    width: fit-content;
+    margin-top: 1rem;
+}

@@ -1,0 +1,77 @@
+﻿.checkbox-group {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+        "check label"
+        "na    error";
+    column-gap: 1rem;
+    row-gap: 0.25rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    /* Dölj den riktiga checkboxen strikt inuti gruppen */
+    input[type="checkbox"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+        display: none !important;
+        /* Logik: När inputen är checkad, ändra utseendet på efterföljande checkmark */
+        &:checked + .checkbox-checkmark {
+            border-color: var(--form-checkbox-checked-border-color);
+            background-color: var(--form-checkbox-checked-bg-color);
+            color: var(--form-checkbox-checked-text-color);
+
+            &::after {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        /* Lägg till focus-state för tillgänglighet (när man tabbar) */
+        &:focus-visible + .checkbox-checkmark {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 3px;
+        }
+    }
+    /* Den specialdesignade rutan */
+    .checkbox-checkmark {
+        grid-area: check;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 25px;
+        width: 25px;
+        border-radius: 8px;
+        border: 1px solid var(--form-checkbox-border-color);
+        background-color: var(--form-checkbox-bg-color);
+        transition: all 0.2s ease-in-out;
+        /* Själva bocken (check-ikonen) */
+        &::after {
+            content: "\f00c";
+            font-family: var(--font-fa-solid);
+            font-weight: 900;
+            font-size: 0.8em;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 0.15s ease, transform 0.15s ease;
+        }
+    }
+    /* Texten bredvid checkboxen */
+    .form-label {
+        grid-area: label;
+        cursor: pointer;
+        margin-bottom: 0; /* Tar bort eventuell marginal från globala labels */
+        user-select: none;
+    }
+    /* Felmeddelandet under texten */
+    .field-validation-error {
+        grid-area: error;
+        font-size: 0.8em;
+        color: var(--form-validation-error-text-color);
+    }
+}
