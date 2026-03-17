@@ -12,7 +12,6 @@ public sealed class BookingEntity : BaseEntity, IAggregateRoot
 {
     public SessionId SessionId { get; private set; } = null!;
     public MemberId MemberId { get; private set; } = null!;
-    public DateTime BookedAt { get; private set; }
     public BookingStatus Status { get; private set; }
 
     private BookingEntity() { }
@@ -21,27 +20,25 @@ public sealed class BookingEntity : BaseEntity, IAggregateRoot
     {
         SessionId = sessionId;
         MemberId = memberId;
-        BookedAt = DateTime.UtcNow;
         Status = BookingStatus.Confirmed;
     }
 
     public static Result<BookingEntity> Create(SessionId sessionId, MemberId memberId)
     {
-        if (sessionId is null || memberId is null)
-        {
-            return Result.Failure<BookingEntity>(DomainErrors.Validation.Required);
-        }
+        if (sessionId is null || sessionId.Value == Guid.Empty)
+            return Result.Failure<BookingEntity>(DomainErrors.Session.NotFound);
+
+        if (memberId is null || memberId.Value == Guid.Empty)
+            return Result.Failure<BookingEntity>(DomainErrors.Membership.NotFound);
 
         var booking = new BookingEntity(sessionId, memberId);
-        return booking;
+        return Result.Success(booking);
     }
 
     public Result Cancel()
     {
         if (Status == BookingStatus.Cancelled)
-        {
             return Result.Failure(DomainErrors.Session.ActionNotAllowed);
-        }
 
         Status = BookingStatus.Cancelled;
         Modified = DateTime.UtcNow;

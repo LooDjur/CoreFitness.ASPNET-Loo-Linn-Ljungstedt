@@ -11,7 +11,7 @@ public record Title : StringValueObject
 {
     private const int Min = 3;
     private const int Max = 20;
-    public Title(string value) : base(value, Min, Max) { }
+    private Title(string value) : base(value, Min, Max) { }
 
     public static Result<Title> Create(string value) =>
         IsInvalid(value, Min, Max)
@@ -22,7 +22,7 @@ public record Instructor : StringValueObject
 {
     private const int Min = 3;
     private const int Max = 100;
-    public Instructor(string value) : base(value, Min, Max) { }
+    private Instructor(string value) : base(value, Min, Max) { }
 
     public static Result<Instructor> Create(string value) =>
         IsInvalid(value, Min, Max) 
@@ -33,7 +33,7 @@ public record Description : StringValueObject
 {
     private const int Min = 5;
     private const int Max = 500;
-    public Description(string value) : base(value, Min, Max) { }
+    private Description(string value) : base(value, Min, Max) { }
 
     public static Result<Description> Create(string value) =>
         IsInvalid(value, Min, Max)
@@ -45,7 +45,7 @@ public record Capacity : RangeValueObject
     private const int Min = 10;
     private const int Max = 40;
 
-    public Capacity(int value)
+    private Capacity(int value)
         : base(value, Min, Max, DomainErrors.Session.InvalidCapacity)
     {
     }
@@ -65,7 +65,7 @@ public record TimeSlot
     public DateTime StartTime { get; }
     public DateTime EndTime { get; }
 
-    public TimeSlot(DateTime start, DateTime end)
+    private TimeSlot(DateTime start, DateTime end)
     {
         if (end <= start)
             throw new DomainException(DomainErrors.Session.InvalidDate);
