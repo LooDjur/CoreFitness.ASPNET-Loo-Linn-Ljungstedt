@@ -56,7 +56,10 @@ public class SessionEntityTests
         var pastStart = DateTime.UtcNow.AddHours(-2);
         var pastEnd = DateTime.UtcNow.AddHours(-1);
 
-        Assert.Throws<DomainException>(() => new TimeSlot(pastStart, pastEnd));
+        var result = TimeSlot.Create(pastStart, pastEnd);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(DomainErrors.Session.InvalidDate, result.Error);
     }
 
     [Fact]
@@ -64,7 +67,7 @@ public class SessionEntityTests
     {
         // 1. Skapa en tid LÅNGT fram
         var futureDate = DateTime.UtcNow.AddDays(10);
-        var futureSchedule = new TimeSlot(futureDate, futureDate.AddHours(1));
+        var futureSchedule = TimeSlot.Create(futureDate, futureDate.AddHours(1)).Value;
 
         var sessionResult = SessionEntity.Create(
             GetValidTitle(),
@@ -77,7 +80,7 @@ public class SessionEntityTests
         var session = sessionResult.Value;
 
         // 2. Kontrollera tillståndet INNAN Delete
-        Assert.False(session.IsDeleted, "Borde vara false vid start");
+        Assert.False(session.IsDeleted);
 
         // 3. Act
         var result = session.Delete();

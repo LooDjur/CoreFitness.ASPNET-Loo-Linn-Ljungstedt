@@ -2,6 +2,7 @@
 using Domain.Common.ValueObjects.Shared;
 using Domain.Memberships.Enums;
 using Domain.Memberships.ValueObjects;
+using static Domain.Common.DomainErrors;
 
 namespace Domain.Memberships.Entities;
 
@@ -20,9 +21,9 @@ public sealed class MembershipEntity : BaseEntity, IAggregateRoot
 
     private MembershipEntity() { }
 
-    private MembershipEntity(Guid memberId, FirstName firstName, LastName lastName, Email email)
+    private MembershipEntity(MemberId memberId, FirstName firstName, LastName lastName, Email email)
     {
-        Id = memberId;
+        Id = memberId.Value;
         FirstName = firstName;
         LastName = lastName;
         Email = email;
@@ -33,8 +34,13 @@ public sealed class MembershipEntity : BaseEntity, IAggregateRoot
 
     public static Result<MembershipEntity> Create(MemberId memberId, FirstName firstName, LastName lastName, Email email)
     {
+        if (memberId is null || firstName is null || lastName is null || email is null)
+        {
+            return Result.Failure<MembershipEntity>(DomainErrors.Validation.Required);
+        }
+
         var membership = new MembershipEntity(memberId, firstName, lastName, email);
-        return membership;
+        return Result.Success(membership);
     }
 
     public Result UpdateProfile(FirstName firstName, LastName lastName, Email email, string? imageUrl)

@@ -7,19 +7,49 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Domain.Memberships.ValueObjects;
-public record FirstName(string Value) : StringValueObject(Value, 2, 50);
-public record LastName(string Value) : StringValueObject(Value, 2, 50);
+
+public record FirstName : StringValueObject
+{
+    private const int Min = 2;
+    private const int Max = 50;
+
+    private FirstName(string value) : base(value, Min, Max) { }
+
+    public static Result<FirstName> Create(string value) =>
+        IsInvalid(value, Min, Max)
+            ? Result.Failure<FirstName>(DomainErrors.Validation.InvalidFormat)
+            : Result.Success(new FirstName(value));
+}
+public record LastName : StringValueObject
+{
+    private const int Min = 2;
+    private const int Max = 50;
+
+    private LastName(string value) : base(value, Min, Max) { }
+
+    public static Result<LastName> Create(string value) =>
+        IsInvalid(value, Min, Max)
+            ? Result.Failure<LastName>(DomainErrors.Validation.InvalidFormat)
+            : Result.Success(new LastName(value));
+}
 public record Email : StringValueObject
 {
+    private const int Min = 5;
+    private const int Max = 100;
+
     private static readonly Regex EmailRegex = new(
         @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-    public Email(string value) : base(value, 5, 100)
+    private Email(string value) : base(value, Min, Max) { }
+
+    public static Result<Email> Create(string value)
     {
-        if (!EmailRegex.IsMatch(value))
+        if (IsInvalid(value, Min, Max) || !EmailRegex.IsMatch(value))
         {
-            throw new DomainException(DomainErrors.Validation.InvalidFormat);
+            return Result.Failure<Email>(DomainErrors.Validation.InvalidFormat);
         }
+
+        return Result.Success(new Email(value));
     }
 }
