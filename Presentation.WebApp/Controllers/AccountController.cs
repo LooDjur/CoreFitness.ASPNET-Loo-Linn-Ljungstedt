@@ -4,7 +4,7 @@ namespace Presentation.WebApp.Controllers;
 
 public class AccountController : Controller
 {
-    public IActionResult My()
+    public IActionResult Index()
     {
         return View();
     }

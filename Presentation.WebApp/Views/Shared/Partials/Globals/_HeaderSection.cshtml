@@ -32,13 +32,13 @@
     </nav>
     <nav class="account-menu">
         <ul class="menu">
-            @if (User.Identity!.IsAuthenticated)
+            @if (true || User.Identity!.IsAuthenticated)
             {
                 <li class="menu-item">
                     <a class="menu-item-link" asp-action="Sessions" asp-controller="Training">Our Classes</a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-item-button" asp-action="My" asp-controller="Account">My Account</a>
+                    <a class="menu-item-button" asp-action="Account" asp-controller="Account">My Account</a>
                 </li>
             }
             else
