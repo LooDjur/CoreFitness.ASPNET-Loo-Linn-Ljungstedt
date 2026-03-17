@@ -14,6 +14,15 @@ public class Result
 
     public static Result Success() => new(true, Error.None);
     public static Result Failure(Error error) => new(false, error);
+    public static Result FirstFailureOrSuccess(params Result[] results)
+    {
+        foreach (var result in results)
+        {
+            if (result.IsFailure) return result;
+        }
+
+        return Success();
+    }
 
     public static Result<TValue> Success<TValue>(TValue value) => Result<TValue>.Success(value);
     public static Result<TValue> Failure<TValue>(Error error) => Result<TValue>.Failure(error);

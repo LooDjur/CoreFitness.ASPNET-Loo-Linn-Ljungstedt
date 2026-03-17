@@ -28,14 +28,8 @@ public sealed class SessionEntity : BaseEntity, IAggregateRoot
 
     public static Result<SessionEntity> Create(Title title, Instructor instructor, SessionCategory category, TimeSlot schedule, Capacity maxCapacity, Description description)
     {
-        if (schedule.StartTime < DateTime.UtcNow)
-        {
-            return Result.Failure<SessionEntity>(DomainErrors.Session.InvalidDate);
-        }
-
         var session = new SessionEntity(title, instructor, category, schedule, maxCapacity, description);
-
-        return session;
+        return Result.Success(session);
     }
 
     public Result UpdateDetails(
@@ -46,10 +40,6 @@ public sealed class SessionEntity : BaseEntity, IAggregateRoot
         TimeSlot schedule,
         Capacity maxCapacity)
     {
-        if (schedule.StartTime < DateTime.UtcNow)
-        {
-            return Result.Failure(DomainErrors.Session.InvalidDate);
-        }
         Title = title;
         Instructor = instructor;
         Description = description;
@@ -65,17 +55,15 @@ public sealed class SessionEntity : BaseEntity, IAggregateRoot
     public Result Delete()
     {
         if (IsDeleted)
-        {
             return Result.Failure(DomainErrors.Session.ActionNotAllowed);
-        }
 
-        if (Schedule.StartTime < DateTime.UtcNow)
-        {
+        var now = DateTime.UtcNow;
+
+        if (Schedule.StartTime < now)
             return Result.Failure(DomainErrors.Session.ActionNotAllowed);
-        }
 
         IsDeleted = true;
-        Modified = DateTime.UtcNow;
+        Modified = now;
 
         return Result.Success();
     }
