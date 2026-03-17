@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Domain.Common;
+﻿namespace Domain.Common;
 
 public class Result
 {
@@ -18,6 +14,15 @@ public class Result
 
     public static Result Success() => new(true, Error.None);
     public static Result Failure(Error error) => new(false, error);
+    public static Result FirstFailureOrSuccess(params Result[] results)
+    {
+        foreach (var result in results)
+        {
+            if (result.IsFailure) return result;
+        }
+
+        return Success();
+    }
 
     public static Result<TValue> Success<TValue>(TValue value) => Result<TValue>.Success(value);
     public static Result<TValue> Failure<TValue>(Error error) => Result<TValue>.Failure(error);
@@ -35,10 +40,11 @@ public class Result<TValue> : Result
 
     public TValue Value => IsSuccess
         ? _value!
-        : throw new InvalidOperationException("The value of a failure result can not be accessed.");
+        : throw new InvalidOperationException("Failure results have no value.");
 
     public static Result<TValue> Success(TValue value) => new(value, true, Error.None);
     public static new Result<TValue> Failure(Error error) => new(default, false, error);
 
     public static implicit operator Result<TValue>(TValue value) => Success(value);
+    public static implicit operator Result<TValue>(Error error) => Failure(error);
 }

@@ -20,8 +20,12 @@ public abstract record StringValueObject
         {
             throw new DomainException(DomainErrors.Validation.InvalidFormat);
         }
-
         Value = value;
+    }
+    protected static bool IsInvalid(string value, int min, int max)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return true;
+        return value.Length < min || value.Length > max;
     }
 
     public static implicit operator string(StringValueObject valueObject) => valueObject.Value;

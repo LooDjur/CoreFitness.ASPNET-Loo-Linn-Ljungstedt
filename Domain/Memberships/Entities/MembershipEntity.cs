@@ -1,19 +1,12 @@
-﻿using Domain.Bookings.ValueObjects;
-using Domain.Common;
-using Domain.Common.Exceptions;
+﻿using Domain.Common;
 using Domain.Common.ValueObjects.Shared;
 using Domain.Memberships.Enums;
 using Domain.Memberships.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using System.Text;
 
 namespace Domain.Memberships.Entities;
 
 public sealed class MembershipEntity : BaseEntity, IAggregateRoot
 {
-    public MemberId MemberId { get; private set; } = null!;
     public FirstName FirstName { get; private set; } = null!;
     public LastName LastName { get; private set; } = null!;
     public Email Email { get; private set; } = null!;
@@ -27,9 +20,9 @@ public sealed class MembershipEntity : BaseEntity, IAggregateRoot
 
     private MembershipEntity() { }
 
-    private MembershipEntity(MemberId memberId, FirstName firstName, LastName lastName, Email email)
+    private MembershipEntity(Guid memberId, FirstName firstName, LastName lastName, Email email)
     {
-        MemberId = memberId;
+        Id = memberId;
         FirstName = firstName;
         LastName = lastName;
         Email = email;

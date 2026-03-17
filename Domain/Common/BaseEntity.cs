@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Domain.Common;
+﻿namespace Domain.Common;
 
 public abstract class BaseEntity
 {
-    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public Guid Id { get; set; } = Guid.NewGuid();
     public DateTime Created { get; set; } = DateTime.UtcNow;
     public DateTime? Modified { get; set; }
 }
