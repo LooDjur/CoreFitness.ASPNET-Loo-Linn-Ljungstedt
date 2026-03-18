@@ -27,7 +27,7 @@ public class BookingEntityUT
         result.Value.SessionId.Should().Be(sessionId);
         result.Value.MemberId.Should().Be(memberId);
         result.Value.Status.Should().Be(BookingStatus.Confirmed);
-        result.Value.Id.Should().NotBeEmpty(); // Kontrollera att BaseEntity satte ett ID
+        result.Value.Id.Value.Should().NotBeEmpty(); // Kontrollera att BaseEntity satte ett ID
     }
 
     [Fact]

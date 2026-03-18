@@ -3,25 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Common.ValueObjects.Abstractions;
+namespace Domain.Common.ValueObjects.Primitives;
 
 public abstract record StringValueObject
 {
-    public string Value { get; }
+    public string Value { get; private init; } = null!;
 
-    protected StringValueObject(string value, int minLength, int maxLength)
+    protected StringValueObject() { }
+    protected StringValueObject(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            throw new DomainException(DomainErrors.Validation.Required);
-        }
-
-        if (value.Length < minLength || value.Length > maxLength)
-        {
-            throw new DomainException(DomainErrors.Validation.InvalidFormat);
-        }
         Value = value;
     }
+
     protected static bool IsInvalid(string value, int min, int max)
     {
         if (string.IsNullOrWhiteSpace(value)) return true;

@@ -2,7 +2,7 @@
 using Domain.Memberships.Repository;
 using Domain.Sessions.Repositories;
 
-namespace Domain.Abstractions;
+namespace Domain.Common.Abstractions;
 
 public interface IUnitOfWork : IDisposable
 {

@@ -1,6 +1,6 @@
 ﻿using Domain.Common;
 using Domain.Common.Exceptions;
-using Domain.Common.ValueObjects.Abstractions;
+using Domain.Common.ValueObjects.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +11,9 @@ public record Title : StringValueObject
 {
     private const int Min = 3;
     private const int Max = 20;
-    private Title(string value) : base(value, Min, Max) { }
+
+    private Title() : base() { }
+    private Title(string value) : base(value) { }
 
     public static Result<Title> Create(string value) =>
         IsInvalid(value, Min, Max)
@@ -22,7 +24,9 @@ public record Instructor : StringValueObject
 {
     private const int Min = 3;
     private const int Max = 100;
-    private Instructor(string value) : base(value, Min, Max) { }
+
+    private Instructor() : base() { }
+    private Instructor(string value) : base(value) { }
 
     public static Result<Instructor> Create(string value) =>
         IsInvalid(value, Min, Max) 
@@ -33,7 +37,9 @@ public record Description : StringValueObject
 {
     private const int Min = 5;
     private const int Max = 500;
-    private Description(string value) : base(value, Min, Max) { }
+
+    private Description() : base() { }
+    private Description(string value) : base(value) { }
 
     public static Result<Description> Create(string value) =>
         IsInvalid(value, Min, Max)
@@ -45,10 +51,8 @@ public record Capacity : RangeValueObject
     private const int Min = 10;
     private const int Max = 40;
 
-    private Capacity(int value)
-        : base(value, Min, Max, DomainErrors.Session.InvalidCapacity)
-    {
-    }
+    private Capacity() : base() { }
+    private Capacity(int value) : base(value) { }
 
     public static Result<Capacity> Create(int value)
     {
@@ -62,8 +66,10 @@ public record Capacity : RangeValueObject
 }
 public record TimeSlot
 {
-    public DateTime StartTime { get; }
-    public DateTime EndTime { get; }
+    public DateTime StartTime { get; private init; }
+    public DateTime EndTime { get; private init; }
+
+    private TimeSlot() { }
 
     private TimeSlot(DateTime start, DateTime end)
     {

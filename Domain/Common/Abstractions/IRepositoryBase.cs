@@ -1,6 +1,4 @@
-﻿using Domain.Common;
-
-namespace Domain.Abstractions;
+﻿namespace Domain.Common.Abstractions;
 
 public interface IRepositoryBase<T> where T : class, IAggregateRoot
 {

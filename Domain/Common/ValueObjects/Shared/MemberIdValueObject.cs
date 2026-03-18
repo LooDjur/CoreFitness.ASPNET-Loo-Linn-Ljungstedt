@@ -1,4 +1,4 @@
-﻿using Domain.Common.ValueObjects.Abstractions;
+﻿using Domain.Common.ValueObjects.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +7,10 @@ namespace Domain.Common.ValueObjects.Shared;
 
 public record MemberId : GuidValueObject
 {
-    private MemberId(Guid value) : base(value, DomainErrors.Membership.NotFound) { }
+    private MemberId() : base() { }
+    private MemberId(Guid value) : base(value) { }
+
+    public static MemberId New() => new(Guid.NewGuid());
 
     public static Result<MemberId> Create(Guid value)
     {
@@ -16,8 +19,6 @@ public record MemberId : GuidValueObject
 
         return Result.Success(new MemberId(value));
     }
-
-    public static MemberId New() => new(Guid.NewGuid());
 
     public static implicit operator Guid(MemberId id) => id.Value;
 }

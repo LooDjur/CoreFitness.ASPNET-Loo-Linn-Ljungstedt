@@ -1,4 +1,5 @@
 ﻿using Domain.Common;
+using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
 using Domain.Memberships.Enums;
 using Domain.Memberships.ValueObjects;
@@ -6,7 +7,7 @@ using static Domain.Common.DomainErrors;
 
 namespace Domain.Memberships.Entities;
 
-public sealed class MembershipEntity : BaseEntity, IAggregateRoot
+public sealed class MembershipEntity : BaseEntity<MemberId>, IAggregateRoot
 {
     public FirstName FirstName { get; private set; } = null!;
     public LastName LastName { get; private set; } = null!;
@@ -23,7 +24,7 @@ public sealed class MembershipEntity : BaseEntity, IAggregateRoot
 
     private MembershipEntity(MemberId memberId, FirstName firstName, LastName lastName, Email email)
     {
-        Id = memberId.Value;
+        Id = memberId;
         FirstName = firstName;
         LastName = lastName;
         Email = email;
@@ -32,14 +33,14 @@ public sealed class MembershipEntity : BaseEntity, IAggregateRoot
         ExpiryDate = DateTime.UtcNow.AddYears(1);
     }
 
-    public static Result<MembershipEntity> Create(MemberId memberId, FirstName firstName, LastName lastName, Email email)
+    public static Result<MembershipEntity> Create(FirstName firstName, LastName lastName, Email email)
     {
-        if (memberId is null || firstName is null || lastName is null || email is null)
-        {
-            return Result.Failure<MembershipEntity>(DomainErrors.Validation.Required);
-        }
+        var newMemberId = MemberId.New();
 
-        var membership = new MembershipEntity(memberId, firstName, lastName, email);
+        if (firstName is null || lastName is null || email is null)
+            return Result.Failure<MembershipEntity>(DomainErrors.Validation.Required);
+
+        var membership = new MembershipEntity(newMemberId, firstName, lastName, email);
         return Result.Success(membership);
     }
 

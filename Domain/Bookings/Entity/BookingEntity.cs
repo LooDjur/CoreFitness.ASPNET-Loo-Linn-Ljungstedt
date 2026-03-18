@@ -1,6 +1,7 @@
 ﻿using Domain.Bookings.Enum;
 using Domain.Bookings.ValueObjects;
 using Domain.Common;
+using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace Domain.Bookings.Entity;
 
-public sealed class BookingEntity : BaseEntity, IAggregateRoot
+public sealed class BookingEntity : BaseEntity<BookingId>, IAggregateRoot
 {
     public SessionId SessionId { get; private set; } = null!;
     public MemberId MemberId { get; private set; } = null!;
@@ -16,8 +17,9 @@ public sealed class BookingEntity : BaseEntity, IAggregateRoot
 
     private BookingEntity() { }
 
-    private BookingEntity(SessionId sessionId, MemberId memberId)
+    private BookingEntity(BookingId id, SessionId sessionId, MemberId memberId)
     {
+        Id = id;
         SessionId = sessionId;
         MemberId = memberId;
         Status = BookingStatus.Confirmed;
@@ -31,7 +33,9 @@ public sealed class BookingEntity : BaseEntity, IAggregateRoot
         if (memberId is null || memberId.Value == Guid.Empty)
             return Result.Failure<BookingEntity>(DomainErrors.Membership.NotFound);
 
-        var booking = new BookingEntity(sessionId, memberId);
+        var bookingId = BookingId.New();
+        var booking = new BookingEntity(bookingId,sessionId, memberId);
+
         return Result.Success(booking);
     }
 

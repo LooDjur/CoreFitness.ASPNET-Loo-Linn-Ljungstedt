@@ -1,7 +1,7 @@
 ﻿using Application.Sessions.DTOs;
 using Application.Sessions.Queries;
-using Domain.Abstractions;
 using Domain.Common;
+using Domain.Common.Abstractions;
 using MediatR;
 
 namespace Application.Sessions.Handlers;

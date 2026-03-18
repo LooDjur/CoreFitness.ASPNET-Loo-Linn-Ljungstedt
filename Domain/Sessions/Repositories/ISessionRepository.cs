@@ -1,4 +1,4 @@
-﻿using Domain.Abstractions;
+﻿using Domain.Common.Abstractions;
 using Domain.Sessions.Entities;
 using Domain.Sessions.Enums;
 using System;

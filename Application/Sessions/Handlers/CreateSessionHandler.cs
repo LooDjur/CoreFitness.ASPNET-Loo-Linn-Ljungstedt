@@ -1,6 +1,6 @@
 ﻿using Application.Sessions.Commands;
-using Domain.Abstractions;
 using Domain.Common;
+using Domain.Common.Abstractions;
 using Domain.Sessions.Entities;
 using Domain.Sessions.ValueObjects;
 using MediatR;
@@ -40,6 +40,6 @@ public sealed class CreateSessionHandler(IUnitOfWork unitOfWork)
         await unitOfWork.Sessions.AddAsync(session, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return session.Id;
+        return Result.Success((Guid)session.Id);
     }
 }
