@@ -21,15 +21,12 @@ public class MembershipEntityUT
     [Fact]
     public void Create_Should_ReturnSuccess_And_MapIdCorrectly()
     {
-        // Arrange
-        var memberId = ValidMemberId;
-
         // Act
-        var result = MembershipEntity.Create(memberId, ValidFirstName, ValidLastName, ValidEmail);
+        var result = MembershipEntity.Create(ValidFirstName, ValidLastName, ValidEmail);
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(memberId.Value, result.Value.Id); // Verifierar mappningen till BaseEntity.Id
+        Assert.NotEqual(Guid.Empty, (Guid)result.Value.Id); 
         Assert.Equal(MembershipStatus.Active, result.Value.Status);
     }
 
@@ -37,7 +34,7 @@ public class MembershipEntityUT
     public void UpdateProfile_Should_ReturnSuccess_WhenActive()
     {
         // Arrange
-        var membership = MembershipEntity.Create(ValidMemberId, ValidFirstName, ValidLastName, ValidEmail).Value;
+        var membership = MembershipEntity.Create(ValidFirstName, ValidLastName, ValidEmail).Value;
         var newFirstName = FirstName.Create("Jane").Value;
         var newLastName = LastName.Create("Doe").Value;
         var newEmail = Email.Create("jane@test.com").Value;
@@ -55,7 +52,7 @@ public class MembershipEntityUT
     public void UpdateProfile_Should_Fail_WhenSuspended()
     {
         // Arrange
-        var membership = MembershipEntity.Create(ValidMemberId, ValidFirstName, ValidLastName, ValidEmail).Value;
+        var membership = MembershipEntity.Create(ValidFirstName, ValidLastName, ValidEmail).Value;
         membership.AdminUpdateStatus(MembershipStatus.Suspended);
 
         // Act
@@ -70,7 +67,7 @@ public class MembershipEntityUT
     public void AdminExtendMembership_Should_IncreaseExpiryDate()
     {
         // Arrange
-        var membership = MembershipEntity.Create(ValidMemberId, ValidFirstName, ValidLastName, ValidEmail).Value;
+        var membership = MembershipEntity.Create(ValidFirstName, ValidLastName, ValidEmail).Value;
         var originalExpiry = membership.ExpiryDate;
 
         // Act
@@ -85,7 +82,7 @@ public class MembershipEntityUT
     public void AdminExtendMembership_Should_Fail_WhenMonthsAreInvalid()
     {
         // Arrange
-        var membership = MembershipEntity.Create(ValidMemberId, ValidFirstName, ValidLastName, ValidEmail).Value;
+        var membership = MembershipEntity.Create(ValidFirstName, ValidLastName, ValidEmail).Value;
 
         // Act & Assert (Vi testar både 0 och för många månader enligt din logik)
         var resultZero = membership.AdminExtendMembership(0);
@@ -102,7 +99,7 @@ public class MembershipEntityUT
     public void AdminUpdateStatus_Should_Fail_WhenSameStatus()
     {
         // Arrange
-        var membership = MembershipEntity.Create(ValidMemberId, ValidFirstName, ValidLastName, ValidEmail).Value;
+        var membership = MembershipEntity.Create(ValidFirstName, ValidLastName, ValidEmail).Value;
 
         // Act
         var result = membership.AdminUpdateStatus(MembershipStatus.Active);
@@ -116,7 +113,7 @@ public class MembershipEntityUT
     public void AdminChangeType_Should_Fail_WhenSameType()
     {
         // Arrange
-        var membership = MembershipEntity.Create(ValidMemberId, ValidFirstName, ValidLastName, ValidEmail).Value;
+        var membership = MembershipEntity.Create(ValidFirstName, ValidLastName, ValidEmail).Value;
 
         // Act
         var result = membership.AdminChangeType(MembershipType.Standard);

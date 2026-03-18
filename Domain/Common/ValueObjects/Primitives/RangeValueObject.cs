@@ -3,21 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Common.ValueObjects.Abstractions;
+namespace Domain.Common.ValueObjects.Primitives;
 
 public abstract record RangeValueObject
 {
-    public int Value { get; }
+    public int Value { get; private init; }
 
-    protected RangeValueObject(int value, int min, int max, Error error)
+    protected RangeValueObject() { }
+
+    protected RangeValueObject(int value)
     {
-        if (IsInvalid(value, min, max))
-        {
-            throw new DomainException(error);
-        }
-
         Value = value;
     }
+
     protected static bool IsInvalid(int value, int min, int max) => value < min || value > max;
 
     public static implicit operator int(RangeValueObject rangeObject) => rangeObject.Value;

@@ -1,24 +1,22 @@
 ﻿using Domain.Common;
-using Domain.Common.ValueObjects.Abstractions;
+using Domain.Common.ValueObjects.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Domain.Bookings.ValueObjects;
 
-public record SessionId : GuidValueObject
+public record BookingId : GuidValueObject
 {
-    private SessionId(Guid value) : base(value, DomainErrors.Session.NotFound) { }
+    private BookingId() : base() { }
+    private BookingId(Guid value) : base(value) { }
 
-    public static Result<SessionId> Create(Guid value)
+    public static BookingId New() => new(Guid.NewGuid());
+    public static Result<BookingId> Create(Guid value)
     {
-        if (value == Guid.Empty)
-            return Result.Failure<SessionId>(DomainErrors.Session.NotFound);
-
-        return Result.Success(new SessionId(value));
+        if (value == Guid.Empty) return Result.Failure<BookingId>(DomainErrors.Validation.InvalidFormat);
+        return Result.Success(new BookingId(value));
     }
 
-    public static SessionId New() => new(Guid.NewGuid());
-
-    public static implicit operator Guid(SessionId id) => id.Value;
+    public static implicit operator Guid(BookingId id) => id.Value;
 }

@@ -2,6 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Common;
+namespace Domain.Common.Abstractions;
 
 public interface IAggregateRoot { }

@@ -1,10 +1,12 @@
 ﻿using Domain.Common;
+using Domain.Common.Abstractions;
+using Domain.Common.ValueObjects.Shared;
 using Domain.Sessions.Enums;
 using Domain.Sessions.ValueObjects;
 
 namespace Domain.Sessions.Entities;
 
-public sealed class SessionEntity : BaseEntity, IAggregateRoot
+public sealed class SessionEntity : BaseEntity<SessionId>, IAggregateRoot
 {
     public Title Title { get; private set; } = null!;
     public Description Description { get; private set; } = null!;
@@ -12,12 +14,12 @@ public sealed class SessionEntity : BaseEntity, IAggregateRoot
     public SessionCategory Category { get; private set; }
     public TimeSlot Schedule { get; private set; } = null!;
     public Capacity MaxCapacity { get; private set; } = null!;
-    public bool IsDeleted { get; private set; } = false;
 
     private SessionEntity() { }
 
-    private SessionEntity(Title title, Instructor instructor, SessionCategory category, TimeSlot schedule, Capacity maxCapacity, Description description)
+    private SessionEntity(SessionId id, Title title, Instructor instructor, SessionCategory category, TimeSlot schedule, Capacity maxCapacity, Description description)
     {
+        Id = id;
         Title = title;
         Instructor = instructor;
         Category = category;
@@ -28,7 +30,12 @@ public sealed class SessionEntity : BaseEntity, IAggregateRoot
 
     public static Result<SessionEntity> Create(Title title, Instructor instructor, SessionCategory category, TimeSlot schedule, Capacity maxCapacity, Description description)
     {
-        var session = new SessionEntity(title, instructor, category, schedule, maxCapacity, description);
+        if (title is null || instructor is null || schedule is null || maxCapacity is null)
+            return Result.Failure<SessionEntity>(DomainErrors.Validation.Required);
+
+        var newSessionId = SessionId.New();
+
+        var session = new SessionEntity(newSessionId, title, instructor, category, schedule, maxCapacity, description);
         return Result.Success(session);
     }
 

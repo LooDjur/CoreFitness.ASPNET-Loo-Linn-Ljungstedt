@@ -1,6 +1,6 @@
 ﻿using Domain.Common;
 using Domain.Common.Exceptions;
-using Domain.Common.ValueObjects.Abstractions;
+using Domain.Common.ValueObjects.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,7 +13,8 @@ public record FirstName : StringValueObject
     private const int Min = 2;
     private const int Max = 50;
 
-    private FirstName(string value) : base(value, Min, Max) { }
+    private FirstName() : base() { }
+    private FirstName(string value) : base(value) { }
 
     public static Result<FirstName> Create(string value) =>
         IsInvalid(value, Min, Max)
@@ -25,7 +26,8 @@ public record LastName : StringValueObject
     private const int Min = 2;
     private const int Max = 50;
 
-    private LastName(string value) : base(value, Min, Max) { }
+    private LastName() : base() { }
+    private LastName(string value) : base(value) { }
 
     public static Result<LastName> Create(string value) =>
         IsInvalid(value, Min, Max)
@@ -37,11 +39,13 @@ public record Email : StringValueObject
     private const int Min = 5;
     private const int Max = 100;
 
+    private Email() : base() { }
+
     private static readonly Regex EmailRegex = new(
         @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-    private Email(string value) : base(value, Min, Max) { }
+    private Email(string value) : base(value) { }
 
     public static Result<Email> Create(string value)
     {

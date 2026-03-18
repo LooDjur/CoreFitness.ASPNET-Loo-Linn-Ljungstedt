@@ -1,8 +1,12 @@
 ﻿namespace Domain.Common;
 
-public abstract class BaseEntity
+public abstract class BaseEntity<TId>
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public TId Id { get; set; } = default!;
     public DateTime Created { get; set; } = DateTime.UtcNow;
     public DateTime? Modified { get; set; }
+
+    public bool IsDeleted { get; protected set; } = false;
+
+    public virtual void UndoDelete() => IsDeleted = false;
 }

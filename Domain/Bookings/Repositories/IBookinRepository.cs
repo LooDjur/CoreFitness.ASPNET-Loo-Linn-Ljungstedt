@@ -1,5 +1,5 @@
-﻿using Domain.Abstractions;
-using Domain.Bookings.Entity;
+﻿using Domain.Bookings.Entity;
+using Domain.Common.Abstractions;
 using Domain.Sessions.Enums;
 
 namespace Domain.Bookings.Repositories;

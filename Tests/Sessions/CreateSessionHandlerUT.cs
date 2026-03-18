@@ -1,7 +1,7 @@
 ﻿using Application.Sessions.Commands;
 using Application.Sessions.Handlers;
-using Domain.Abstractions;
 using Domain.Common;
+using Domain.Common.Abstractions;
 using Domain.Common.Exceptions;
 using Domain.Sessions.Entities;
 using Domain.Sessions.Enums;
