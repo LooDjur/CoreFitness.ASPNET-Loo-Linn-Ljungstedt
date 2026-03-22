@@ -17,39 +17,39 @@ public sealed class SessionEntity : BaseEntity<SessionId>, IAggregateRoot
 
     private SessionEntity() { }
 
-    private SessionEntity(SessionId id, Title title, Instructor instructor, SessionCategory category, TimeSlot schedule, Capacity maxCapacity, Description description)
+    private SessionEntity(SessionId id, Title title, Description description, Instructor instructor, SessionCategory category, TimeSlot schedule, Capacity maxCapacity)
     {
         Id = id;
         Title = title;
+        Description = description;
         Instructor = instructor;
         Category = category;
         Schedule = schedule;
         MaxCapacity = maxCapacity;
-        Description = description;
     }
 
-    public static Result<SessionEntity> Create(Title title, Instructor instructor, SessionCategory category, TimeSlot schedule, Capacity maxCapacity, Description description)
+    public static Result<SessionEntity> Create(Title title, Description description, Instructor instructor, SessionCategory category, TimeSlot schedule, Capacity maxCapacity)
     {
         if (title is null || instructor is null || schedule is null || maxCapacity is null)
             return Result.Failure<SessionEntity>(DomainErrors.Validation.Required);
 
         var newSessionId = SessionId.New();
 
-        var session = new SessionEntity(newSessionId, title, instructor, category, schedule, maxCapacity, description);
+        var session = new SessionEntity(newSessionId, title, description, instructor, category, schedule, maxCapacity);
         return Result.Success(session);
     }
 
     public Result UpdateDetails(
         Title title,
-        Instructor instructor,
         Description description,
+        Instructor instructor,
         SessionCategory category,
         TimeSlot schedule,
         Capacity maxCapacity)
     {
         Title = title;
-        Instructor = instructor;
         Description = description;
+        Instructor = instructor;
         Category = category;
         Schedule = schedule;
         MaxCapacity = maxCapacity;

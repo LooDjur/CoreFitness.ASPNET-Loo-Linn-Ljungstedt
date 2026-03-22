@@ -1,16 +1,19 @@
+using Application.CustomerSupport.Commands;
 using Application.Faq;
-using Presentation.WebApp.Controllers.MiddleWare;
+using Application;
+using Infrastructure.Extensions.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRouting(x => x.LowercaseUrls = true);
 
+builder.Services.AddApplication();
+builder.Services.AddPersistence(builder.Configuration);
+
 builder.Services.AddScoped<IFaqService, FaqService>();
 
 var app = builder.Build();
-
-app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHsts();
 app.UseHttpsRedirection();

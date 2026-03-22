@@ -10,36 +10,40 @@ namespace Application.Sessions.Handlers;
 public sealed class CreateSessionHandler(IUnitOfWork unitOfWork)
     : IRequestHandler<CreateSessionCommand, Result<Guid>>
 {
-    public async Task<Result<Guid>> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(CreateSessionCommand request, CancellationToken ct)
     {
         var titleRes = Title.Create(request.Title);
-        var instructorRes = Instructor.Create(request.Instructor);
-        var timeRes = TimeSlot.Create(request.StartTime, request.EndTime);
-        var capacityRes = Capacity.Create(request.MaxCapacity);
         var descriptionRes = Description.Create(request.Description);
+        var instructorRes = Instructor.Create(request.Instructor);
+        var capacityRes = Capacity.Create(request.MaxCapacity);
+        var timeRes = TimeSlot.Create(request.StartTime, request.EndTime);
 
-        if (Result.FirstFailureOrSuccess(titleRes, instructorRes, timeRes, capacityRes, descriptionRes)
-            is var failure && failure.IsFailure)
-        {
-            return Result.Failure<Guid>(failure.Error);
-        }
+        var validationResult = Result.FirstFailureOrSuccess(
+            titleRes,
+            descriptionRes,
+            instructorRes,
+            capacityRes,
+            timeRes);
+
+        if (validationResult.IsFailure)
+            return Result.Failure<Guid>(validationResult.Error);
 
         var sessionResult = SessionEntity.Create(
             titleRes.Value,
+            descriptionRes.Value,
             instructorRes.Value,
             request.Category,
             timeRes.Value,
-            capacityRes.Value,
-            descriptionRes.Value);
+            capacityRes.Value);
 
         if (sessionResult.IsFailure)
             return Result.Failure<Guid>(sessionResult.Error);
 
         var session = sessionResult.Value;
 
-        await unitOfWork.Sessions.AddAsync(session, cancellationToken);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.Sessions.AddAsync(session, ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
-        return Result.Success((Guid)session.Id);
+        return Result.Success(session.Id.Value);
     }
 }

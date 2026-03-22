@@ -4,35 +4,43 @@ using System.Text;
 
 namespace Domain.Common;
 
-public record Error(string Code, string Description)
+public record Error(string Code, string Description, ErrorType Type)
 {
-    public static readonly Error None = new(string.Empty, string.Empty);
+    public static readonly Error None = new(string.Empty, string.Empty, ErrorType.Failure);
+    public static Error NotFound(string code, string description) => new(code, description, ErrorType.NotFound);
+    public static Error Validation(string code, string description) => new(code, description, ErrorType.Validation);
+    public static Error Conflict(string code, string description) => new(code, description, ErrorType.Conflict);
+    public static Error Failure(string code, string description) => new(code, description, ErrorType.Failure);
+}
+
+public static class FaqErrors
+{
+    public static readonly Error NotFound = Error.NotFound(
+        "Faq.NotFound",
+        "The FAQ items could not be found.");
 }
 
 public static class DomainErrors
 {
     public static class Validation
     {
-        public static readonly Error Required = new("Validation.Required", "This field is required.");
-        public static readonly Error TooLong = new("Validation.TooLong", "The input is too long.");
-        public static readonly Error InvalidFormat = new("Validation.Invalid", "The input format is incorrect.");
+        public static readonly Error Required = Error.Validation("Validation.Required", "This field is required.");
+        public static readonly Error TooLong = Error.Validation("Validation.TooLong", "The input is too long.");
+        public static readonly Error InvalidFormat = Error.Validation("Validation.Invalid", "The input format is incorrect.");
     }
 
     public static class Session
     {
-        public static readonly Error NotFound = new("Session.NotFound", "The session was not found.");
-
-        public static readonly Error InvalidDate = new("Session.InvalidDate", "Date is either in the past or invalid.");
-        public static readonly Error ActionNotAllowed = new("Session.NotAllowed", "This action cannot be performed on the current session state.");
-
-        public static readonly Error InvalidCapacity = new("Session.InvalidCapacity", "Capacity must be between 10 and 40.");
+        public static readonly Error NotFound = Error.NotFound("Session.NotFound", "The session was not found.");
+        public static readonly Error InvalidDate = Error.Validation("Session.InvalidDate", "Date is invalid.");
+        public static readonly Error ActionNotAllowed = Error.Failure("Session.NotAllowed", "Action not allowed.");
+        public static readonly Error InvalidCapacity = Error.Validation("Session.InvalidCapacity", "Capacity 10-40.");
     }
 
     public static class Membership
     {
-        public static readonly Error NotFound = new("Membership.NotFound", "The member was not found.");
-
-        public static readonly Error Ineligible = new("Membership.Ineligible", "Membership status does not allow this action.");
-        public static readonly Error LimitReached = new("Membership.Limit", "The requested change exceeds the allowed limit.");
+        public static readonly Error NotFound = Error.NotFound("Membership.NotFound", "The member was not found.");
+        public static readonly Error Ineligible = Error.Failure("Membership.Ineligible", "Membership status error.");
+        public static readonly Error LimitReached = Error.Conflict("Membership.Limit", "Limit exceeded.");
     }
 }

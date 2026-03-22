@@ -1,5 +1,5 @@
 ﻿using Domain.Bookings.Repositories;
-using Domain.Memberships.Repository;
+using Domain.Memberships.Repositories;
 using Domain.Sessions.Repositories;
 
 namespace Domain.Common.Abstractions;

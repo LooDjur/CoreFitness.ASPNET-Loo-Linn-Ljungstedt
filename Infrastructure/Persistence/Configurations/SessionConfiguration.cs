@@ -13,30 +13,41 @@ public sealed class SessionConfiguration : IEntityTypeConfiguration<SessionEntit
 
         builder.Property(s => s.Id)
             .HasConversion(
-                id => id.Value,             
+                id => id.Value,
                 value => SessionId.Create(value).Value
             )
+            .ValueGeneratedNever()
             .IsRequired();
+
+        builder.Property(s => s.Category)
+            .IsRequired();
+
+        builder.Property(s => s.Created).IsRequired();
+        builder.Property(s => s.Modified);
+        builder.Property(s => s.IsDeleted).IsRequired().HasDefaultValue(false);
 
         builder.ComplexProperty(s => s.Title, b =>
         {
             b.Property(t => t.Value)
                 .HasColumnName("Title")
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(100);
         });
 
         builder.ComplexProperty(s => s.Description, b =>
         {
             b.Property(d => d.Value)
                 .HasColumnName("Description")
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(500);
         });
 
         builder.ComplexProperty(s => s.Instructor, b =>
         {
             b.Property(i => i.Value)
                 .HasColumnName("Instructor")
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(100);
         });
 
         builder.ComplexProperty(s => s.MaxCapacity, b =>
@@ -46,11 +57,13 @@ public sealed class SessionConfiguration : IEntityTypeConfiguration<SessionEntit
                 .IsRequired();
         });
 
-        // TimeSlot
         builder.ComplexProperty(s => s.Schedule, b =>
         {
-            b.Property(p => p.StartTime).HasColumnName("StartTime");
-            b.Property(p => p.EndTime).HasColumnName("EndTime");
+            b.Property(p => p.StartTime).HasColumnName("StartTime").IsRequired();
+            b.Property(p => p.EndTime).HasColumnName("EndTime").IsRequired();
         });
+
+        builder.Property(s => s.IsDeleted)
+           .HasDefaultValue(false);
     }
 }

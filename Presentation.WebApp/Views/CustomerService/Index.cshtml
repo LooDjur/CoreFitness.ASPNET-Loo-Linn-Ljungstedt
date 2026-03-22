@@ -1,9 +1,16 @@
-﻿@{
-    ViewData["Title"] = "Customer Service";
+﻿﻿@{
+
 }
 
-<partial name="Partials/Globals/_PageTitleSection" />
+<div class="page_customer-service">
+    <partial name="Partials/Globals/_PageTitleSection" />
+    
+    <div class="container">
+        <partial name="Sections/_ContactFormSection" />
+    </div>
 
-<partial name="Sections/_ContactFormSection" />
+</div>
 
-<partial name="Partials/Sections/_FaqSection" />
+@section Scripts {
+    <partial name="~/Views/Shared/Partials/Globals/_ValidationScripts.cshtml" />
+}

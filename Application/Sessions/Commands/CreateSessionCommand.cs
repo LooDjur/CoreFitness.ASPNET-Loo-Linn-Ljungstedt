@@ -11,4 +11,5 @@ public record CreateSessionCommand(
     SessionCategory Category,
     DateTime StartTime,
     DateTime EndTime,
-    int MaxCapacity) : IRequest<Result<Guid>>;
+    int MaxCapacity
+) : IRequest<Result<Guid>>;

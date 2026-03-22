@@ -8,8 +8,9 @@
     row-gap: 0.25rem;
     align-items: center;
     margin-bottom: 1rem;
-    /* Dölj den riktiga checkboxen strikt inuti gruppen */
-    input[type="checkbox"] {
+}
+
+    .checkbox-group input[type="checkbox"] {
         position: absolute;
         width: 1px;
         height: 1px;
@@ -20,58 +21,46 @@
         white-space: nowrap;
         border-width: 0;
         display: none !important;
-        /* Logik: När inputen är checkad, ändra utseendet på efterföljande checkmark */
-        &:checked + .checkbox-checkmark {
+    }
+
+        .checkbox-group input[type="checkbox"]:checked + .checkbox-checkmark {
             border-color: var(--form-checkbox-checked-border-color);
             background-color: var(--form-checkbox-checked-bg-color);
             color: var(--form-checkbox-checked-text-color);
+        }
 
-            &::after {
+            .checkbox-group input[type="checkbox"]:checked + .checkbox-checkmark::after {
                 opacity: 1;
                 transform: scale(1);
             }
-        }
-        /* Lägg till focus-state för tillgänglighet (när man tabbar) */
-        &:focus-visible + .checkbox-checkmark {
-            outline: 2px solid var(--primary-color);
-            outline-offset: 3px;
-        }
-    }
-    /* Den specialdesignade rutan */
-    .checkbox-checkmark {
-        grid-area: check;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        height: 25px;
-        width: 25px;
-        border-radius: 8px;
-        border: 1px solid var(--form-checkbox-border-color);
-        background-color: var(--form-checkbox-bg-color);
-        transition: all 0.2s ease-in-out;
-        /* Själva bocken (check-ikonen) */
-        &::after {
-            content: "\f00c";
-            font-family: var(--font-fa-solid);
-            font-weight: 900;
-            font-size: 0.8em;
-            opacity: 0;
-            transform: scale(0.5);
-            transition: opacity 0.15s ease, transform 0.15s ease;
-        }
-    }
-    /* Texten bredvid checkboxen */
-    .form-label {
-        grid-area: label;
-        cursor: pointer;
-        margin-bottom: 0; /* Tar bort eventuell marginal från globala labels */
-        user-select: none;
-    }
-    /* Felmeddelandet under texten */
-    .field-validation-error {
-        grid-area: error;
+
+.checkbox-checkmark {
+    grid-area: check;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 25px;
+    width: 25px;
+    border-radius: 8px;
+    border: 1px solid var(--form-checkbox-border-color);
+    background-color: var(--form-checkbox-bg-color);
+    transition: all 0.2s ease-in-out;
+}
+
+    .checkbox-checkmark::after {
+        content: "\f00c";
+        font-family: var(--font-fa-solid);
+        font-weight: 900;
         font-size: 0.8em;
-        color: var(--form-validation-error-text-color);
+        opacity: 0;
+        transform: scale(0.5);
+        transition: opacity 0.15s ease, transform 0.15s ease;
     }
+
+.checkbox-group .form-label {
+    grid-area: label;
+    cursor: pointer;
+    margin-bottom: 0;
+    user-select: none;
 }

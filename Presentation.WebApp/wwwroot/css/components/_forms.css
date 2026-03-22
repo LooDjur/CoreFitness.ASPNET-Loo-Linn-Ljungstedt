@@ -4,47 +4,55 @@
     color: var(--form-text-color);
     padding: 2rem;
     border-radius: 1rem;
+}
 
-    .form-group {
-        display: grid;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
+.form-group {
+    display: grid;
+    gap: 0.1rem;
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    font-size: 0.9em;
+    font-weight: 600;
+    font-family: var(--font-heading);
+}
+
+.form-input, .form-textarea {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 0.625rem;
+    font-size: 1em;
+    font-family: var(--font-default);
+    outline: none;
+    border: 1px solid var(--form-input-border-color);
+    background-color: var(--form-input-bg-color);
+    color: var(--form-input-text-color);
+    transition: border-color 0.15s ease-in-out;
+
+    &::placeholder {
+        color: var(--form-input-placeholder-color);
     }
 
-    .form-label {
-        font-size: 0.9em;
-        font-weight: 600;
-        font-family: var(--font-heading);
+    &:focus {
+        border-color: var(--form-input-focus-border-color);
+    }
+}
+
+.field-validation-error,
+.field-validation-valid {
+    display: block;
+    color: var(--form-validation-error-text-color);
+    font-size: 0.8em;
+    min-height: 1.2em;
+    line-height: 1.2;
+    transition: opacity 0.2s ease;
+}
+    .field-validation-error:empty,
+    .field-validation-valid:empty {
+        visibility: hidden;
     }
 
-    .form-input, .form-textarea {
-        width: 100%;
-        padding: 1rem;
-        border-radius: 0.625rem;
-        font-size: 1em;
-        font-family: var(--font-default);
-        outline: none;
-        border: 1px solid var(--form-input-border-color);
-        background-color: var(--form-input-bg-color);
-        color: var(--form-input-text-color);
-        transition: border-color 0.15s ease-in-out;
-
-        &::placeholder {
-            color: var(--form-input-placeholder-color);
-        }
-
-        &:focus {
-            border-color: var(--form-input-focus-border-color);
-        }
-    }
-
-    /* Validation */
-    .input-validation-error {
-        border-color: var(--form-validation-error-text-color);
-    }
-
-    .field-validation-error {
-        color: var(--form-validation-error-text-color);
-        font-size: 0.8em;
-    }
+.input-validation-error {
+    border-color: var(--form-validation-error-text-color);
 }
