@@ -1,7 +1,8 @@
 ﻿using Domain.Bookings.Repositories;
 using Domain.Common.Abstractions;
-using Domain.Memberships.Repository;
+using Domain.Memberships.Repositories;
 using Domain.Sessions.Repositories;
+using Infrastructure.Persistence.Context;
 using Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;

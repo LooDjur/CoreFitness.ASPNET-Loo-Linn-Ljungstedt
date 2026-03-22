@@ -1,9 +1,5 @@
 /* Core - Grundinställningar */
-@import "core/_variables.css";
-@import "core/_base.css";
-
-/* Components - Knappar och smådelar */
-@import "components/_buttons.css";
+@import "fonts.css";
 @import "core/_variables.css";
 @import "core/_base.css";
 
@@ -15,5 +11,6 @@
 
 /* Sections */
 @import "sections/shared/_header.css";
-@import "sections/_contact.css";
-@import "sections/_faq.css";
+@import "sections/shared/_footer.css";
+
+@import "sections/_forms.css";

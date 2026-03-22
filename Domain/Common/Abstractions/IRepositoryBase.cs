@@ -1,12 +1,11 @@
 ﻿namespace Domain.Common.Abstractions;
 
-public interface IRepositoryBase<T> where T : class, IAggregateRoot
+public interface IRepositoryBase<TEntity, TId>
+    where TEntity : BaseEntity<TId>
 {
-    Task<T?> GetByIdAsync(string id, CancellationToken ct = default);
-    Task<T?> GetByGuidIdAsync(Guid id, CancellationToken ct = default);
-    Task<IEnumerable<T>> GetAllAsync(CancellationToken ct = default);
-
-    Task AddAsync(T entity, CancellationToken ct = default);
-    void Update(T entity);
-    void Delete(T entity);
+    Task<TEntity?> GetByIdAsync(TId id, CancellationToken ct = default);
+    Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken ct = default);
+    Task AddAsync(TEntity entity, CancellationToken ct = default);
+    void Update(TEntity entity);
+    void Delete(TEntity entity);
 }

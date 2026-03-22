@@ -1,5 +1,7 @@
 ﻿.menu-item.dropdown {
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .dropdown-menu {
@@ -11,9 +13,10 @@
     padding: 1rem;
     list-style: none;
     min-width: 200px;
-    border-radius: 25px;
+    border-radius: 15px;
     z-index: 100;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    margin-top: 0.5rem;
 }
 
 .menu-item.dropdown:hover .dropdown-menu {
@@ -30,15 +33,34 @@
 }
 
     .dropdown-menu li a:hover {
-        color: var(--primary-color);
+        color: var(--white-color);
     }
 
-.menu-item.dropdown::after {
+.main-menu .menu-item.dropdown .fa-solid::before {
+    content: "\f078";
+}
+
+.main-menu .menu-item.dropdown .fa-solid {
+    font-family: var(--font-fa);
+    font-weight: 900;
     display: inline-block;
-    content: " ▾";
-    font-family: var(--font-default);
-    margin-left: 0.4rem;
-    font-size: 0.7rem;
-    vertical-align: middle;
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
     color: var(--white-color);
+    vertical-align: middle;
+    transition: transform 0.3s ease-in-out, color 0.15s ease-in-out;
+}
+
+.menu-item.dropdown:hover .menu-item-link,
+.menu-item.dropdown:hover .fa-solid {
+    color: var(--primary-color);
+}
+
+.menu-item.dropdown:hover .fa-solid {
+    transform: rotate(180deg);
+}
+
+.menu-item.dropdown::after {
+    content: none;
+    display: none;
 }

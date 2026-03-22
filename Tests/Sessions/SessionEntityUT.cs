@@ -38,11 +38,12 @@ public class SessionEntityTests
         // Act
         var result = SessionEntity.Create(
             GetValidTitle(),
+            GetValidDescription(),
             GetValidInstructor(),
             SessionCategory.Yoga,
             GetFutureSchedule(),
-            GetValidCapacity(),
-            GetValidDescription());
+            GetValidCapacity());
+            
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -71,11 +72,11 @@ public class SessionEntityTests
 
         var sessionResult = SessionEntity.Create(
             GetValidTitle(),
+            GetValidDescription(),
             GetValidInstructor(),
             SessionCategory.Yoga,
             futureSchedule,
-            GetValidCapacity(),
-            GetValidDescription());
+            GetValidCapacity());
 
         var session = sessionResult.Value;
 

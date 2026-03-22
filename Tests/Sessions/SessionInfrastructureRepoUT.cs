@@ -1,9 +1,11 @@
 ﻿using Domain.Common.Abstractions;
+using Domain.Common.ValueObjects.Shared;
 using Domain.Sessions.Entities;
 using Domain.Sessions.Enums;
 using Domain.Sessions.ValueObjects;
 using FluentAssertions;
 using Infrastructure.Persistence;
+using Infrastructure.Persistence.Context;
 using Infrastructure.Repositories;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +20,6 @@ public class SessionInfrastructureRepoUT : IDisposable
 
     public SessionInfrastructureRepoUT()
     {
-        // Setup SQLite In-Memory
         _connection = new SqliteConnection("Filename=:memory:");
         _connection.Open();
 
@@ -29,7 +30,6 @@ public class SessionInfrastructureRepoUT : IDisposable
         _context = new ApplicationDbContext(options);
         _context.Database.EnsureCreated();
 
-        // Vi testar genom UnitOfWork för att simulera verkligt användande
         _unitOfWork = new UnitOfWork(_context);
     }
 
@@ -58,7 +58,7 @@ public class SessionInfrastructureRepoUT : IDisposable
         await _unitOfWork.SaveChangesAsync(CancellationToken.None);
 
         // Act
-        var result = await _unitOfWork.Sessions.GetByIdAsync(session.Id.Value.ToString(), CancellationToken.None);
+        var result = await _unitOfWork.Sessions.GetByIdAsync(session.Id, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -68,8 +68,10 @@ public class SessionInfrastructureRepoUT : IDisposable
     [Fact]
     public async Task GetByIdAsync_WithInvalidString_ShouldReturnNull()
     {
+        var randomId = SessionId.New();
+
         // Act
-        var result = await _unitOfWork.Sessions.GetByIdAsync("not-a-guid", CancellationToken.None);
+        var result = await _unitOfWork.Sessions.GetByIdAsync(randomId, CancellationToken.None);
 
         // Assert
         result.Should().BeNull();
@@ -110,7 +112,7 @@ public class SessionInfrastructureRepoUT : IDisposable
         var newTime = TimeSlot.Create(DateTime.UtcNow.AddDays(5), DateTime.UtcNow.AddDays(5).AddHours(1)).Value;
 
         // Act
-        session.UpdateDetails(newTitle, newInstructor, newDesc, SessionCategory.Spinning, newTime, newCap);
+        session.UpdateDetails(newTitle, newDesc, newInstructor, SessionCategory.Spinning, newTime, newCap);
         _unitOfWork.Sessions.Update(session);
         await _unitOfWork.SaveChangesAsync(CancellationToken.None);
 
@@ -143,7 +145,7 @@ public class SessionInfrastructureRepoUT : IDisposable
     }
 
     // Helpers
-    private SessionEntity CreateValidSession(string title)
+    private static SessionEntity CreateValidSession(string title)
     {
         var titleRes = Title.Create(title);
         var instructorRes = Instructor.Create("Anders");
@@ -161,18 +163,19 @@ public class SessionInfrastructureRepoUT : IDisposable
         // Om alla Value Objects är OK, skapa entiteten
         var sessionResult = SessionEntity.Create(
             titleRes.Value,
+            descriptionRes.Value,
             instructorRes.Value,
             SessionCategory.Yoga,
             timeRes.Value,
-            capacityRes.Value,
-            descriptionRes.Value);
+            capacityRes.Value);
+            
 
         if (sessionResult.IsFailure)
             throw new Exception($"SessionEntity Error: {sessionResult.Error.Code}");
 
         return sessionResult.Value;
     }
-    private SessionEntity CreateSessionAt(DateTime startTime)
+    private static SessionEntity CreateSessionAt(DateTime startTime)
     {
         // Använd helpern ovan för att få ett giltigt grundobjekt
         var session = CreateValidSession("Timed Session");

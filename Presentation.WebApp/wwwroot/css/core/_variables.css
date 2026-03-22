@@ -3,6 +3,7 @@
     --font-heading: "Poppins", sans-serif;
     --font-fa-regular: "Font Awesome 7 Pro Regular";
     --font-fa-solid: "Font Awesome 7 Pro Solid";
+    --font-fa: var(--font-fa-solid);
     --primary-color: #d7eb31;
     --dark-color: #27252f;
     --gray-color: #6f6f6f;
@@ -18,14 +19,12 @@
     --link-hover-text-color: var(--primary-color);
     --header-bg-color: var(--dark-color);
     --header-text-color: var(--white-color);
-
     /* Menu Colors*/
     --menu-item-text-color: var(--white-color);
     --menu-item-link-text-color: var(--white-color);
     --menu-item-link-hover-text-color: var(--primary-color);
     --menu-item-button-bg-color: var(--primary-color);
     --menu-item-button-text-color: var(--dark-color);
-
     /* Form Colors */
     --form-bg-color: var(--white-color);
     --form-border-color: var(--extra-light-gray-color);
