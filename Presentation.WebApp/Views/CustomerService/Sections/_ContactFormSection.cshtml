@@ -41,18 +41,19 @@
                 <textarea class="form-textarea" asp-for="Message" rows="5"></textarea>
                 <span class="field-validation" asp-validation-for="Message"></span>
             </div>
+            <div data-id="terms" class="form-group">
+                <div class="checkbox-group">
+                    <input class="form-checkbox-input" asp-for="AcceptSavePersonalInformation" id="accept-terms" />
+        
+                    <label class="checkbox-checkmark" for="accept-terms"></label>
+        
+                    <label class="form-label" asp-for="AcceptSavePersonalInformation" for="accept-terms"></label>
+        
+                    <span class="field-validation-error" asp-validation-for="AcceptSavePersonalInformation"></span>
+                </div>
+            </div>
             <button class="btn" type="submit">Submit Request</button>
         </form>
     </div>
 </section>
 
-@*     <div data-id="terms" class="form-group checkbox">
-            <div class="form-checkbox-validation">
-                <label class="form-checkbox-label">
-                    <input class="form-checkbox-input" asp-for="AcceptSavePersonalInformation" />
-                    <span class="form-checkbox-checkmark"></span>
-                    <label class="checkbox-label" asp-for="AcceptSavePersonalInformation"></label>
-                </label>
-                <span asp-validation-for="AcceptSavePersonalInformation"></span>
-            </div>
-        </div> *@

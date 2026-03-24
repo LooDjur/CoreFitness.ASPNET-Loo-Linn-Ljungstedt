@@ -13,9 +13,7 @@
 .contact-image {
     width: 100%;
 }
-
     .contact-image img {
-        width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
@@ -27,13 +25,25 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+}
+.form-textarea {
+    resize: vertical;
+    min-height: 4rem;
+    max-height: 30rem;
 }
 
 .form-grid-fields {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
+}
+
+.checkbox-group .field-validation-error {
+    grid-area: error;
+}
+
+.checkbox-checkmark.input-validation-error {
+    border-color: var(--form-validation-error-text-color)
 }
 
 @media (max-width: 1500px) {

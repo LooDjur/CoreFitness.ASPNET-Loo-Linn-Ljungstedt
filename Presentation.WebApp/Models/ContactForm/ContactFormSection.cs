@@ -24,4 +24,8 @@ public class ContactFormSection
     [Required(ErrorMessage = "You must enter a message")]
     [Display(Name = "Message", Prompt = "Message")]
     public string Message { get; set; } = null!;
+
+    [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms and conditions")]
+    [Display(Name = "I accept the terms and conditions that CoreFitness savess my informatioin")]
+    public bool AcceptSavePersonalInformation { get; set; }
 }
