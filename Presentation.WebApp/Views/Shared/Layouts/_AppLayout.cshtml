@@ -15,23 +15,25 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
+    <div class="app-layout @ViewData["PageClass"]">
+    <header>
+        <div class="container full"> <partial name="Partials/Globals/_HeaderSection" />
+        </div>
 
-    <div class="app-layout">
-        <header>
-            <partial name="Partials/Globals/_HeaderSection" />
+        @if (IsSectionDefined("Hero"))
+            @await RenderSectionAsync("Hero", required: false)
+    </header>
 
-            @if (IsSectionDefined("Hero"))
-                @await RenderSectionAsync("Hero", required: false)
-            
-        </header>
-        <main>
-            @RenderBody()
-        </main>
-        <footer>
-            <partial name="Partials/Globals/_FooterSection" />
-        </footer>
-    </div>
+    <main>
+        <div class="container"> @RenderBody()
+        </div>
+    </main>
 
+    <footer>
+        <div class="container"> <partial name="Partials/Globals/_FooterSection" />
+        </div>
+    </footer>
+</div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

@@ -1,51 +1,39 @@
-﻿using Application.CustomerSupport.Abstractions.Repositories;
-using Application.CustomerSupport.Inputs;
-using Application.CustomerSupport.Output;
+﻿using Domain.Common;
+using Domain.Common.ValueObjects.Shared;
+using Domain.ContactReq.Entities;
+using Domain.ContactReq.Repositories;
+using Domain.ContactReq.ValueObjects;
+using Domain.Sessions.Entities;
 using Infrastructure.Persistence.Context;
-using Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Repositories;
 
-public class ContactRequestRepository(ApplicationDbContext context) : IContactRequestRepository
+public sealed class ContactRequestRepository(ApplicationDbContext context) : IContactRequestRepository
 {
-    public async Task<bool> AddAsync(ContactRequestInput model)
-    {
-        ArgumentNullException.ThrowIfNull(model);
+    public async Task<ContactRequestEntity?> GetByIdAsync(ContactRequestId id, CancellationToken ct = default)
+        => await context.Set<ContactRequestEntity>()
+            .FirstOrDefaultAsync(x => x.Id == id, ct);
 
-        var entity = new ContactRequestEntity
-        {
-            Id = model.Id,
-            FirstName = model.FirstName,
-            LastName = model.LastName,
-            Email = model.Email,
-            Phone = model.Phone,
-            Message = model.Message,
-            CreatedAt = model.CreatedAt
-        };
-
-        await context.ContactRequests.AddAsync(entity);
-        return await context.SaveChangesAsync() > 0;
-    }
-
-    public async Task<IReadOnlyList<ContactRequest>> GetAllAsync()
-    {
-        var entities = await context.ContactRequests
+    public async Task<IEnumerable<ContactRequestEntity>> GetAllAsync(CancellationToken ct = default)
+        => await context.Set<ContactRequestEntity>()
             .AsNoTracking()
-            .OrderByDescending(x => x.CreatedAt)
-            .ToListAsync();
+            .Where(x => !x.IsDeleted)
+            .OrderByDescending(x => x.Created)
+            .ToListAsync(ct);
 
-        return [.. entities.Select(x => new ContactRequest(
-            x.Id,
-            x.FirstName,
-            x.LastName,
-            x.Email,
-            x.Phone,
-            x.Message,
-            x.CreatedAt
-        ))];
+    public async Task AddAsync(ContactRequestEntity entity, CancellationToken ct = default)
+        => await context.Set<ContactRequestEntity>().AddAsync(entity, ct);
+
+    public void Update(ContactRequestEntity entity)
+        => context.Set<ContactRequestEntity>().Update(entity);
+
+    public void Delete(ContactRequestEntity entity)
+    {
     }
+
+    public async Task<IEnumerable<ContactRequestEntity>> GetByEmailAsync(string email, CancellationToken ct = default)
+        => await context.Set<ContactRequestEntity>()
+            .Where(x => x.Email.Value == email && !x.IsDeleted)
+            .ToListAsync(ct);
 }

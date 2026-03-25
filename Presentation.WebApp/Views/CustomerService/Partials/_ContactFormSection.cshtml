@@ -2,7 +2,7 @@
 
 @model ContactFormSection
 
-<section class="contact-form-section">
+<section>
     <div class="contact-container">
         <div class="contact-image">
             <img src="/images/contact-us-image.png" alt="Woman working out at the gym" />
@@ -44,11 +44,8 @@
             <div data-id="terms" class="form-group">
                 <div class="checkbox-group">
                     <input class="form-checkbox-input" asp-for="AcceptSavePersonalInformation" id="accept-terms" />
-        
                     <label class="checkbox-checkmark" for="accept-terms"></label>
-        
                     <label class="form-label" asp-for="AcceptSavePersonalInformation" for="accept-terms"></label>
-        
                     <span class="field-validation-error" asp-validation-for="AcceptSavePersonalInformation"></span>
                 </div>
             </div>

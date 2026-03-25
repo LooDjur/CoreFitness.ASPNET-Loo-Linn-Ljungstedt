@@ -1,30 +1,46 @@
-﻿using Application.CustomerSupport.Abstractions.Services;
-using Application.CustomerSupport.Commands;
-using Application.CustomerSupport.Inputs;
-using Application.CustomerSupport.Output;
+﻿using Application.CustomerSupport.Commands;
 using Domain.Common;
 using Domain.Common.Abstractions;
+using Domain.Common.ValueObjects.Shared;
+using Domain.ContactReq.Entities;
+using Domain.ContactReq.Repositories;
+using Domain.ContactReq.ValueObjects;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.CustomerSupport.Handler;
 
-public sealed class RegisterContactHandler(IContactRequestService contactService) 
+public sealed class RegisterContactHandler(
+    IContactRequestRepository repository,
+    IUnitOfWork unitOfWork)
     : IRequestHandler<RegisterContactCommand, Result>
 {
     public async Task<Result> Handle(RegisterContactCommand request, CancellationToken ct)
     {
-        var input = new ContactRequestInput(
-            request.FirstName,
-            request.LastName,
-            request.Email,
-            request.Phone,
-            request.Message
-        );
+        var firstNameResult = FirstName.Create(request.FirstName);
+        var lastNameResult = LastName.Create(request.LastName);
+        var emailResult = Email.Create(request.Email);
+        var messageResult = MessageBody.Create(request.Message);
 
-        var success = await contactService.CreateContactRequestAsync(input);
-        return success ? Result.Success() : Result.Failure(Error.Failure("Contact.Error", "Kunde inte spara"));
+        if (Result.FirstFailureOrSuccess(firstNameResult, lastNameResult, emailResult, messageResult) is Result failure && failure.IsFailure)
+        {
+            return failure;
+        }
+
+        var contactRequestResult = ContactRequestEntity.Create(
+            firstNameResult.Value,
+            lastNameResult.Value,
+            emailResult.Value,
+            request.Phone != null ? PhoneNumber.Create(request.Phone).Value : null,
+            messageResult.Value);
+
+        if (contactRequestResult.IsFailure)
+        {
+            return contactRequestResult;
+        }
+
+        await repository.AddAsync(contactRequestResult.Value, ct);
+        await unitOfWork.SaveChangesAsync(ct);
+
+        return Result.Success();
     }
 }

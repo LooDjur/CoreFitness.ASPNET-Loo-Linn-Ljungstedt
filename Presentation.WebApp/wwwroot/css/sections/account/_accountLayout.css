@@ -1,0 +1,63 @@
+﻿.about-me-page {
+
+    .header-section {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 3rem;
+        align-items: center;
+    }
+
+    .main-menu {
+        display: flex;
+        justify-content: flex-start;
+        flex: none;
+    }
+
+    .account-menu {
+        display: flex;
+        justify-content: flex-end;
+        flex: none;
+    }
+
+    .account-layout {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 4rem;
+        margin-top: 2rem;
+        align-items: start;
+    }
+
+    .account-sidebar {
+        position: sticky;
+        top: 2rem;
+    }
+
+    .account-main {
+        width: 100%;
+    }
+
+    #aboutme-form .btn {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        gap: 0.5rem;
+
+        &::after {
+            content: "\f054";
+            font-family: var(--font-fa);
+            font-weight: 900;
+            font-size: 0.8rem;
+        }
+    }
+
+    @media (max-width: 991px) {
+        .account-layout {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .account-sidebar {
+            position: static;
+        }
+    }
+}

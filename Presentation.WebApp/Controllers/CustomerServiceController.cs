@@ -16,27 +16,21 @@ public class CustomerServiceController(ISender sender) : BaseController
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> HandleSubmit(ContactFormSection model)
+    public async Task<IActionResult> HandleSubmit(RegisterContactCommand command)
     {
         if (!ModelState.IsValid)
-            return View("Index", model);
-
-        var command = new RegisterContactCommand(
-            model.FirstName,
-            model.LastName,
-            model.Email,
-            model.Phone,
-            model.Message
-        );
+        {
+            return View("Index", command);
+        }
 
         var result = await sender.Send(command);
 
         if (result.IsFailure)
         {
-            return HandleFailure(result);
+            return HandleFailure(result, command);
         }
 
-        TempData["Message"] = "Your message has been sent successfully. We will get back to you as soon as possible.";
+        TempData["Message"] = "Tack! Vi har tagit emot ditt meddelande.";
         return RedirectToAction("Index");
     }
 }

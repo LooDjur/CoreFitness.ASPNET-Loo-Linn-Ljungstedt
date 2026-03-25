@@ -1,20 +1,27 @@
 ﻿@{
     ViewData["Title"] = "My Account";
+    var activeView = ViewData["ActiveView"]?.ToString() ?? "about-me";
+    ViewData["PageClass"] = "about-me-page";
 }
 <div class="page_account">
     <partial name="Partials/Globals/_PageTitleSection" />
-
     <div class="container account-layout">
         <aside class="account-sidebar">
-            <div class="profile-card">
-                @* <partial name="Sections/image" />
-                <partial name="Sections/menu" /> *@
-            </div>
+            <partial name="Partials/_AccountMenu" />
         </aside>
-
-        <main class="account-main">
-            <partial name="Sections/_AboutMeFormSection" />
-        </main>
-
+        <section class="account-main">
+            @if (activeView == "about-me")
+            {
+                <partial name="Partials/_AboutMeFormSection" />
+            }
+            else if (activeView == "statistics")
+            {
+                <partial name="Partials/_AccountStatistics" />
+            }
+        </section>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="~/Views/Shared/Partials/Globals/_ValidationScripts.cshtml" />
+}

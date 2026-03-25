@@ -7,6 +7,7 @@
     overflow: hidden;
     border: 1px solid var(--form-border-color);
     background-color: var(--form-bg-color);
+    margin-top: 2rem;
 }
 
 .contact-image {
@@ -15,6 +16,7 @@
 
     .contact-image img {
         height: 100%;
+        width: 100%;
         object-fit: cover;
         display: block;
     }
@@ -26,10 +28,15 @@
     display: flex;
     flex-direction: column;
 
+    h3, h2 {
+        margin-top: 0;
+    }
+
     .form-textarea {
         resize: vertical;
         min-height: 4rem;
         max-height: 30rem;
+        width: 100%;
     }
 
     .form-grid-fields {

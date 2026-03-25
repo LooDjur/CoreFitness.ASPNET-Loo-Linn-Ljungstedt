@@ -5,11 +5,13 @@ namespace Presentation.WebApp.Controllers.Common;
 
 public abstract class BaseController : Controller
 {
-    protected IActionResult HandleFailure(Result result)
+    protected IActionResult HandleFailure<TModel>(Result result, TModel model)
     {
-        if (result.IsSuccess)
+        if (result.Error.Type == ErrorType.Validation)
         {
-            return RedirectToAction("Index", "Home");
+            ModelState.AddModelError(string.Empty, result.Error.Description);
+
+            return View(model);
         }
 
         int statusCode = result.Error.Type switch
@@ -17,7 +19,6 @@ public abstract class BaseController : Controller
             ErrorType.NotFound => 404,
             ErrorType.Unauthorized => 401,
             ErrorType.Forbidden => 403,
-            ErrorType.Validation => 400,
             ErrorType.Conflict => 409,
             _ => 500
         };

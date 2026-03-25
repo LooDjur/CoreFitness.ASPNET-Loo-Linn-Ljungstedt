@@ -2,8 +2,6 @@
 using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
 using Domain.Memberships.Enums;
-using Domain.Memberships.ValueObjects;
-using static Domain.Common.DomainErrors;
 
 namespace Domain.Memberships.Entities;
 
