@@ -6,9 +6,10 @@
     background-position: center;
     color: var(--header-text-color);
     border-radius: 1.25rem;
-    padding: 1rem 2rem; /* Lite mindre vertikal padding för smidigare look */
+    padding: 1rem 2rem;
+    margin-bottom: 2rem;
     min-height: 100px;
-    display: flex; /* Ändrat till flex för att lättare centrera sektionen inuti */
+    display: flex;
     align-items: center;
 }
 
@@ -16,18 +17,14 @@
     width: 100%;
     display: grid;
     align-items: center;
-    /* Mobil-läge: Logga till vänster, resten till höger */
     grid-template-columns: auto 1fr;
 }
 
 @media (width >= 1280px) {
     .header-section {
-        /* Magiska formeln: 1fr auto 1fr */
-        /* Sidorna tar lika mycket plats (1fr), mitten anpassar sig (auto) */
         grid-template-columns: 1fr auto 1fr;
     }
 
-    /* Centrera menyn i mittenkolumnen */
     .main-menu {
         display: flex;
         justify-content: center;
