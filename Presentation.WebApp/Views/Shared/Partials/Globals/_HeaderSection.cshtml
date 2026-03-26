@@ -14,7 +14,7 @@
             </li>
             <li class="menu-item dropdown">
                 <a class="menu-item-link" asp-action="Index" asp-controller="Training">
-                    Training <i class="fa-solid fa-chevron-down"></i>
+                    Training
                 </a>
                 <ul class="dropdown-menu">
                     <li><a asp-action="SPersonalTraining" asp-controller="Training">Personal Training</a></li>
@@ -34,12 +34,12 @@
         <ul class="menu">
             @if (true || User.Identity!.IsAuthenticated)
             {
-                <li class="menu-item">
-                    <a class="menu-item-link" asp-action="Sessions" asp-controller="Training">Our Classes</a>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-item-button" asp-action="Account" asp-controller="Account">My Account</a>
-                </li>
+                    <li class="menu-item">
+                        <a class="menu-item-link" asp-action="Sessions" asp-controller="Training">Our Classes</a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="btn" asp-action="Index" asp-controller="Account">My Account</a>
+                    </li>
             }
             else
             {
@@ -47,7 +47,7 @@
                     <a class="menu-item-link" asp-action="SignUp" asp-controller="Authentication">Become Member</a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-item-button" asp-action="SignIn" asp-controller="Authentication">Sign In</a>
+                    <a class="btn" asp-action="SignIn" asp-controller="Authentication">Sign In</a>
                 </li>
                 
             }

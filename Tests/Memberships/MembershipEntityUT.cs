@@ -6,8 +6,7 @@ using Domain.Common;
 using Domain.Common.ValueObjects.Shared;
 using Domain.Memberships.Entities;
 using Domain.Memberships.Enums;
-using Domain.Memberships.ValueObjects;
-
+using Domain.Common.ValueObjects.Shared;
 namespace Tests.Memberships;
 
 public class MembershipEntityUT

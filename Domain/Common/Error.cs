@@ -43,4 +43,9 @@ public static class DomainErrors
         public static readonly Error Ineligible = Error.Failure("Membership.Ineligible", "Membership status error.");
         public static readonly Error LimitReached = Error.Conflict("Membership.Limit", "Limit exceeded.");
     }
+
+    public static class ContactRequest
+    {
+        public static readonly Error ActionNotAllowed = Error.Failure("ContactRequest.NotAllowed", "Action not allowed.");
+    }
 }

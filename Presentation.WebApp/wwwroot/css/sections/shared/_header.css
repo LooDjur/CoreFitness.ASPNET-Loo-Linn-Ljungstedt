@@ -3,41 +3,28 @@
     background-image: url('/images/dark-section-img.png');
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: center;
+    background-position: top center;
     color: var(--header-text-color);
     border-radius: 1.25rem;
-    padding: 1rem 2rem; /* Lite mindre vertikal padding för smidigare look */
+    margin: 1rem;
     min-height: 100px;
-    display: flex; /* Ändrat till flex för att lättare centrera sektionen inuti */
+    display: flex;
     align-items: center;
 }
 
 .header-section {
     width: 100%;
-    display: grid;
+    display: flex;
     align-items: center;
-    /* Mobil-läge: Logga till vänster, resten till höger */
-    grid-template-columns: auto 1fr;
+    justify-content: space-between;
 }
 
-@media (width >= 1280px) {
-    .header-section {
-        /* Magiska formeln: 1fr auto 1fr */
-        /* Sidorna tar lika mycket plats (1fr), mitten anpassar sig (auto) */
-        grid-template-columns: 1fr auto 1fr;
-    }
+.main-menu {
+    justify-content: center;
+}
 
-    /* Centrera menyn i mittenkolumnen */
-    .main-menu {
-        display: flex;
-        justify-content: center;
-    }
-
-    .account-menu {
-        display: flex;
-        justify-content: flex-end;
-        gap: 1.5rem;
-    }
+.account-menu {
+    justify-content: flex-end;
 }
 
 .menu {
@@ -55,8 +42,19 @@
     font-weight: 600;
     white-space: nowrap;
     transition: color 0.15s ease-in-out;
-}
 
-    .menu-item-link:hover {
+    &:hover {
         color: var(--primary-color);
     }
+}
+
+@media (max-width: 1200px) {
+
+    .header-section {
+        grid-template-columns: auto 1fr;
+    }
+
+    .main-menu {
+        display: none;
+    }
+}

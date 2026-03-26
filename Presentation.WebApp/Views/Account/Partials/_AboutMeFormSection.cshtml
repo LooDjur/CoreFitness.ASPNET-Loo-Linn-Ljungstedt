@@ -1,0 +1,47 @@
+﻿@using Presentation.WebApp.Models.Account
+@model AboutMeFormSection
+
+@{
+    ViewData["Title"] = "About Me";
+}
+<section class="aboutme-details">
+    <form id="aboutme-form" method="post" enctype="multipart/form-data" asp-action="UpdateDetails" asp-controller="Account" novalidate>
+        <div data-id="title" class="title">
+            <h3>About Me</h3>
+            <hr />
+        </div>
+        <div class="form-grid-fields">
+            <div data-id="firstname" class="form-group">
+                <label class="form-label" asp-for="FirstName"></label>
+                <input class="form-input" asp-for="FirstName" />
+                <span class="field-validation" asp-validation-for="FirstName"></span>
+            </div>
+            <div data-id="lastname" class="form-group">
+                <label class="form-label" asp-for="LastName"></label>
+                <input class="form-input" asp-for="LastName" />
+                <span class="field-validation" asp-validation-for="LastName"></span>
+            </div>
+        </div>
+        <div class="form-grid-fields">
+            <div data-id="email" class="form-group">
+                <label class="form-label" asp-for="Email"></label>
+                <input class="form-input" asp-for="Email" />
+                <span class="field-validation" asp-validation-for="Email"></span>
+            </div>
+            <div data-id="phone" class="form-group">
+                <label class="form-label" asp-for="Phone"></label>
+                <input class="form-input" asp-for="Phone" />
+                <span class="field-validation" asp-validation-for="Phone"></span>
+            </div>
+        </div>
+        <hr />
+        <div data-id="file-upload" class="form-group">
+            <label class="form-label" asp-for="ProfileImage"></label>
+            <div class="form-input-validation">
+                <input class="form-input" asp-for="ProfileImage" />
+                <span asp-validation-for="ProfileImage"></span>
+            </div>
+        </div>
+        <button class="btn" type="submit"> Save </button>
+    </form>
+</section>

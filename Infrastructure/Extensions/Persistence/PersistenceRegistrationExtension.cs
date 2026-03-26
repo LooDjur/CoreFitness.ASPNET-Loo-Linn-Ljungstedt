@@ -1,14 +1,12 @@
 ﻿using Domain.Common.Abstractions;
+using Domain.ContactReq.Repositories;
 using Domain.Sessions.Repositories;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Context;
 using Infrastructure.Repositories;
-using Domain.Bookings.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Application.CustomerSupport.Abstractions.Repositories;
 
 namespace Infrastructure.Extensions.Persistence;
 

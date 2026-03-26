@@ -1,10 +1,5 @@
-﻿using Application.CustomerSupport;
-using Application.CustomerSupport.Abstractions.Services;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using System.Text;
 
 namespace Application;
 
@@ -15,7 +10,8 @@ public static class DependencyInjection
         services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
-        services.AddScoped<IContactRequestService, ContactRequestService>();
+        services.AddMediatR(config =>
+            config.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
         return services;
     }

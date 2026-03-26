@@ -1,66 +1,72 @@
-﻿.menu-item.dropdown {
+﻿.dropdown {
     position: relative;
     display: flex;
     align-items: center;
-}
+    cursor: pointer;
 
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: var(--menu-item-button-bg-color);
-    padding: 1rem;
-    list-style: none;
-    min-width: 200px;
-    border-radius: 15px;
-    z-index: 100;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    margin-top: 0.5rem;
-}
+    > a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+        transition: color 0.15s ease-in-out;
+        padding: 0.5rem 0;
 
-.menu-item.dropdown:hover .dropdown-menu {
-    display: block;
-}
-
-.dropdown-menu li a {
-    color: var(--menu-item-button-text-color);
-    text-decoration: none;
-    padding: 0.5rem 0;
-    display: block;
-    font-size: 0.9rem;
-    transition: color 0.15s ease-in-out;
-}
-
-    .dropdown-menu li a:hover {
-        color: var(--white-color);
+        &::after {
+            content: "\f078";
+            font-family: var(--font-fa);
+            font-weight: 900;
+            margin-left: 0.5rem;
+            font-size: 0.8rem;
+            display: inline-block;
+            transition: transform 0.2s ease-in-out, color 0.15s ease-in-out;
+        }
     }
 
-.main-menu .menu-item.dropdown .fa-solid::before {
-    content: "\f078";
-}
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        min-width: 200px;
+        list-style: none;
+        padding-top: 0.5rem;
+        background-color: transparent;
+        background-color: var(--menu-item-button-bg-color);
+        background-clip: padding-box;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        padding: 1rem;
 
-.main-menu .menu-item.dropdown .fa-solid {
-    font-family: var(--font-fa);
-    font-weight: 900;
-    display: inline-block;
-    margin-left: 0.5rem;
-    font-size: 0.8rem;
-    color: var(--white-color);
-    vertical-align: middle;
-    transition: transform 0.3s ease-in-out, color 0.15s ease-in-out;
-}
+        li a {
+            color: var(--dark-color);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 0;
+            display: block;
+            font-size: 0.9rem;
+            transition: color 0.15s ease-in-out;
 
-.menu-item.dropdown:hover .menu-item-link,
-.menu-item.dropdown:hover .fa-solid {
-    color: var(--primary-color);
-}
+            &:hover {
+                color: var(--gray-color);
+                text-decoration: none;
+            }
+        }
+    }
 
-.menu-item.dropdown:hover .fa-solid {
-    transform: rotate(180deg);
-}
+    &:hover {
+        > a {
+            color: var(--primary-color);
 
-.menu-item.dropdown::after {
-    content: none;
-    display: none;
+            &::after {
+                transform: rotate(180deg);
+                color: var(--primary-color);
+            }
+        }
+
+        .dropdown-menu {
+            display: block;
+        }
+    }
 }

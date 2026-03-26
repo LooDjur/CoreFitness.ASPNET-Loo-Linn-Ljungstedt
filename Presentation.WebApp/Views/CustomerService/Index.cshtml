@@ -1,16 +1,60 @@
-﻿﻿@{
-
+﻿@{
+    ViewData["Title"] = "Customer Service";
 }
-
 <div class="page_customer-service">
     <partial name="Partials/Globals/_PageTitleSection" />
     
-    <div class="container">
-        <partial name="Sections/_ContactFormSection" />
+    <div class="container customer-service-layout">
+        <partial name="Partials/_ContactFormSection" />
+        <partial name="Partials/Sections/_FaqSection" />
     </div>
 
 </div>
 
 @section Scripts {
     <partial name="~/Views/Shared/Partials/Globals/_ValidationScripts.cshtml" />
+
+    <script>
+        $(function() {
+            const form = $("#contact-form");
+            const checkbox = $("#accept-terms");
+            const checkboxValidation = $('[data-valmsg-for="AcceptSavePersonalInformation"]');
+    
+            const rangeMsg = checkbox.attr("data-val-range") || "You must accept to save personal information";
+
+            function setCheckboxError(message) {
+                $(".checkbox-checkmark").addClass("input-validation-error");
+                checkboxValidation
+                    .removeClass("field-validation-valid")
+                    .addClass("field-validation-error")
+                    .text(message);
+            }
+
+            function clearCheckboxError() {
+                $(".checkbox-checkmark").removeClass("input-validation-error");
+                checkboxValidation
+                    .text("")
+                    .removeClass("field-validation-error")
+                    .addClass("field-validation-valid");
+            }
+
+            function validateCheckbox() {
+                if (checkbox.is(":checked")) {
+                    clearCheckboxError();
+                    return true;
+                } else {
+                    setCheckboxError(rangeMsg);
+                    return false;
+                }
+            }
+
+            checkbox.on("change", validateCheckbox);
+
+            form.on("submit", function(e) {
+                if (!validateCheckbox()) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
 }
