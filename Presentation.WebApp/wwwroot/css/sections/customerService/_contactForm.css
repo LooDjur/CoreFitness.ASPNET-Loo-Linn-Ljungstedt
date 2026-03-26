@@ -41,7 +41,6 @@
     .form-grid-fields {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 1rem;
     }
 
     .btn {
@@ -50,7 +49,7 @@
     }
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 1200px) {
     .contact-container {
         grid-template-columns: 1fr;
     }
@@ -59,7 +58,15 @@
         display: none;
     }
 
-    #contact-form .form-grid-fields {
-        grid-template-columns: 1fr;
+    #contact-form {
+        padding: 2rem;
+
+        .form-grid-fields {
+            grid-template-columns: 1fr;
+        }
+        .btn {
+            align-self: stretch;
+            width: 100%;
+        }
     }
 }

@@ -38,9 +38,3 @@
             transform: translateX(0.4rem);
         }
     }
-
-@media (max-width: 991px) {
-    button,  .btn {
-        width: 100%;
-    }
-}
