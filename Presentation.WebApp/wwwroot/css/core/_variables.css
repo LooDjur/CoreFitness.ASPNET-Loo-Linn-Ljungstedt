@@ -1,45 +1,51 @@
 ﻿:root {
+    /* Fonts */
     --font-default: "DM Sans", sans-serif;
     --font-heading: "Poppins", sans-serif;
-    --font-fa-regular: "Font Awesome 7 Pro Regular";
-    --font-fa-solid: "Font Awesome 7 Pro Solid";
-    --font-fa: var(--font-fa-solid);
-    --primary-color: #d7eb31;
-    --dark-color: #27252f;
-    --gray-color: #6f6f6f;
-    --light-gray-color: #cecece;
-    --extra-light-gray-color: #e6e6e6;
-    --light-color: #f7f7f7;
-    --white-color: #ffffff;
-    --danger-color: #ce2b2baf;
+    --font-fa: "Font Awesome 7 Pro Solid";
+    /* Base Colors */
+    --primary-color: #D6EB31;
+    --dark-color: #27252F;
+    --gray-color: #6F6F6F;
+    --light-gray-color: #D9D9D9;
+    --light-color: #F7F7F7;
+    --white-color: #FFFFFF;
+    --danger-color: #CE2B2BAF;
+    /* Body & Layout */
     --body-bg-color: var(--light-color);
-    --body-text-color: var(--dark-color);
+    --body-text-color: var(--gray-color);
     --heading-text-color: var(--dark-color);
-    --link-text-color: var(--dark-color);
-    --link-hover-text-color: var(--primary-color);
+    /* Header, Footer & Menu */
     --header-bg-color: var(--dark-color);
     --header-text-color: var(--white-color);
-    /* Menu Colors*/
-    --menu-item-text-color: var(--white-color);
+    --footer-bg-color: var(--dark-color);
+    --footer-text-color: var(--white-color);
     --menu-item-link-text-color: var(--white-color);
     --menu-item-link-hover-text-color: var(--primary-color);
-    --menu-item-button-bg-color: var(--primary-color);
-    --menu-item-button-text-color: var(--dark-color);
-    /* Form Colors */
+    /* Buttons */
+    --button-bg-color: var(--primary-color);
+    --button-text-color: var(--dark-color);
+    --button-bg-hover-color: var(--dark-color);
+    --button-text-hover-color: var(--white-color);
+    /* Form Base */
     --form-bg-color: var(--white-color);
-    --form-border-color: var(--extra-light-gray-color);
+    --form-border-color: var(--light-gray-color);
     --form-text-color: var(--dark-color);
-    --form-input-bg-color: var(--white-color);
-    --form-input-border-color: var(--light-gray-color);
+    --contact-form-bg-color: var(--light-color);
+    /* Form Inputs */
+    --form-input-bg-color: var(--light-color);
+    --form-input-border-color: var(--light-color);
     --form-input-text-color: var(--dark-color);
     --form-input-placeholder-color: var(--gray-color);
     --form-input-focus-border-color: var(--primary-color);
+    /* Form Checkbox */
     --form-checkbox-bg-color: var(--white-color);
     --form-checkbox-border-color: var(--light-gray-color);
-    --form-checkbox-text-color: var(--dark-color);
     --form-checkbox-checked-bg-color: var(--primary-color);
     --form-checkbox-checked-border-color: var(--primary-color);
-    --form-checkbox-checked-text-color: var(--dark-color);
+    /* Sections & Extras (Från läraren) */
+    --section-bg-color: var(--white-color);
+    --section-text-color: var(--gray-color);
+    --section-title-dot-color: var(--primary-color);
     --form-validation-error-text-color: var(--danger-color);
-    --contact-form-bg-color: var(--extra-light-gray-color);
 }

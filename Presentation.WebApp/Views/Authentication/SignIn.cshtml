@@ -1,0 +1,52 @@
+﻿﻿@using Presentation.WebApp.Models.Authentication
+
+@model SignInForm
+
+@{
+    // Layout = "Layouts/_AuthLayout";
+    ViewData["Title"] = "Sign In";
+}
+
+<div class="page__auth-signin">
+    <section class="section__auth">
+        <div data-id="title" class="title">
+            <h1>Welcome Back!</h1>
+            <p>Log in to continue your fitness journey with full access to your customized program, training history, and progress tracking.</p>
+            <hr />
+        </div>
+
+        <form class="signin-form" method="post" asp-action="SignIn" asp-controller="Authentication" novalidate>
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+            <div class="form-grid-fields">
+                <div data-id="email" class="form-group">
+                    <label class="form-label" asp-for="Email"></label>
+                    <input class="form-input" asp-for="Email" />
+                    <span class="field-validation" asp-validation-for="Email"></span>
+                </div>
+
+                <div data-id="password" class="form-group">
+                    <label class="form-label" asp-for="Password"></label>
+                    <input class="form-input" type="password" asp-for="Password" />
+                    <span class="field-validation" asp-validation-for="Password"></span>
+                </div>
+            </div>
+
+            <div data-id="remember-me" class="form-group">
+                <div class="checkbox-group">
+                    <input class="form-checkbox-input" asp-for="RememberMe" id="remember-me" />
+                    <label class="checkbox-checkmark" for="remember-me"></label>
+                    <label class="form-label" asp-for="RememberMe" for="remember-me"></label>
+                </div>
+            </div>
+
+            <button class="btn" type="submit">Continue</button>
+
+            <div class="form-errormessage">
+                <div asp-validation-summary="ModelOnly" class="field-validation-error"></div>
+                <span class="field-validation-error" asp-validation-for="ErrorMessage"></span>
+            </div>
+        </form>
+    </section>
+</div>
