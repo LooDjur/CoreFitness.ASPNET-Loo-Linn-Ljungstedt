@@ -1,0 +1,34 @@
+﻿@{
+    var title = ViewData["Title"]?.ToString();
+    var pageTitle = !string.IsNullOrWhiteSpace(title)
+        ? $"{title} | CoreFitness"
+        : "CoreFitness | Gym & Fitness Center";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@pageTitle</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="app-layout auth-layout @ViewData["PageClass"]">
+        <header>
+            <div class="container full">
+                <partial name="Partials/Globals/_HeaderSection" />
+            </div>
+        </header>
+        <main>
+            <div class="container">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

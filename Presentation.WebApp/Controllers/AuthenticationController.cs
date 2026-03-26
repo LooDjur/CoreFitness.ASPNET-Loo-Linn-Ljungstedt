@@ -10,5 +10,16 @@ namespace Presentation.WebApp.Controllers
         {
             return View();
         }
+
+        //[HttpPost]
+        //public IActionResult SignIn(SignInFormCommand command)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View("Index", command);
+        //    }
+
+        //    return View();
+        //}
     }
 }

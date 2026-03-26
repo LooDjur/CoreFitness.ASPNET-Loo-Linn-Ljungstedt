@@ -3,21 +3,21 @@
 @model SignInForm
 
 @{
-    // Layout = "Layouts/_AuthLayout";
+    Layout = "Layouts/_AuthLayout";
     ViewData["Title"] = "Sign In";
 }
 
-<div class="page__auth-signin">
-    <section class="section__auth">
-        <div data-id="title" class="title">
-            <h1>Welcome Back!</h1>
-            <p>Log in to continue your fitness journey with full access to your customized program, training history, and progress tracking.</p>
-            <hr />
-        </div>
-
+ <section>
+    <div class= "signin-container">
         <form class="signin-form" method="post" asp-action="SignIn" asp-controller="Authentication" novalidate>
             @Html.AntiForgeryToken()
             <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+            <div data-id="title" class="title">
+                <h2>Welcome Back!</h2>
+                <p>Log in to continue your fitness journey with full access to your customized program, training history, and progress tracking. Stay consistent, monitor your development, and keep moving forward with the structure and support built into your account.</p>
+                <hr />
+            </div>
 
             <div class="form-grid-fields">
                 <div data-id="email" class="form-group">
@@ -48,5 +48,5 @@
                 <span class="field-validation-error" asp-validation-for="ErrorMessage"></span>
             </div>
         </form>
-    </section>
-</div>
+    </div>
+ </section>
