@@ -1,4 +1,6 @@
-﻿using Application.Sessions.Commands;
+﻿using Application.Sessions.Commands.Create;
+using Application.Sessions.Commands.Delete;
+using Application.Sessions.Commands.Update;
 using Application.Sessions.Queries;
 using Domain.Common;
 using MediatR;

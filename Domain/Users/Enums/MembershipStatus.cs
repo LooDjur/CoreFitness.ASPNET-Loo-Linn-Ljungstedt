@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Memberships.Enums;
+namespace Domain.Users.Enums;
 
 public enum MembershipStatus
 {

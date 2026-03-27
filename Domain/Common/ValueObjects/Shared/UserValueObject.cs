@@ -5,6 +5,24 @@ using System.Text;
 
 namespace Domain.Common.ValueObjects.Shared;
 
+public record UserId : GuidValueObject
+{
+    private UserId() : base() { }
+    private UserId(Guid value) : base(value) { }
+
+    public static UserId New() => new(Guid.NewGuid());
+
+    public static Result<UserId> Create(Guid value)
+    {
+        if (value == Guid.Empty)
+            return Result.Failure<UserId>(DomainErrors.Validation.Required);
+
+        return Result.Success(new UserId(value));
+    }
+
+    public static implicit operator Guid(UserId id) => id.Value;
+}
+
 public record FirstName : StringValueObject
 {
     private const int Min = 2;
@@ -47,7 +65,7 @@ public record Email : EmailValueObject
 
         var normalized = value.Trim().ToLowerInvariant();
 
-        return new Email(normalized);
+        return Result.Success(new Email(normalized));
     }
 }
 
@@ -61,10 +79,15 @@ public record PhoneNumber : StringValueObject
     public static Result<PhoneNumber> Create(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            return Result.Success<PhoneNumber>(null!);
+        {
+            return Result.Failure<PhoneNumber>(DomainErrors.Validation.Required);
+        }
 
-        return value.Length > Max
-            ? Result.Failure<PhoneNumber>(DomainErrors.Validation.InvalidFormat)
-            : new PhoneNumber(value);
+        if (value.Length > Max)
+        {
+            return Result.Failure<PhoneNumber>(DomainErrors.Validation.InvalidFormat);
+        }
+
+        return Result.Success(new PhoneNumber(value.Trim()));
     }
 }

@@ -12,20 +12,16 @@ public abstract record EmailValueObject
         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     public string Value { get; init; } = null!;
+
     protected EmailValueObject() { }
-    protected EmailValueObject(string value)
-    {
-        Value = value;
-    }
+    protected EmailValueObject(string value) => Value = value;
 
     protected static bool IsInvalidFormat(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
-            return true;
-
+        if (string.IsNullOrWhiteSpace(value)) return true;
         return !EmailRegex.IsMatch(value);
     }
 
-    public static implicit operator string(EmailValueObject email) => email.Value;
+    public static implicit operator string(EmailValueObject email) => email?.Value ?? string.Empty;
     public override string ToString() => Value;
 }

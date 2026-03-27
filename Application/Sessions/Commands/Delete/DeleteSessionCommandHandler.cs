@@ -1,5 +1,4 @@
-﻿using Application.Sessions.Commands;
-using Domain.Common;
+﻿using Domain.Common;
 using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
 using MediatR;
@@ -7,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Sessions.Handlers;
+namespace Application.Sessions.Commands.Delete;
 
-public sealed class DeleteSessionHandler(IUnitOfWork unitOfWork)
+public sealed class DeleteSessionCommandHandler(IUnitOfWork unitOfWork)
     : IRequestHandler<DeleteSessionCommand, Result>
 {
     public async Task<Result> Handle(DeleteSessionCommand request, CancellationToken ct)

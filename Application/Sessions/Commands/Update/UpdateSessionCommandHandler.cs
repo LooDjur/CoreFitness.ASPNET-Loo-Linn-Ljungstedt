@@ -1,5 +1,4 @@
-﻿using Application.Sessions.Commands;
-using Domain.Common;
+﻿using Domain.Common;
 using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
 using Domain.Sessions.ValueObjects;
@@ -8,9 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Sessions.Handlers;
+namespace Application.Sessions.Commands.Update;
 
-public sealed class UpdateSessionHandler(IUnitOfWork unitOfWork)
+public sealed class UpdateSessionCommandHandler(IUnitOfWork unitOfWork)
     : IRequestHandler<UpdateSessionCommand, Result>
 {
     public async Task<Result> Handle(UpdateSessionCommand request, CancellationToken ct)

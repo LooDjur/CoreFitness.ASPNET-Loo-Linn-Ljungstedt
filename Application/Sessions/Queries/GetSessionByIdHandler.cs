@@ -1,5 +1,4 @@
 ﻿using Application.Sessions.Output;
-using Application.Sessions.Queries;
 using Domain.Common;
 using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
@@ -8,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Sessions.Handlers;
+namespace Application.Sessions.Queries;
 
 public sealed class GetSessionByIdHandler(IUnitOfWork unitOfWork)
     : IRequestHandler<GetSessionByIdQuery, Result<SessionOutput>>

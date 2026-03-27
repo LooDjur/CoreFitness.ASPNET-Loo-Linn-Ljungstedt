@@ -2,9 +2,9 @@
 using Domain.Sessions.Enums;
 using MediatR;
 
-namespace Application.Sessions.Commands;
+namespace Application.Sessions.Commands.Create;
 
-public record CreateSessionCommand(
+public sealed record CreateSessionCommand(
     string Title,
     string Description,
     string Instructor,

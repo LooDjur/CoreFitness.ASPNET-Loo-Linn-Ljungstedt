@@ -37,11 +37,12 @@ public static class DomainErrors
         public static readonly Error InvalidCapacity = Error.Validation("Session.InvalidCapacity", "Capacity 10-40.");
     }
 
-    public static class Membership
+    public static class User
     {
-        public static readonly Error NotFound = Error.NotFound("Membership.NotFound", "The member was not found.");
-        public static readonly Error Ineligible = Error.Failure("Membership.Ineligible", "Membership status error.");
-        public static readonly Error LimitReached = Error.Conflict("Membership.Limit", "Limit exceeded.");
+        public static readonly Error NotFound = Error.NotFound("User.NotFound", "The user was not found.");
+        public static readonly Error Ineligible = Error.Failure("User.Ineligible", "User status error.");
+        public static readonly Error LimitReached = Error.Conflict("User.Limit", "Limit exceeded.");
+        public static readonly Error EmailInvalid = Error.Validation("User.EmailInvalid", "Email is invalid.");
     }
 
     public static class ContactRequest

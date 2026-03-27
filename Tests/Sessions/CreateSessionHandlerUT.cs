@@ -1,5 +1,5 @@
 ﻿using Application.Sessions.Commands;
-using Application.Sessions.Handlers;
+using Application.Sessions.Commands.Create;
 using Domain.Common;
 using Domain.Common.Abstractions;
 using Domain.Common.Exceptions;
@@ -14,7 +14,7 @@ public class CreateSessionHandlerUT
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ISessionRepository _sessionRepository;
-    private readonly CreateSessionHandler _handler;
+    private readonly CreateSessionCommandHandler _handler;
 
     public CreateSessionHandlerUT()
     {
@@ -24,7 +24,7 @@ public class CreateSessionHandlerUT
         // Setup: Koppla ihop repo med unit of work
         _unitOfWork.Sessions.Returns(_sessionRepository);
 
-        _handler = new CreateSessionHandler(_unitOfWork);
+        _handler = new CreateSessionCommandHandler(_unitOfWork);
     }
 
     [Fact]

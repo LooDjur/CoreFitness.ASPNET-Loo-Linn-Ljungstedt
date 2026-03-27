@@ -1,11 +1,10 @@
 ﻿using Application.Sessions.Output;
-using Application.Sessions.Queries;
 using Domain.Common;
 using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
 using MediatR;
 
-namespace Application.Sessions.Handlers;
+namespace Application.Sessions.Queries;
 
 public sealed class GetSessionsHandler(IUnitOfWork unitOfWork)
     : IRequestHandler<GetSessionsQuery, Result<List<SessionOutput>>>

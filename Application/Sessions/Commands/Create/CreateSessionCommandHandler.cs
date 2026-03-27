@@ -1,13 +1,12 @@
-﻿using Application.Sessions.Commands;
-using Domain.Common;
+﻿using Domain.Common;
 using Domain.Common.Abstractions;
 using Domain.Sessions.Entities;
 using Domain.Sessions.ValueObjects;
 using MediatR;
 
-namespace Application.Sessions.Handlers;
+namespace Application.Sessions.Commands.Create;
 
-public sealed class CreateSessionHandler(IUnitOfWork unitOfWork)
+public sealed class CreateSessionCommandHandler(IUnitOfWork unitOfWork)
     : IRequestHandler<CreateSessionCommand, Result<Guid>>
 {
     public async Task<Result<Guid>> Handle(CreateSessionCommand request, CancellationToken ct)

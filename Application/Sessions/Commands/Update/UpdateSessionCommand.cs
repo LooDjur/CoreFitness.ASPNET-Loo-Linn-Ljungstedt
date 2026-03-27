@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Sessions.Commands;
+namespace Application.Sessions.Commands.Update;
 
-public record UpdateSessionCommand(
+public sealed record UpdateSessionCommand(
     Guid Id,
     string Title,
     string Description,
