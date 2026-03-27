@@ -2,10 +2,8 @@
 using Domain.Common;
 using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
+using Domain.Users.Enums;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Users.Queries;
 
@@ -16,10 +14,10 @@ public sealed class GetUserProfileHandler(IUnitOfWork unitOfWork)
     {
         var userId = UserId.Create(request.UserId).Value;
 
-        var user = await unitOfWork.Users.GetByIdAsync(userId, ct);
-        if (user is null) return Result.Failure<UserResponse>(DomainErrors.User.NotFound);
+        var user = await unitOfWork.Users.GetUserWithMembershipAsync(userId, ct);
 
-        var membership = await unitOfWork.Memberships.GetByUserIdAsync(userId, ct);
+        if (user is null)
+            return Result.Failure<UserResponse>(DomainErrors.User.NotFound);
 
         var response = new UserResponse(
             user.Id.Value,
@@ -28,8 +26,8 @@ public sealed class GetUserProfileHandler(IUnitOfWork unitOfWork)
             user.LastName?.Value,
             user.Phone?.Value,
             user.ProfileImageUrl,
-            membership?.Type.ToString(),
-            membership?.IsEligibleToBook ?? false
+            user.Membership?.Type.ToString() ?? "Ingen plan",
+            user.Membership?.Status == MembershipStatus.Active
         );
 
         return Result.Success(response);

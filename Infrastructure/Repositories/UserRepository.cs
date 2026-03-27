@@ -47,4 +47,10 @@ public sealed class UserRepository(ApplicationDbContext context) : IUserReposito
     {
         context.Users.Remove(user);
     }
+    public async Task<UserEntity?> GetUserWithMembershipAsync(UserId id, CancellationToken ct)
+    {
+        return await context.Users
+            .Include(u => u.Membership) // HÄR SKER JOINEN
+            .FirstOrDefaultAsync(u => u.Id == id, ct);
+    }
 }

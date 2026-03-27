@@ -31,7 +31,7 @@ public sealed class BookingEntity : BaseEntity<BookingId>, IAggregateRoot
             return Result.Failure<BookingEntity>(DomainErrors.Session.NotFound);
 
         if (memberId is null || memberId.Value == Guid.Empty)
-            return Result.Failure<BookingEntity>(DomainErrors.Membership.NotFound);
+            return Result.Failure<BookingEntity>(DomainErrors.User.NotFound);
 
         var bookingId = BookingId.New();
         var booking = new BookingEntity(bookingId,sessionId, memberId);

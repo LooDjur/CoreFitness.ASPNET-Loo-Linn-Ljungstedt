@@ -16,17 +16,13 @@ public sealed class DeleteUserCommandHandler(IUnitOfWork unitOfWork)
         var userId = UserId.Create(request.UserId).Value;
 
         var user = await unitOfWork.Users.GetByIdAsync(userId, ct);
-        if (user is null) return Result.Failure(DomainErrors.User.NotFound);
 
-        var membership = await unitOfWork.Memberships.GetByUserIdAsync(userId, ct);
-        if (membership is not null)
-        {
-            unitOfWork.Memberships.Delete(membership);
-        }
+        if (user is null) return Result.Failure(DomainErrors.User.NotFound);
 
         unitOfWork.Users.Delete(user);
 
         await unitOfWork.SaveChangesAsync(ct);
+
         return Result.Success();
     }
 }

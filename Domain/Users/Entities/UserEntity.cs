@@ -10,6 +10,7 @@ namespace Domain.Users.Entities;
 
 public sealed class UserEntity : BaseEntity<UserId>, IAggregateRoot
 {
+    public MembershipEntity? Membership { get; private set; }
     public FirstName? FirstName { get; private set; }
     public LastName? LastName { get; private set; }
     public Email Email { get; private set; } = null!;
@@ -27,7 +28,10 @@ public sealed class UserEntity : BaseEntity<UserId>, IAggregateRoot
         FirstName = firstName;
         LastName = lastName;
     }
-
+    public void SetMembership(MembershipEntity membership)
+    {
+        Membership = membership;
+    }
     public static UserEntity Register(Email email)
     {
         return new UserEntity(UserId.New(), email, UserRole.Member);

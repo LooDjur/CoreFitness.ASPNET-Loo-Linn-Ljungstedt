@@ -15,7 +15,7 @@ public record MemberId : GuidValueObject
     public static Result<MemberId> Create(Guid value)
     {
         if (value == Guid.Empty)
-            return Result.Failure<MemberId>(DomainErrors.Membership.NotFound);
+            return Result.Failure<MemberId>(DomainErrors.User.NotFound);
 
         return Result.Success(new MemberId(value));
     }
