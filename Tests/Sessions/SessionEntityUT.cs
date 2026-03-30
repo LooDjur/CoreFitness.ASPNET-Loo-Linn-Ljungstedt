@@ -1,8 +1,5 @@
 ﻿using Domain.Common;
-using Domain.Common.Exceptions;
-using Domain.Sessions.Entities;
-using Domain.Sessions.Enums;
-using Domain.Sessions.ValueObjects;
+using Domain.Sessions;
 
 namespace Tests.Sessions;
 
@@ -43,7 +40,7 @@ public class SessionEntityTests
             SessionCategory.Yoga,
             GetFutureSchedule(),
             GetValidCapacity());
-            
+
 
         // Assert
         Assert.True(result.IsSuccess);

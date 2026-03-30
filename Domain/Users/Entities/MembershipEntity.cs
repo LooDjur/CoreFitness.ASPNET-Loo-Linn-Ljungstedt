@@ -1,14 +1,12 @@
 ﻿using Domain.Common;
-using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
 using Domain.Users.Enums;
 
 namespace Domain.Users.Entities;
 
-public sealed class MembershipEntity : BaseEntity<MemberId>, IAggregateRoot
+public sealed class MembershipEntity : BaseEntity<MemberId>
 {
     public UserId UserId { get; private set; } = null!;
-
     public MembershipStatus Status { get; private set; }
     public MembershipType Type { get; private set; }
     public DateTime ExpiryDate { get; private set; }
@@ -25,19 +23,17 @@ public sealed class MembershipEntity : BaseEntity<MemberId>, IAggregateRoot
         ExpiryDate = DateTime.UtcNow.AddYears(1);
     }
 
-    public static Result<MembershipEntity> Create(UserId userId, MembershipType? type)
+    internal static Result<MembershipEntity> CreateInternal(UserId userId, MembershipType type)
     {
         if (userId == null || userId.Value == Guid.Empty)
             return Result.Failure<MembershipEntity>(DomainErrors.Validation.Required);
 
-        var finalType = type ?? MembershipType.Standard;
-
-        var membership = new MembershipEntity(MemberId.New(), userId, finalType);
+        var membership = new MembershipEntity(MemberId.New(), userId, type);
 
         return Result.Success(membership);
     }
 
-    public Result AdminExtendMembership(int months)
+    public Result AdminExtend(int months)
     {
         if (months <= 0) return Result.Failure(DomainErrors.Validation.InvalidFormat);
         if (months > 2) return Result.Failure(DomainErrors.User.LimitReached);
@@ -47,14 +43,12 @@ public sealed class MembershipEntity : BaseEntity<MemberId>, IAggregateRoot
             : ExpiryDate.AddMonths(months);
 
         Modified = DateTime.UtcNow;
-
         return Result.Success();
     }
 
     public Result AdminUpdateStatus(MembershipStatus newStatus)
     {
-        if (Status == newStatus)
-            return Result.Failure(DomainErrors.User.Ineligible);
+        if (Status == newStatus) return Result.Failure(DomainErrors.User.Ineligible);
 
         Status = newStatus;
         Modified = DateTime.UtcNow;
@@ -63,8 +57,7 @@ public sealed class MembershipEntity : BaseEntity<MemberId>, IAggregateRoot
 
     public Result AdminChangeType(MembershipType newType)
     {
-        if (Type == newType)
-            return Result.Failure(DomainErrors.User.Ineligible);
+        if (Type == newType) return Result.Failure(DomainErrors.User.Ineligible);
 
         Type = newType;
         Modified = DateTime.UtcNow;

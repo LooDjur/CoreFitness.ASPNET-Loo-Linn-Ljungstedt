@@ -1,7 +1,5 @@
 ﻿using Domain.Common.ValueObjects.Shared;
-using Domain.Sessions.Entities;
-using Domain.Sessions.Enums;
-using Domain.Sessions.Repositories;
+using Domain.Sessions;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 

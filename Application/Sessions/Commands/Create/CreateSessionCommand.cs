@@ -1,5 +1,5 @@
 ﻿using Domain.Common;
-using Domain.Sessions.Enums;
+using Domain.Sessions;
 using MediatR;
 
 namespace Application.Sessions.Commands.Create;

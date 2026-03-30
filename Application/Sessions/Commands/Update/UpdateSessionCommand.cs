@@ -1,10 +1,6 @@
 ﻿using Domain.Common;
-using Domain.Sessions.Enums;
-using Domain.Sessions.ValueObjects;
+using Domain.Sessions;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Sessions.Commands.Update;
 

@@ -3,9 +3,6 @@ using Domain.Users.Entities;
 using Domain.Users.Repositories;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Repositories;
 
@@ -50,7 +47,7 @@ public sealed class UserRepository(ApplicationDbContext context) : IUserReposito
     public async Task<UserEntity?> GetUserWithMembershipAsync(UserId id, CancellationToken ct)
     {
         return await context.Users
-            .Include(u => u.Membership) // HÄR SKER JOINEN
+            .Include(u => u.Membership)
             .FirstOrDefaultAsync(u => u.Id == id, ct);
     }
 }

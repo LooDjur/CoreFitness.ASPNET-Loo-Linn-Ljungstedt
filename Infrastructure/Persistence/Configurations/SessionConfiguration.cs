@@ -1,5 +1,5 @@
 ﻿using Domain.Common.ValueObjects.Shared;
-using Domain.Sessions.Entities;
+using Domain.Sessions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

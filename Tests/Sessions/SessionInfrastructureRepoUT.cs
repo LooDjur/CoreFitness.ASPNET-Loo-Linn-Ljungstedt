@@ -1,12 +1,9 @@
 ﻿using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
-using Domain.Sessions.Entities;
-using Domain.Sessions.Enums;
-using Domain.Sessions.ValueObjects;
+using Domain.Sessions;
 using FluentAssertions;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Context;
-using Infrastructure.Repositories;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
@@ -168,7 +165,7 @@ public class SessionInfrastructureRepoUT : IDisposable
             SessionCategory.Yoga,
             timeRes.Value,
             capacityRes.Value);
-            
+
 
         if (sessionResult.IsFailure)
             throw new Exception($"SessionEntity Error: {sessionResult.Error.Code}");

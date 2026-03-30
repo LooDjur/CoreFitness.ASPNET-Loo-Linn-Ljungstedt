@@ -1,11 +1,7 @@
-﻿using Application.Sessions.Commands;
-using Application.Sessions.Commands.Create;
+﻿using Application.Sessions.Commands.Create;
 using Domain.Common;
 using Domain.Common.Abstractions;
-using Domain.Common.Exceptions;
-using Domain.Sessions.Entities;
-using Domain.Sessions.Enums;
-using Domain.Sessions.Repositories;
+using Domain.Sessions;
 using NSubstitute;
 
 namespace Tests.Sessions;

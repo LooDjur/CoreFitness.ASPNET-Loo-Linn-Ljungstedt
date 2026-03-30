@@ -1,7 +1,6 @@
 ﻿using Domain.Common;
 using Domain.Common.Abstractions;
-using Domain.Sessions.Entities;
-using Domain.Sessions.ValueObjects;
+using Domain.Sessions;
 using MediatR;
 
 namespace Application.Sessions.Commands.Create;

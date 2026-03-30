@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Sessions.Enums;
+namespace Domain.Sessions;
 
 public enum SessionCategory
 {

@@ -1,5 +1,5 @@
 ﻿using Domain.ContactReq.Entities;
-using Domain.Sessions.Entities;
+using Domain.Sessions;
 using Domain.Users.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;

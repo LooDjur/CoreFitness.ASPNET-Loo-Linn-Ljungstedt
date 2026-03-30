@@ -1,9 +1,4 @@
-﻿using Domain.Sessions.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Application.Sessions.Output;
+﻿namespace Application.Sessions.Output;
 
 public record SessionOutput(
     Guid Id,

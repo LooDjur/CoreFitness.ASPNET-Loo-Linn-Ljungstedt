@@ -1,10 +1,8 @@
 ﻿using Domain.Common;
 using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
-using Domain.Sessions.Enums;
-using Domain.Sessions.ValueObjects;
 
-namespace Domain.Sessions.Entities;
+namespace Domain.Sessions;
 
 public sealed class SessionEntity : BaseEntity<SessionId>, IAggregateRoot
 {

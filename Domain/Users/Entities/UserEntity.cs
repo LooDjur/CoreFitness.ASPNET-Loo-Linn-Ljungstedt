@@ -2,9 +2,6 @@
 using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
 using Domain.Users.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.Users.Entities;
 
@@ -20,22 +17,34 @@ public sealed class UserEntity : BaseEntity<UserId>, IAggregateRoot
 
     private UserEntity() { }
 
-    private UserEntity(UserId id, Email email, UserRole role, FirstName? firstName = null, LastName? lastName = null)
+    private UserEntity(UserId id, Email email, UserRole role)
     {
         Id = id;
         Email = email;
         Role = role;
-        FirstName = firstName;
-        LastName = lastName;
     }
-    public void SetMembership(MembershipEntity membership)
-    {
-        Membership = membership;
-    }
+
     public static UserEntity Register(Email email)
     {
         return new UserEntity(UserId.New(), email, UserRole.Member);
     }
+
+    public Result StartMembership(MembershipType type)
+    {
+        if (Membership != null)
+            return Result.Failure(DomainErrors.User.Ineligible);
+
+        var membershipResult = MembershipEntity.CreateInternal(this.Id, type);
+
+        if (membershipResult.IsFailure)
+            return Result.Failure(membershipResult.Error);
+
+        Membership = membershipResult.Value;
+        Modified = DateTime.UtcNow;
+
+        return Result.Success();
+    }
+
     public Result CompleteProfile(FirstName firstName, LastName lastName, PhoneNumber? phone)
     {
         FirstName = firstName;
@@ -44,6 +53,7 @@ public sealed class UserEntity : BaseEntity<UserId>, IAggregateRoot
         Modified = DateTime.UtcNow;
         return Result.Success();
     }
+
     public void UpdateProfile(
         FirstName firstName,
         LastName lastName,

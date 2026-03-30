@@ -1,9 +1,6 @@
-﻿using Domain.Common;
-using Domain.Common.ValueObjects.Shared;
-using Domain.ContactReq.Entities;
+﻿using Domain.ContactReq.Entities;
 using Domain.ContactReq.Repositories;
 using Domain.ContactReq.ValueObjects;
-using Domain.Sessions.Entities;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,12 +1,10 @@
 ﻿using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
-using Domain.Sessions.Entities;
-using Domain.Sessions.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Sessions.Repositories;
+namespace Domain.Sessions;
 
 public interface ISessionRepository : IRepositoryBase<SessionEntity, SessionId>
 {

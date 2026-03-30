@@ -1,7 +1,7 @@
 ﻿using Domain.Common;
 using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
-using Domain.Sessions.ValueObjects;
+using Domain.Sessions;
 using MediatR;
 using System;
 using System.Collections.Generic;

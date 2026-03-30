@@ -1,4 +1,4 @@
-﻿using Domain.Sessions.Enums;
+﻿using Domain.Sessions;
 using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.WebApp.Models.Sessions;

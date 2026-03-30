@@ -1,7 +1,6 @@
 ﻿using Domain.Bookings.Entity;
 using Domain.Bookings.ValueObjects;
 using Domain.Common.Abstractions;
-using Domain.Sessions.Enums;
 
 namespace Domain.Bookings.Repositories;
 

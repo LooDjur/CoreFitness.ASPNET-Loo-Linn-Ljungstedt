@@ -1,6 +1,6 @@
 ﻿using Domain.Common.Abstractions;
 using Domain.ContactReq.Repositories;
-using Domain.Sessions.Repositories;
+using Domain.Sessions;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Context;
 using Infrastructure.Repositories;

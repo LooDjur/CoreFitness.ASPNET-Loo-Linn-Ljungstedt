@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Sessions.ValueObjects;
+namespace Domain.Sessions;
 
 public record Title : StringValueObject
 {
