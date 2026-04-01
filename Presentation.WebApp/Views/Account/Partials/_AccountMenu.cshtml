@@ -1,14 +1,42 @@
 ﻿@{
     ViewData["Title"] = "Menu Options";
+    var activeView = ViewData["ActiveView"]?.ToString() ?? "about-me";
 }
-<section>
+
+<section class="account-menu">
     <div class="account-container">
+        
         <div class="account-image">
             <img src="/images/account-image.png" alt="Profile" />
         </div>
 
         <div class="account-menu-content">
-            <h3>Menu Options</h3>
+            
+            <div data-id="title" class="title">
+                <h4>Menu Options</h4>
+            </div>
+
+            <div class="menu-button-group">
+                
+                <a asp-action="Index" asp-route-viewName="about-me"
+                       class="btn @(activeView == "about-me" ? "btn-primary" : "btn-gray")">
+                    About Me
+                </a>
+                <hr />
+                <a asp-action="Index" asp-route-viewName="membership"
+                       class="btn @(activeView == "membership" ? "btn-primary" : "btn-gray")">
+                    My Membership
+                </a>
+                <hr />
+                <a asp-action="Index" asp-route-viewName="bookings"
+                       class="btn @(activeView == "bookings" ? "btn-primary" : "btn-gray")">
+                    My Bookings
+                </a>
+                <hr />
+                <a asp-action="Logout" asp-controller="Account" class="btn btn-red">
+                    Sign Out
+                </a>
+            </div>
         </div>
     </div>
 </section>

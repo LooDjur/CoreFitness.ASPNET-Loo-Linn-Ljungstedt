@@ -3,7 +3,7 @@ using Domain.ContactReq.Repositories;
 using Domain.Sessions;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Context;
-using Infrastructure.Repositories;
+using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

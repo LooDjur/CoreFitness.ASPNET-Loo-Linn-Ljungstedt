@@ -4,7 +4,7 @@ using Domain.ContactReq.ValueObjects;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories;
+namespace Infrastructure.Persistence.Repositories;
 
 public sealed class ContactRequestRepository(ApplicationDbContext context) : IContactRequestRepository
 {

@@ -3,7 +3,7 @@ using Domain.Common.Abstractions;
 using Domain.Sessions;
 using Domain.Users.Repositories;
 using Infrastructure.Persistence.Context;
-using Infrastructure.Repositories;
+using Infrastructure.Persistence.Repositories;
 
 namespace Infrastructure.Persistence;
 

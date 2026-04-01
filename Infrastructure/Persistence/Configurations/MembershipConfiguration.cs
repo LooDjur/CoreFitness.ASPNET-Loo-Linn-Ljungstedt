@@ -35,10 +35,5 @@ public sealed class MembershipConfiguration : IEntityTypeConfiguration<Membershi
         builder.Property(m => m.Modified);
         builder.Property(m => m.IsDeleted)
             .HasDefaultValue(false);
-
-        builder.HasOne<UserEntity>()
-            .WithOne()
-            .HasForeignKey<MembershipEntity>(m => m.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

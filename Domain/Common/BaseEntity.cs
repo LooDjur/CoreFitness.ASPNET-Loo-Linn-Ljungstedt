@@ -2,7 +2,7 @@
 
 public abstract class BaseEntity<TId>
 {
-    public TId Id { get; set; } = default!;
+    public TId Id { get; protected set; } = default!;
     public DateTime Created { get; set; } = DateTime.UtcNow;
     public DateTime? Modified { get; set; }
 

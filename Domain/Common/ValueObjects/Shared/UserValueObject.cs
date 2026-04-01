@@ -10,8 +10,6 @@ public record UserId : GuidValueObject
     private UserId() : base() { }
     private UserId(Guid value) : base(value) { }
 
-    public static UserId New() => new(Guid.NewGuid());
-
     public static Result<UserId> Create(Guid value)
     {
         if (value == Guid.Empty)

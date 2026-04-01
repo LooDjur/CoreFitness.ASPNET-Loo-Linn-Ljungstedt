@@ -36,14 +36,31 @@
         width: 100%;
     }
 
-    @media (max-width: 991px) {
-        .account-layout {
-            grid-template-columns: 1fr;
-            gap: 2rem;
+    button {
+        display: block;
+        width: 100%;
+        text-decoration: none;
+        background: none;
+        font-weight: 500;
+
+        &:hover {
+            color: var(--primary-color)
         }
 
-        .account-sidebar {
-            position: static;
+        &.active {
+            color: #007bff;
+            /*            Färg för aktiv länk font-weight: 700;*/
+        }
+
+        @media (max-width: 991px) {
+            .account-layout {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .account-sidebar {
+                position: static;
+            }
         }
     }
 }

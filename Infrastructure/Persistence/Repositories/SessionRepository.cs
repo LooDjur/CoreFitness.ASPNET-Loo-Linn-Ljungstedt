@@ -3,7 +3,7 @@ using Domain.Sessions;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories;
+namespace Infrastructure.Persistence.Repositories;
 
 public sealed class SessionRepository(ApplicationDbContext context) : ISessionRepository
 {

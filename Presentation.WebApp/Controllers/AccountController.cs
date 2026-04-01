@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Application.Abstractions.Authentication;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.WebApp.Controllers.Common;
 
 namespace Presentation.WebApp.Controllers;
 
 [Authorize]
-public class AccountController : BaseController
+public class AccountController (
+    IAuthService authService) : BaseController
 {
     [HttpGet]
     [Route("account/{viewName?}")]
@@ -16,31 +19,11 @@ public class AccountController : BaseController
         return View();
     }
 
-    //[HttpPost("update-details")]
-    //[ValidateAntiForgeryToken]
-    //public async Task<IActionResult> UpdateDetails(AboutMeForm form)
-    //{
-    //    if (!ModelState.IsValid)
-    //    {
-    //        ViewData["ActiveView"] = "about-me";
-    //        ViewData["PageClass"] = "about-me-page";
-    //        return View("Index", form);
-    //    }
-
-    //    var userId = "5677ba79-34b6-424e-af76-7a7c3b4cc4f3";
-
-    //    var result = await _accountService.UploadImageAsync(userId, form.ProfileImage);
-
-    //    if (!result.Succeeded)
-    //    {
-    //        ViewData["ErrorMessage"] = result.Message;
-    //        ViewData["ActiveView"] = "about-me";
-    //        ViewData["PageClass"] = "about-me-page";
-
-    //        return View("Index", form);
-    //    }
-
-    //    TempData["SuccessMessage"] = "Profile updated successfully!";
-    //    return RedirectToAction(nameof(Index), new { viewName = "about-me" });
-    //}
+    [HttpGet]
+    [Route("/sign-out")]
+    public async Task<IActionResult> Logout()
+    {
+        await authService.SignOutUserAsync();
+        return RedirectToAction("Index", "Home");
+    }
 }

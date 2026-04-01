@@ -24,9 +24,9 @@ public sealed class UserEntity : BaseEntity<UserId>, IAggregateRoot
         Role = role;
     }
 
-    public static UserEntity Register(Email email)
+    public static UserEntity Register(UserId id, Email email)
     {
-        return new UserEntity(UserId.New(), email, UserRole.Member);
+        return new UserEntity(id, email, UserRole.Member);
     }
 
     public Result StartMembership(MembershipType type)

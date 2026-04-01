@@ -32,7 +32,7 @@
     </nav>
     <nav class="account-menu">
         <ul class="menu">
-            @if (true || User.Identity!.IsAuthenticated)
+            @if (User.Identity!.IsAuthenticated)
             {
                     <li class="menu-item">
                         <a class="menu-item-link" asp-action="Sessions" asp-controller="Training">Our Classes</a>

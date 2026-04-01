@@ -1,0 +1,49 @@
+﻿@using Presentation.WebApp.Models.Authentication
+@model SignUpForm
+
+@{
+    Layout = "Layouts/_AuthLayout";
+    ViewData["Title"] = "Become a Member";
+}
+
+<section>
+    <div class="signin-container">
+        <form class="signin-form" method="post" asp-action="SignUp" asp-controller="Authentication" novalidate>
+            @Html.AntiForgeryToken()
+
+            <div data-id="title" class="title">
+                <h2>Become a Member</h2>
+                <p>Sign up to continue your fitness journey with full access to your customized program, training history, and progress tracking. Stay consistent, monitor your development, and keep moving forward with the structure and support built into your account.</p>
+                <hr />
+            </div>
+
+            <div class="form-grid-fields">
+                <div data-id="email" class="form-group">
+                    <label class="form-label" asp-for="Email"></label>
+                    <input class="form-input" asp-for="Email" />
+                    <span class="field-validation" asp-validation-for="Email"></span>
+                </div>
+            </div>
+
+            <div data-id="TermsAndConditions" class="form-group">
+                <div class="checkbox-group">
+                    <input class="form-checkbox-input" asp-for="TermsAndConditions" id="TermsAndConditions" />
+                    <label class="checkbox-checkmark" for="TermsAndConditions"></label>
+                    <label class="form-label" asp-for="TermsAndConditions" for="TermsAndConditions"></label>
+                </div>
+                <span class="field-validation" asp-validation-for="TermsAndConditions"></span>
+            </div>
+
+            <button class="btn" type="submit">Continue</button>
+
+            <div class="form-errormessage">
+                <div asp-validation-summary="ModelOnly" class="field-validation-error"></div>
+                <span class="field-validation-error" asp-validation-for="ErrorMessage"></span>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="~/Views/Shared/Partials/Globals/_ValidationScripts.cshtml" />
+}

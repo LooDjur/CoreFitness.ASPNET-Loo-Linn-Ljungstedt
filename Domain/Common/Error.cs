@@ -22,6 +22,13 @@ public static class FaqErrors
 
 public static class DomainErrors
 {
+    public static class Authentication
+    {
+        public static readonly Error InvalidCredentials = Error.Validation("Auth.InvalidCredentials", "Incorrect email address or password.");
+
+        public static readonly Error LockedOut = Error.Failure("Auth.LockedOut", "User account has been temporary locked.");
+    }
+
     public static class Validation
     {
         public static readonly Error Required = Error.Validation("Validation.Required", "This field is required.");

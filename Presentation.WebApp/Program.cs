@@ -1,37 +1,20 @@
-using Application.Faq;
 using Application;
+using Application.Faq;
+using Infrastructure.Extensions;
 using Infrastructure.Extensions.Persistence;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services
-    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/authentication/signin";
-        options.Cookie.Name = "corefitness.auth";
-        options.ExpireTimeSpan = TimeSpan.FromHours(1);
-        options.SlidingExpiration = true;
+builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
+builder.Services.AddApplication();
 
-        options.Cookie.HttpOnly = true;
-        options.Cookie.IsEssential = true;
-        options.Cookie.SameSite = SameSiteMode.Lax;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    });
+builder.Services.AddSession();
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-});
+builder.Services.AddScoped<IFaqService, FaqService>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRouting(x => x.LowercaseUrls = true);
-
-builder.Services.AddApplication();
-builder.Services.AddPersistence(builder.Configuration);
-
-builder.Services.AddScoped<IFaqService, FaqService>();
 
 var app = builder.Build();
 
@@ -39,7 +22,8 @@ app.UseHsts();
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseAuthorization();
+app.UseSession();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseStatusCodePagesWithReExecute("/error/{0}");
