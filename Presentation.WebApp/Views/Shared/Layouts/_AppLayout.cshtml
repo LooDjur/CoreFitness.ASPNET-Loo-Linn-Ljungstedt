@@ -16,17 +16,20 @@
 </head>
 <body>
     <div class="app-layout @ViewData["PageClass"]">
-    <header>
-        <div class="container full"> <partial name="Partials/Globals/_HeaderSection" />
+        <div class="header-hero-wrapper">
+            <header class="main-header">
+                <div class="container full">
+                    <partial name="Partials/Globals/_HeaderSection" />
+                </div>
+            </header>
+
+            @if (IsSectionDefined("Hero"))
+            {
+                @await RenderSectionAsync("Hero", required: false)
+            }
         </div>
-
-        @if (IsSectionDefined("Hero"))
-            @await RenderSectionAsync("Hero", required: false)
-    </header>
-
     <main>
-        <div class="container"> @RenderBody()
-        </div>
+        @RenderBody()
     </main>
 
     <footer>

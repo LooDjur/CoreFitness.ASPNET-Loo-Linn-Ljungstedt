@@ -1,22 +1,37 @@
-﻿.about-me-page {
+﻿.about-me-page, .auth-layout {
+    .main-header {
+        .container.full {
+            max-width: 100%;
+            margin: 0;
+            display: block;
+        }
 
-    .header-section {
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        gap: 3rem;
-        align-items: center;
+        .header-section {
+            display: grid;
+            grid-template-columns: auto auto 1fr auto;
+            gap: 3rem;
+            align-items: center;
+            width: 100%;
+        }
+
+        .main-menu, .account-menu {
+            display: grid;
+            flex: none;
+            // Nollställer flex: 1 från din site.css
+        }
     }
 
-    .main-menu {
-        display: flex;
-        justify-content: flex-start;
-        flex: none;
-    }
+    main {
+        display: block;
+        width: 100%;
 
-    .account-menu {
-        display: flex;
-        justify-content: flex-end;
-        flex: none;
+        .container {
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 1200px;
+            width: 100%;
+            display: block;
+        }
     }
 
     .account-layout {
@@ -35,32 +50,21 @@
     .account-main {
         width: 100%;
     }
+}
 
-    button {
-        display: block;
-        width: 100%;
-        text-decoration: none;
-        background: none;
-        font-weight: 500;
-
-        &:hover {
-            color: var(--primary-color)
+@media (max-width: 991px) {
+    .about-me-page, .auth-layout {
+        .account-layout {
+            grid-template-columns: 1fr;
+            gap: 2rem;
         }
 
-        &.active {
-            color: #007bff;
-            /*            Färg för aktiv länk font-weight: 700;*/
+        .account-sidebar {
+            position: static;
         }
 
-        @media (max-width: 991px) {
-            .account-layout {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .account-sidebar {
-                position: static;
-            }
+        .main-header .header-section {
+            grid-template-columns: auto 1fr auto;
         }
     }
 }

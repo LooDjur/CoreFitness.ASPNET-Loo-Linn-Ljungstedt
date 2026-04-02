@@ -13,6 +13,12 @@
 @import "sections/shared/_header.css";
 @import "sections/shared/_footer.css";
 
+@import "sections/home/_hero.css";
+@import "sections/home/_brands.css";
+@import "sections/home/_aboutUs.css";
+@import "sections/home/_ourPrograms.css";
+@import "sections/home/_ourStore.css";
+
 @import "sections/customerservice/_contactForm.css";
 @import "sections/account/_accountLayout.css";
 @import "sections/authentication/_signIn.css";

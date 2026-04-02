@@ -1,15 +1,21 @@
-﻿header {
+﻿.header-hero-wrapper {
     background-color: var(--header-bg-color);
     background-image: url('/images/dark-section-img.png');
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 100% auto;
     background-position: top center;
-    color: var(--header-text-color);
     border-radius: 1.25rem;
     margin: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-header {
+    width: 100%;
     min-height: 100px;
     display: flex;
     align-items: center;
+    color: var(--header-text-color);
 }
 
 .header-section {
@@ -20,10 +26,13 @@
 }
 
 .main-menu {
+    display: flex;
     justify-content: center;
+    flex: 1;
 }
 
 .account-menu {
+    display: flex;
     justify-content: flex-end;
 }
 
@@ -49,12 +58,12 @@
 }
 
 @media (max-width: 1200px) {
-
-    .header-section {
-        grid-template-columns: auto 1fr;
-    }
-
     .main-menu {
         display: none;
+    }
+
+    .header-section {
+        display: flex;
+        justify-content: space-between;
     }
 }

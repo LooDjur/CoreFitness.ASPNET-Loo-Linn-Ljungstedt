@@ -14,6 +14,51 @@ html, body {
     min-height: 100dvh;
 }
 
+.section-title {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: var(--dark-color);
+    padding: 0.2rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--white-color);
+    width: fit-content;
+
+    &::before {
+        content: "\e7d1";
+        color: var(--primary-color);
+        font-family: var(--font-fa);
+        font-weight: 900;
+        font-size: 1.2em;
+        margin-right: 8px;
+    }
+
+    @media (width < 1200px) {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.additional-information {
+    font-weight: 600;
+    color: var(--dark-color);
+    font-size: 1.1rem;
+
+    a {
+        color: var(--dark-color);
+        text-decoration: underline;
+        margin-left: 0.5rem;
+
+        &:hover {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+    }
+}
+
 h1, h2, h3, h4, h5, h6 {
     color: var(--heading-color);
     font-family: var(--font-heading);
@@ -53,6 +98,10 @@ hr {
     &.minimal {
         margin: 0;
     }
+}
+
+.accent {
+    color: var(--primary-color);
 }
 
 .container {
