@@ -1,13 +1,79 @@
-﻿@{
-    var items = faqService.GetFaqItems();
+﻿@using Application.Faq
+@inject IFaqService faqService
+
+@{
+    var faqs = faqService.GetFaqItems();
 }
 
-<section class="faq-section">
-    @foreach(var faq in items)
-    {
-        <div>
-            <div>@faq.Id</div>
-            <p>@faq.Description</p>
+@if (faqs != null && faqs.Any())
+{
+    <section class="section__faq">
+        <div class="container">
+            <div class="faq-area">
+                <div class="title">
+                    <div class="section-title">Frequently Asked Questions</div>
+                    <h2>Common questions about gym and training</h2>
+                </div>
+
+                <img src="images/faq-image.png" alt="Gym FAQ" />
+
+                <div class="accordion" data-accordion>
+                    @foreach (var item in faqs)
+                    {
+                        @* Vi har tagit bort var isFirst här *@
+
+                        <div class="accordion-item">
+                            <div class="accordion-title">
+                                <button type="button"
+                                        class="accordion-trigger"
+                                        aria-expanded="false"
+                                        aria-controls="accordion-panel-@item.Id"
+                                        id="accordion-trigger-@item.Id">
+                                    @item.Title
+                                </button>
+                            </div>
+                            <div id="accordion-panel-@item.Id"
+                                 class="accordion-panel"
+                                 role="region"
+                                 aria-labelledby="accordion-trigger-@item.Id"
+                                 style="display: none;">
+                                <div class="accordion-content">
+                                    @item.Description
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
-    }
-</section>
+    </section>
+}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const accordion = document.querySelector('[data-accordion]');
+        
+        if (accordion) {
+            accordion.addEventListener('click', function (e) {
+                const trigger = e.target.closest('.accordion-trigger');
+                if (!trigger) return;
+
+                const parent = trigger.closest('.accordion-item');
+                const panel = parent.querySelector('.accordion-panel');
+                
+                const wasExpanded = trigger.getAttribute('aria-expanded') === 'true';
+
+                accordion.querySelectorAll('.accordion-trigger').forEach(btn => {
+                    btn.setAttribute('aria-expanded', 'false');
+                    const otherPanel = btn.closest('.accordion-item').querySelector('.accordion-panel');
+                    if (otherPanel) otherPanel.style.display = 'none';
+                });
+
+                if (!wasExpanded) {
+                    trigger.setAttribute('aria-expanded', 'true');
+                    panel.style.display = 'block';
+                }
+            });
+        }
+    });
+</script>

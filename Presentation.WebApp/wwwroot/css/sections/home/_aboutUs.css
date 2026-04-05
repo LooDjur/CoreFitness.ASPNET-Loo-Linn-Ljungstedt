@@ -10,7 +10,7 @@
 
         @media (min-width: 1200px) {
             flex-direction: row;
-            align-items: flex-start; /* Håller texten i linje med bildens topp */
+            align-items: flex-start;
             gap: 0;
         }
 
@@ -21,7 +21,7 @@
 
         .about-us-image {
             width: 100%;
-            height: auto; /* Bilden visas nu i sin helhet utan att klippas */
+            height: auto;
             border-radius: 1.25rem;
             display: block;
 

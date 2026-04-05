@@ -8,6 +8,7 @@
 @import "components/_dropdown.css";
 @import "components/_forms.css";
 @import "components/_checkbox.css";
+@import "components/_faq.css";
 
 /* Sections */
 @import "sections/shared/_header.css";
@@ -19,6 +20,9 @@
 @import "sections/home/_ourPrograms.css";
 @import "sections/home/_ourStore.css";
 
+@import "sections/memberships/_membershipOffers.css";
+
 @import "sections/customerservice/_contactForm.css";
+
 @import "sections/account/_accountLayout.css";
 @import "sections/authentication/_signIn.css";

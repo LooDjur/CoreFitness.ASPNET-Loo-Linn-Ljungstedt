@@ -3,12 +3,15 @@
     var activeView = ViewData["ActiveView"]?.ToString() ?? "about-me";
     ViewData["PageClass"] = "about-me-page";
 }
-<div class="page_account">
+
+<div class="about-me-page">
     <partial name="Partials/Globals/_PageTitleSection" />
+
     <div class="container account-layout">
         <aside class="account-sidebar">
             <partial name="Partials/_AccountMenu" />
         </aside>
+
         <section class="account-main">
             @if (activeView == "about-me")
             {

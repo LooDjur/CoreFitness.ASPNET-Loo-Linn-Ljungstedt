@@ -12,29 +12,36 @@
 
         <div class="account-menu-content">
             
-            <div data-id="title" class="title">
+            <div class="title">
                 <h4>Menu Options</h4>
             </div>
 
             <div class="menu-button-group">
-                
                 <a asp-action="Index" asp-route-viewName="about-me"
-                       class="btn @(activeView == "about-me" ? "btn-primary" : "btn-gray")">
+                       class="btn @(activeView == "about-me" ? "btn-primary" : "")">
                     About Me
                 </a>
                 <hr />
                 <a asp-action="Index" asp-route-viewName="membership"
-                       class="btn @(activeView == "membership" ? "btn-primary" : "btn-gray")">
+                       class="btn @(activeView == "membership" ? "btn-primary" : "")">
                     My Membership
                 </a>
                 <hr />
                 <a asp-action="Index" asp-route-viewName="bookings"
-                       class="btn @(activeView == "bookings" ? "btn-primary" : "btn-gray")">
+                       class="btn @(activeView == "bookings" ? "btn-primary" : "")">
                     My Bookings
                 </a>
                 <hr />
-                <a asp-action="Logout" asp-controller="Account" class="btn btn-red">
+
+                <a asp-action="Logout" asp-controller="Account" class="btn">
                     Sign Out
+                </a>
+            </div>
+
+            <div class="account-footer-info">
+                <p>If you'd like to cancel your account click below</p>
+                <a asp-action="DeleteAccount" asp-controller="Account" class="btn-remove">
+                    Remove Account
                 </a>
             </div>
         </div>
