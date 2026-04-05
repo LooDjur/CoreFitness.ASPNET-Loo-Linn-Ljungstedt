@@ -1,12 +1,21 @@
 ﻿.section__hero {
     color: var(--white-color);
+    overflow: hidden;
 
     > hr.accent {
         margin: -5px 0 0 0;
         border: none;
         border-top: 0.1px solid var(--primary-color);
         opacity: 0.3;
-        width: 100%;
+    }
+
+    .container {
+        padding: 4rem 0;
+
+        @media (width < 1200px) {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
     }
 
 
@@ -14,11 +23,12 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 2rem;
-        align-items: center;
+        min-height: 600px;
 
         @media (width < 1200px) {
             grid-template-columns: 1fr;
             text-align: center;
+            min-height: auto;
         }
 
         .hero-content {
@@ -26,11 +36,14 @@
             flex-direction: column;
             align-items: flex-start;
             text-align: left;
+            align-self: center;
+            padding: 4rem 0;
 
             @media (width < 1200px) {
                 text-align: center;
                 align-items: center;
                 order: 2;
+                align-self: auto;
             }
         }
 
@@ -38,11 +51,11 @@
             width: 100%;
 
             h1 {
-                font-weight: 800;
                 margin: 0;
                 font-size: 54px;
                 line-height: 1.1;
                 text-align: left;
+                font-weight: 800;
 
                 @media (width < 1200px) {
                     font-size: 48px;
@@ -95,12 +108,10 @@
             border-top: 0.1px solid var(--primary-color);
             opacity: 0.3;
             margin: 0.5rem 0 1rem 0;
-            width: 100%;
         }
 
         .cta-btn {
             display: flex;
-            margin-bottom: 1.5rem;
 
             @media (width < 1200px) {
                 margin-bottom: 2rem;
@@ -109,12 +120,11 @@
         }
 
         .hero-image {
-            width: 100%;
-            height: auto;
+            margin-bottom: -4rem;
+            align-self: end;
 
             @media (width < 1200px) {
-                order: 1;
-                margin-bottom: 1rem;
+                display: none;
             }
         }
     }

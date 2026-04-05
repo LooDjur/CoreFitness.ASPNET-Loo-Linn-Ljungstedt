@@ -4,9 +4,13 @@
     ViewData["PageClass"] = "about-me-page";
 }
 
-<div class="about-me-page">
-    <partial name="Partials/Globals/_PageTitleSection" />
+<section class="page-header">
+    <div class="container">
+        <partial name="Partials/Globals/_PageTitleSection" />
+    </div>
+</section>
 
+<div class="about-me-page">
     <div class="container account-layout">
         <aside class="account-sidebar">
             <partial name="Partials/_AccountMenu" />

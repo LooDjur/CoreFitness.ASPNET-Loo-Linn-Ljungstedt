@@ -2,10 +2,14 @@
     ViewData["Title"] = "Customer Service";
 }
 
+<section class="page-header">
+    <div class="container">
+        <partial name="Partials/Globals/_PageTitleSection" />
+    </div>
+</section>
+
 <div class="page_customer-service">
-    <partial name="Partials/Globals/_PageTitleSection" />
-    
-    <div class="customer-service-layout">
+    <div class="customer-service-layout container">
         <partial name="Partials/_ContactFormSection" />
         <partial name="Partials/Sections/_FaqSection" />
     </div>
