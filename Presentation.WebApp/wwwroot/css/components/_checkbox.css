@@ -12,11 +12,8 @@
 
     .field-validation-error {
         grid-area: error;
+        visibility: visible;
         color: var(--form-validation-error-text-color);
-    }
-
-    .field-validation-error {
-        grid-area: error;
     }
 
     input[type="checkbox"] {
@@ -24,17 +21,16 @@
         opacity: 0;
         width: 0;
         height: 0;
-        display: none;
 
         &:checked + .checkbox-checkmark {
             border-color: var(--form-checkbox-checked-border-color);
             background-color: var(--form-checkbox-checked-bg-color);
-        }
 
-            &:checked + .checkbox-checkmark::after {
+            &::after {
                 opacity: 1;
                 transform: scale(1);
             }
+        }
     }
 }
 

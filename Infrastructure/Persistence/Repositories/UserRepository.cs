@@ -11,7 +11,8 @@ public sealed class UserRepository(ApplicationDbContext context) : IUserReposito
     public async Task<UserEntity?> GetByIdAsync(UserId id, CancellationToken ct)
     {
         return await context.DomainUsers
-            .FirstOrDefaultAsync(u => u.Id == id, ct);
+        .Include(u => u.Membership)
+        .FirstOrDefaultAsync(u => u.Id == id, ct);
     }
 
     public async Task<UserEntity?> GetByEmailAsync(Email email, CancellationToken ct)

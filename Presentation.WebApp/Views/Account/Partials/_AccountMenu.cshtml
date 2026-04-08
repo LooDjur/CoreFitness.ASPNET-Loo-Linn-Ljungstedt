@@ -1,5 +1,6 @@
-﻿@{
-    ViewData["Title"] = "Menu Options";
+﻿@model AccountViewModel
+
+@{
     var activeView = ViewData["ActiveView"]?.ToString() ?? "about-me";
 }
 
@@ -12,7 +13,7 @@
 
         <div class="account-menu-content">
             
-            <div class="title">
+            <div data-id="title"  class="title">
                 <h4>Menu Options</h4>
             </div>
 
@@ -22,8 +23,8 @@
                     About Me
                 </a>
                 <hr />
-                <a asp-action="Index" asp-route-viewName="membership"
-                       class="btn @(activeView == "membership" ? "btn-primary" : "")">
+                <a asp-action="Index" asp-route-viewName="my-membership"
+                       class="btn @(activeView == "my-membership" ? "btn-primary" : "")">
                     My Membership
                 </a>
                 <hr />

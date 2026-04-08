@@ -15,10 +15,12 @@ public sealed class RegisterQuickHandler(
     public async Task<Result<Guid>> Handle(RegisterQuickCommand request, CancellationToken ct)
     {
         var emailRes = Email.Create(request.Email);
-        if (emailRes.IsFailure) return Result.Failure<Guid>(emailRes.Error);
+        if (emailRes.IsFailure)
+            return Result.Failure<Guid>(emailRes.Error);
 
         var identityResult = await authService.RegisterIdentityAsync(request.Email, request.Password, request.Role, ct);
-        if (identityResult.IsFailure) return identityResult;
+        if (identityResult.IsFailure)
+            return identityResult;
 
         var userId = UserId.Create(identityResult.Value);
         var user = UserEntity.Register(userId.Value, emailRes.Value);

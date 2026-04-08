@@ -14,7 +14,7 @@ public sealed class CompleteOnboardingHandler(IUnitOfWork unitOfWork)
         var userIdResult = UserId.Create(request.UserId);
         if (userIdResult.IsFailure) return Result.Failure(userIdResult.Error);
 
-        var user = await unitOfWork.Users.GetByIdAsync(userIdResult.Value, ct);
+        var user = await unitOfWork.Users.GetUserWithMembershipAsync(userIdResult.Value, ct);
         if (user is null) return Result.Failure(DomainErrors.User.NotFound);
 
         var fnRes = FirstName.Create(request.FirstName);

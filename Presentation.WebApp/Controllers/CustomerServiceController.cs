@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.WebApp.Controllers.Common;
-using Presentation.WebApp.Models.ContactForm;
 
 namespace Presentation.WebApp.Controllers;
 
@@ -11,6 +10,7 @@ public class CustomerServiceController(ISender sender) : BaseController
 {
     [HttpGet]
     [AllowAnonymous]
+    [Route("/customer-service")]
     public IActionResult Index()
     {
         ViewData["Title"] = "Customer Service";
@@ -19,6 +19,7 @@ public class CustomerServiceController(ISender sender) : BaseController
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Route("/customer-service")]
     public async Task<IActionResult> HandleSubmit(RegisterContactCommand command)
     {
         if (!ModelState.IsValid)

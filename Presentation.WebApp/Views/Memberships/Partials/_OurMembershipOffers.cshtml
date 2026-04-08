@@ -1,7 +1,14 @@
-﻿<section class="section__memberships">
+﻿@{
+    var currentPlan = ViewData["CurrentPlan"]?.ToString() ?? "";
+    var isStandard = currentPlan.Equals("Standard", StringComparison.OrdinalIgnoreCase);
+    var isPremium = currentPlan.Equals("Premium", StringComparison.OrdinalIgnoreCase);
+}
+
+<section class="section__memberships">
     <div class="container">
         <div class="memberships-area">
-            <div class="membership-option">
+            
+            <div class="membership-option @(isStandard ? "active-plan" : "")">
                 <div class="membership-information">
                     <div class="weight-icon"></div>
                     <h3>Standard Membership</h3>
@@ -19,12 +26,25 @@
                         <div class="note">Monthly 20 Classes</div>
                     </div>
 
-                    <a class="cta btn accent" href="#">Join Now</a>
+                    @if (isStandard)
+                    {
+                        <button class="cta btn btn-gray" disabled>Current Plan</button>
+                    }
+                    else
+                    {
+                        <a class="cta btn accent"
+                               asp-controller="Memberships"
+                               asp-action="Select"
+                               asp-route-plan="Standard">
+                            @(string.IsNullOrEmpty(currentPlan) ? "Join Now" : "Downgrade")
+                        </a>
+                    }
+                       
                     <div class="additional-information">Try Any Membership Free for 1 Week</div>
                 </div>
             </div>
 
-            <div class="membership-option">
+            <div class="membership-option @(isPremium ? "active-plan" : "")">
                 <div class="membership-information">
                     <div class="weight-icon"></div>
                     <h3>Premium Membership</h3>
@@ -42,7 +62,20 @@
                         <div class="note">Monthly 20 Classes</div>
                     </div>
 
-                    <a class="cta btn accent" href="#">Join Now</a>
+                    @if (isPremium)
+                    {
+                        <button class="cta btn btn-gray" disabled>Current Plan</button>
+                    }
+                    else
+                    {
+                        <a class="cta btn accent"
+                               asp-controller="Memberships"
+                               asp-action="Select"
+                               asp-route-plan="Premium">
+                            @(string.IsNullOrEmpty(currentPlan) ? "Join Now" : "Upgrade")
+                        </a>
+                    }
+                       
                     <div class="additional-information">Try Any Membership Free for 1 Week</div>
                 </div>
             </div>
@@ -53,11 +86,11 @@
                     <p>Our memberships give you access to all equipment, personalized training.</p>
                     <hr />
                     <p class="call-us">Call Us At: +(46) 8 410 521 00</p>
-                    <a class="btn accent" href="#">Call Us Today!</a>
+                    <a class="btn accent" href="tel:+46841052100">Call Us Today!</a>
                 </div>
 
                 <div class="contact-info-image">
-                    <img src="images/membership-image.png" alt="">
+                    <img src="images/membership-image.png" alt="Gym training session">
                 </div>
             </div>
         </div>

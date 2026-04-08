@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.WebApp.Models.Account;
-public class AboutMeFormSection
+public class AboutMeViewModel
 {
     [Display(Name = "First Name", Prompt = "Enter your first name")]
     [DataType(DataType.Text)]

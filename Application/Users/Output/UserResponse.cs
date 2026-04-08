@@ -6,10 +6,13 @@ namespace Application.Users.Output;
 
 public sealed record UserResponse(
     Guid UserId,
+    Guid? MemberId,
     string Email,
     string? FirstName,
     string? LastName,
     string? Phone,
     string? ProfileImageUrl,
     string? MembershipPlan,
-    bool IsActive);
+    DateTime? ExpiryDate,
+    bool IsActive
+);

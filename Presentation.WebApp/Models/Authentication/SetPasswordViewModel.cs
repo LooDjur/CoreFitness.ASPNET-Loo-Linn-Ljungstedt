@@ -2,7 +2,7 @@
 
 namespace Presentation.WebApp.Models.Authentication;
 
-public class SetPasswordForm
+public class SetPasswordViewModel
 {
     [Required(ErrorMessage = "Password is required")]
     [StringLength(100, ErrorMessage = "The password must be at least 4 characters long.", MinimumLength = 4)]

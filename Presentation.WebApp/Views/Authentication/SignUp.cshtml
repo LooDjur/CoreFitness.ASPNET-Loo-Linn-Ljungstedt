@@ -1,5 +1,4 @@
-﻿@using Presentation.WebApp.Models.Authentication
-@model SignUpForm
+﻿@model SignUpFormViewModel
 
 @{
     Layout = "Layouts/_AuthLayout";
@@ -8,7 +7,7 @@
 
 <section>
     <div class="signin-container">
-        <form class="signin-form" method="post" asp-action="SignUp" asp-controller="Authentication" novalidate>
+        <form class="signin-form" method="post" asp-action="SignUp" asp-controller="Authentication" asp-route-returnUrl="@ViewData["ReturnUrl"]" novalidate>
             @Html.AntiForgeryToken()
 
             <div data-id="title" class="title">

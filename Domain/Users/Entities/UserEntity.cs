@@ -15,6 +15,8 @@ public sealed class UserEntity : BaseEntity<UserId>, IAggregateRoot
     public UserRole Role { get; private set; }
     public string? ProfileImageUrl { get; private set; }
 
+    public bool HasActiveMembership => Membership is { IsEligibleToBook: true };
+
     private UserEntity() { }
 
     private UserEntity(UserId id, Email email, UserRole role)
@@ -32,7 +34,9 @@ public sealed class UserEntity : BaseEntity<UserId>, IAggregateRoot
     public Result StartMembership(MembershipType type)
     {
         if (Membership != null)
-            return Result.Failure(DomainErrors.User.Ineligible);
+        {
+            return Membership.ChangeType(type);
+        }
 
         var membershipResult = MembershipEntity.CreateInternal(this.Id, type);
 
@@ -40,6 +44,17 @@ public sealed class UserEntity : BaseEntity<UserId>, IAggregateRoot
             return Result.Failure(membershipResult.Error);
 
         Membership = membershipResult.Value;
+        Modified = DateTime.UtcNow;
+
+        return Result.Success();
+    }
+
+    public Result CancelMembership()
+    {
+        if (Membership == null)
+            return Result.Failure(DomainErrors.User.Ineligible);
+
+        Membership = null;
         Modified = DateTime.UtcNow;
 
         return Result.Success();
@@ -67,5 +82,15 @@ public sealed class UserEntity : BaseEntity<UserId>, IAggregateRoot
         Phone = phone;
         ProfileImageUrl = profileImageUrl;
         Modified = DateTime.UtcNow;
+    }
+
+    public Result CanBePermanentlyDeleted()
+    {
+        if (Role == UserRole.Admin)
+        {
+            return Result.Failure(DomainErrors.User.Ineligible);
+        }
+
+        return Result.Success();
     }
 }

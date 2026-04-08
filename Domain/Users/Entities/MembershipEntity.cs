@@ -33,6 +33,15 @@ public sealed class MembershipEntity : BaseEntity<MemberId>
         return Result.Success(membership);
     }
 
+    public Result ChangeType(MembershipType newType)
+    {
+        if (Type == newType) return Result.Failure(DomainErrors.User.Ineligible);
+
+        Type = newType;
+        Modified = DateTime.UtcNow;
+        return Result.Success();
+    }
+
     public Result AdminExtend(int months)
     {
         if (months <= 0) return Result.Failure(DomainErrors.Validation.InvalidFormat);
@@ -51,15 +60,6 @@ public sealed class MembershipEntity : BaseEntity<MemberId>
         if (Status == newStatus) return Result.Failure(DomainErrors.User.Ineligible);
 
         Status = newStatus;
-        Modified = DateTime.UtcNow;
-        return Result.Success();
-    }
-
-    public Result AdminChangeType(MembershipType newType)
-    {
-        if (Type == newType) return Result.Failure(DomainErrors.User.Ineligible);
-
-        Type = newType;
         Modified = DateTime.UtcNow;
         return Result.Success();
     }

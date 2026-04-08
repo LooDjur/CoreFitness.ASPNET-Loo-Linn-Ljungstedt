@@ -1,6 +1,9 @@
-﻿@{
+﻿@model AccountViewModel
+
+@{
+    var activeView = ViewData["ActiveView"]?.ToString()?.ToLower() ?? "about-me";
+
     ViewData["Title"] = "My Account";
-    var activeView = ViewData["ActiveView"]?.ToString() ?? "about-me";
     ViewData["PageClass"] = "about-me-page";
 }
 
@@ -15,16 +18,16 @@
         <aside class="account-sidebar">
             <partial name="Partials/_AccountMenu" />
         </aside>
-
         <section class="account-main">
             @if (activeView == "about-me")
             {
-                <partial name="Partials/_AboutMeFormSection" />
+                <partial name="Partials/_AboutMeFormSection" model="Model.Profile" />
             }
-            else if (activeView == "statistics")
+            else if (activeView == "my-membership")
             {
-                <partial name="Partials/_AccountStatistics" />
+                <partial name="Partials/_MyMembership" model="Model.Membership" />
             }
+            <partial name="Partials/_AccountStatistics" />
         </section>
     </div>
 </div>

@@ -5,4 +5,10 @@
 </section>
 
 <partial name="Partials/_OurMembershipOffers" />
-<partial name="Partials/Sections/_FaqSection" />
+<div class="container">
+    @await Component.InvokeAsync("Faq")
+</div>
+
+@section Scripts {
+    <script src="~/js/faqAccordion.js" asp-append-version="true"></script>
+}

@@ -1,9 +1,5 @@
-﻿@using Presentation.WebApp.Models.Account
-@model AboutMeFormSection
+﻿@model AboutMeViewModel
 
-@{
-    ViewData["Title"] = "About Me";
-}
 <section class="aboutme-details">
     <form id="aboutme-form" method="post" enctype="multipart/form-data" asp-action="UpdateDetails" asp-controller="Account" novalidate>
         <div data-id="title" class="title">
@@ -21,8 +17,6 @@
                 <input class="form-input" asp-for="LastName" />
                 <span class="field-validation" asp-validation-for="LastName"></span>
             </div>
-        </div>
-        <div class="form-grid-fields">
             <div data-id="email" class="form-group">
                 <label class="form-label" asp-for="Email"></label>
                 <input class="form-input" asp-for="Email" />

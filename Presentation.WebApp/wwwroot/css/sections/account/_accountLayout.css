@@ -139,10 +139,8 @@
             }
         }
     }
-}
 
-@media (max-width: 991px) {
-    .about-me-page, .auth-layout {
+    @media (max-width: 991px) {
         .account-layout {
             grid-template-columns: 1fr;
             gap: 2rem;
@@ -157,5 +155,11 @@
             grid-template-columns: auto 1fr auto;
             gap: 1rem;
         }
+    }
+}
+
+.membership-section {
+    p {
+        margin: 0.2rem 0;
     }
 }

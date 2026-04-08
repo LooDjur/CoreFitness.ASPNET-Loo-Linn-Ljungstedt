@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Presentation.WebApp.Models.ContactForm;
+namespace Presentation.WebApp.Models.CustomerService;
 
-public class ContactFormSection
+public class ContactViewModel
 {
     [Required(ErrorMessage = "You must enter a first name")]
     [Display(Name = "First Name", Prompt = "")]
@@ -13,7 +13,7 @@ public class ContactFormSection
     public string LastName { get; set; } = null!;
 
     [Required(ErrorMessage = "You must enter an email address")]
-    [EmailAddress(ErrorMessage = "You must enter an valid email address")]
+    [EmailAddress(ErrorMessage = "Invalid email address")]
     [Display(Name = "Email Address", Prompt = "name@example.com")]
     public string Email { get; set; } = null!;
 
@@ -26,6 +26,6 @@ public class ContactFormSection
     public string Message { get; set; } = null!;
 
     [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms and conditions")]
-    [Display(Name = "I accept the terms and conditions that CoreFitness savess my informatioin")]
+    [Display(Name = "I accept t´hat CoreFitness will save my information.")]
     public bool AcceptSavePersonalInformation { get; set; }
 }

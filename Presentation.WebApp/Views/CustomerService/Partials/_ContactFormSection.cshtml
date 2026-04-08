@@ -1,5 +1,4 @@
-﻿@using Presentation.WebApp.Models.ContactForm
-@model ContactFormSection
+﻿@model ContactViewModel
 
 <section class="section__contact">
     <div class="container">
@@ -16,45 +15,43 @@
 
                 <div class="form-grid-fields">
                     <div data-id="firstname" class="form-group">
-                        <label class="form-label" asp-for="FirstName">First Name</label>
-                        <input class="form-input" asp-for="FirstName" placeholder="Enter your first name" />
-                        <span class="field-validation" asp-validation-for="FirstName"></span>
+                        <label class="form-label" asp-for="FirstName"></label>
+                        <input class="form-input" asp-for="FirstName" />
+                        <span asp-validation-for="FirstName" class="field-validation"></span>
                     </div>
                     <div data-id="lastname" class="form-group">
-                        <label class="form-label" asp-for="LastName">Last Name</label>
-                        <input class="form-input" asp-for="LastName" placeholder="Enter your last name" />
-                        <span class="field-validation" asp-validation-for="LastName"></span>
+                        <label class="form-label" asp-for="LastName"></label>
+                        <input class="form-input" asp-for="LastName" />
+                        <span asp-validation-for="LastName" class="field-validation"></span>
                     </div>
                 </div>
 
                 <div class="form-grid-fields">
                     <div data-id="email" class="form-group">
-                        <label class="form-label" asp-for="Email">Email Address</label>
-                        <input class="form-input" asp-for="Email" type="email" placeholder="example@mail.com" />
-                        <span class="field-validation" asp-validation-for="Email"></span>
+                        <label class="form-label" asp-for="Email"></label>
+                        <input class="form-input" asp-for="Email" />
+                        <span asp-validation-for="Email" class="field-validation"></span>
                     </div>
                     <div data-id="phone" class="form-group">
-                        <label class="form-label" asp-for="Phone">Phone Number</label>
-                        <input class="form-input" asp-for="Phone" type="tel" placeholder="Your phone number" />
-                        <span class="field-validation" asp-validation-for="Phone"></span>
+                        <label class="form-label" asp-for="Phone"></label>
+                        <input class="form-input" asp-for="Phone" />
+                        <span asp-validation-for="Phone" class="field-validation"></span>
                     </div>
                 </div>
 
                 <div data-id="message" class="form-group">
-                    <label class="form-label" asp-for="Message">Message</label>
-                    <textarea class="form-textarea" asp-for="Message" rows="5" placeholder="How can we help you?"></textarea>
-                    <span class="field-validation" asp-validation-for="Message"></span>
+                    <label class="form-label" asp-for="Message"></label>
+                    <textarea class="form-textarea" asp-for="Message" rows="5"></textarea>
+                    <span asp-validation-for="Message" class="field-validation"></span>
                 </div>
 
                 <div data-id="terms" class="form-group">
                     <div class="checkbox-group">
                         <input class="form-checkbox-input" asp-for="AcceptSavePersonalInformation" id="accept-terms" />
                         <label class="checkbox-checkmark" for="accept-terms"></label>
-                        <label class="form-label" asp-for="AcceptSavePersonalInformation" for="accept-terms">
-                            I accept that my personal information is saved according to the privacy policy.
-                        </label>
+                        <label class="form-label" asp-for="AcceptSavePersonalInformation"></label>
+                        <span asp-validation-for="AcceptSavePersonalInformation" class="field-validation"></span>
                     </div>
-                    <span class="field-validation-error" asp-validation-for="AcceptSavePersonalInformation"></span>
                 </div>
 
                 <div class="form-button">

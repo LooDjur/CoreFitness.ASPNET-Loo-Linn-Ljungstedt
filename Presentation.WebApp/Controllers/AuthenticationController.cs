@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Users.Commands.Create.User;
+using Domain.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.WebApp.Controllers.Common;
@@ -16,12 +17,12 @@ public class AuthenticationController(
     public IActionResult SignIn(string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
-        return View(new SignInForm());
+        return View(new SignInFormViewModel());
     }
 
     [HttpPost]
     [Route("/sign-in")]
-    public async Task<IActionResult> SignIn(SignInForm form, string? returnUrl = null)
+    public async Task<IActionResult> SignIn(SignInFormViewModel form, string? returnUrl = null)
     {
         if (!ModelState.IsValid)
             return View(form);
@@ -36,53 +37,59 @@ public class AuthenticationController(
             return RedirectToAction("Index", "Home");
         }
 
-        ModelState.AddModelError("ErrorMessage", "Invalid email or password.");
-        return View(form);
+        return HandleFailure(Result.Failure(DomainErrors.Authentication.InvalidCredentials), form);
     }
 
     [HttpGet]
     [Route("/sign-up")]
-    public IActionResult SignUp() => View(new SignUpForm());
+    public IActionResult SignUp(string? returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+        return View(new SignUpFormViewModel());
+    }
 
     [HttpPost]
     [Route("/sign-up")]
-    public IActionResult SignUp(SignUpForm form)
+    public IActionResult SignUp(SignUpFormViewModel form, string? returnUrl = null)
     {
         if (!ModelState.IsValid)
             return View(form);
 
         HttpContext.Session.SetString("reg_email", form.Email);
 
-        return RedirectToAction("SetPassword");
+        return RedirectToAction("SetPassword", new { returnUrl });
     }
 
     [HttpGet]
     [Route("/set-password")]
-    public IActionResult SetPassword()
+    public IActionResult SetPassword(string? returnUrl = null)
     {
+        ViewData["ReturnUrl"] = returnUrl;
         var email = HttpContext.Session.GetString("reg_email");
-        if (string.IsNullOrEmpty(email)) return RedirectToAction("SignUp");
 
-        return View(new SetPasswordForm());
+        if (string.IsNullOrEmpty(email))
+            return RedirectToAction("SignUp");
+
+        return View(new SetPasswordViewModel());
     }
 
     [HttpPost]
     [Route("/set-password")]
-    public async Task<IActionResult> SetPassword(SetPasswordForm form)
+    public async Task<IActionResult> SetPassword(SetPasswordViewModel form, string? returnUrl = null)
     {
         var email = HttpContext.Session.GetString("reg_email");
+        if (string.IsNullOrEmpty(email))
+            return RedirectToAction("SignUp");
 
-        if (string.IsNullOrEmpty(email)) return RedirectToAction("SignUp");
-
-        if (!ModelState.IsValid) return View(form);
+        if (!ModelState.IsValid)
+            return View(form);
 
         var command = new RegisterQuickCommand(email, form.Password, "Member");
         var result = await sender.Send(command);
 
         if (result.IsFailure)
         {
-            ModelState.AddModelError("ErrorMessage", result.Error.Description);
-            return View(form);
+            return HandleFailure(result, form);
         }
 
         var signInResult = await authService.SignInUserAsync(email, form.Password, false);
@@ -90,9 +97,13 @@ public class AuthenticationController(
         if (signInResult.Succeeded)
         {
             HttpContext.Session.Remove("reg_email");
+
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+
             return RedirectToAction("Index", "Home");
         }
 
-        return RedirectToAction("SignIn");
+        return HandleFailure(Result.Failure(DomainErrors.Authentication.InvalidCredentials), form);
     }
 }

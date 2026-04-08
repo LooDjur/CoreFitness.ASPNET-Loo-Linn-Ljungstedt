@@ -1,0 +1,75 @@
+﻿@model AboutMeViewModel
+
+@{
+    Layout = "Layouts/_AuthLayout";
+    ViewData["Title"] = "Complete Your Membership";
+
+    var currentPlan = ViewData["CurrentPlan"]?.ToString();
+    var selectedPlan = ViewData["SelectedPlan"]?.ToString();
+
+    string buttonText;
+
+    if (string.IsNullOrEmpty(Model.FirstName))
+    {
+        buttonText = "Create Account & Start Membership";
+    }
+    else if (!string.IsNullOrEmpty(currentPlan) && !currentPlan.Equals(selectedPlan, StringComparison.OrdinalIgnoreCase))
+    {
+        buttonText = "Confirm & Update Plan";
+    }
+    else
+    {
+        buttonText = "Confirm & Start Membership";
+    }
+}
+
+<section>
+    <div class="signin-container">
+        <form method="post" asp-action="CompleteOnboarding" asp-controller="Memberships" asp-route-plan="@selectedPlan" enctype="multipart/form-data" novalidate>
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="plan" value="@selectedPlan" />
+
+            <div data-id="title" class="title">
+                <h2>Almost there!</h2>
+                <p>You've selected the <strong>@selectedPlan</strong>. Please confirm your details below to activate your account and start training.</p>
+                <hr />
+            </div>
+
+            <div class="form-grid-fields">
+                <div data-id="firstname" class="form-group">
+                    <label class="form-label" asp-for="FirstName">Förnamn</label>
+                    <input class="form-input" asp-for="FirstName" placeholder="Förnamn" />
+                    <span class="field-validation" asp-validation-for="FirstName"></span>
+                </div>
+
+                <div data-id="lastname" class="form-group">
+                    <label class="form-label" asp-for="LastName">Efternamn</label>
+                    <input class="form-input" asp-for="LastName" placeholder="Efternamn" />
+                    <span class="field-validation" asp-validation-for="LastName"></span>
+                </div>
+
+                <div data-id="email" class="form-group">
+                    <label class="form-label" asp-for="Email">E-post</label>
+                    <input class="form-input" asp-for="Email" readonly />
+                    <span class="field-validation" asp-validation-for="Email"></span>
+                </div>
+
+                <div data-id="phone" class="form-group">
+                    <label class="form-label" asp-for="Phone">Telefonnummer</label>
+                    <input class="form-input" asp-for="Phone" placeholder="Mobilnummer" />
+                    <span class="field-validation" asp-validation-for="Phone"></span>
+                </div>
+            </div>
+
+            <button class="btn" type="submit">@buttonText</button>
+
+            <div class="form-errormessage">
+                <div asp-validation-summary="ModelOnly" class="field-validation-error"></div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="~/Views/Shared/Partials/Globals/_ValidationScripts.cshtml" />
+}

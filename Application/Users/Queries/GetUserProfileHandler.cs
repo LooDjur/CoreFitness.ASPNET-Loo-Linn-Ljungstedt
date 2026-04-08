@@ -21,13 +21,15 @@ public sealed class GetUserProfileHandler(IUnitOfWork unitOfWork)
 
         var response = new UserResponse(
             user.Id.Value,
+            user.Membership?.Id.Value,
             user.Email.Value,
             user.FirstName?.Value,
             user.LastName?.Value,
             user.Phone?.Value,
             user.ProfileImageUrl,
-            user.Membership?.Type.ToString() ?? "Ingen plan",
-            user.Membership?.Status == MembershipStatus.Active
+            user.Membership?.Type.ToString() ?? "No active plan",
+            user.Membership?.ExpiryDate,
+            user.Membership?.IsEligibleToBook ?? false 
         );
 
         return Result.Success(response);

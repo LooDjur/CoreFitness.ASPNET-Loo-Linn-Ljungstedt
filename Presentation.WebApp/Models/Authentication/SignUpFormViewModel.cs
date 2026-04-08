@@ -2,7 +2,7 @@
 
 namespace Presentation.WebApp.Models.Authentication;
 
-public class SignUpForm
+public class SignUpFormViewModel
 {
     [Required(ErrorMessage = "Email address is required")]
     [EmailAddress(ErrorMessage = "Email address must be valid")]

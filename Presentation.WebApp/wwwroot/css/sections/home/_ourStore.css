@@ -58,4 +58,8 @@
             }
         }
     }
+
+    .additional-information {
+        font-weight: 600;
+    }
 }

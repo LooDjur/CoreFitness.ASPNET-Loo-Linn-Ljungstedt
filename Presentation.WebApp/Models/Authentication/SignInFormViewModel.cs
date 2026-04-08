@@ -2,7 +2,7 @@
 
 namespace Presentation.WebApp.Models.Authentication;
 
-public class SignInForm
+public class SignInFormViewModel
 {
     [Required(ErrorMessage = "Email is required")]
     [DataType(DataType.EmailAddress)]

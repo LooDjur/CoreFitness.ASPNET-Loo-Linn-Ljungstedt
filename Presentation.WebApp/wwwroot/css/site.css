@@ -8,11 +8,11 @@
 @import "components/_dropdown.css";
 @import "components/_forms.css";
 @import "components/_checkbox.css";
-@import "components/_faq.css";
 
 /* Sections */
 @import "sections/shared/_header.css";
 @import "sections/shared/_footer.css";
+@import "sections/shared/_faq.css";
 
 @import "sections/home/_hero.css";
 @import "sections/home/_brands.css";
