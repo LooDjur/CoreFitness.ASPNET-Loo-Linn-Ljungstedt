@@ -1,0 +1,21 @@
+﻿@model SessionFormViewModel
+
+@{
+    ViewData["Title"] = "Our Classes";
+}
+
+<section class="page-header">
+    <div class="container">
+        <partial name="Partials/Globals/_PageTitleSection" />
+    </div>
+</section>
+
+<div class="container">
+    @if (User.IsInRole("Admin"))
+    {
+        <partial name="Partials/_EditSessions" model="Model" />
+    }
+
+    @* <partial name="Partials/_EditSessions" model="Model" /> *@
+
+</div>

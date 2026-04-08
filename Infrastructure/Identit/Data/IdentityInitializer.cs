@@ -1,13 +1,10 @@
-﻿using Application.Abstractions.Authentication;
-using Application.Users.Commands.Create.User;
-using Domain.Common;
+﻿using Application.Users.Commands.Create.User;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using static Domain.Common.DomainErrors;
 
 namespace Infrastructure.Identit.Data;
 
-internal class IdentityInitializer
+public class IdentityInitializer
 {
     public static async Task AddDefaultAdminAsync(IServiceProvider sp)
     {
@@ -15,12 +12,8 @@ internal class IdentityInitializer
 
         var sender = scope.ServiceProvider.GetRequiredService<ISender>();
 
-        var command = new RegisterQuickCommand("admin@domain.com", "BytMig123!", "Admin");
+        var command = new RegisterQuickCommand("admin@admin.com", "aA1!", "Admin");
 
         var result = await sender.Send(command);
-
-        if (result.IsFailure)
-        {
-        }
     }
 }

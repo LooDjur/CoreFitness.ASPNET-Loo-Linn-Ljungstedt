@@ -1,7 +1,8 @@
 ﻿$(function() {
-    const $form = $("#contact-form");
+    const $form = $("#contact-form, .signin-form");
     const $checkbox = $("#accept-terms");
-    const $errorSpan = $('[data-valmsg-for="AcceptSavePersonalInformation"]');
+
+    const $errorSpan = $checkbox.siblings('span[data-valmsg-for]');
 
     if ($.validator && $form.data("validator")) {
         $form.data("validator").settings.ignore = [];
@@ -9,15 +10,19 @@
 
     function validateCheckbox() {
         const isChecked = $checkbox.is(":checked");
-        const rangeMsg = $checkbox.attr("data-val-range");
+        const errorMsg = $checkbox.attr("data-val-range");
 
         if (isChecked) {
             $(".checkbox-checkmark").removeClass("input-validation-error");
-            $errorSpan.text("").removeClass("field-validation-error").addClass("field-validation-valid");
+            $errorSpan.text("")
+                      .removeClass("field-validation-error")
+                      .addClass("field-validation-valid");
             return true;
         } else {
             $(".checkbox-checkmark").addClass("input-validation-error");
-            $errorSpan.text(rangeMsg).addClass("field-validation-error").removeClass("field-validation-valid");
+            $errorSpan.text(errorMsg)
+                      .addClass("field-validation-error")
+                      .removeClass("field-validation-valid");
             return false;
         }
     }

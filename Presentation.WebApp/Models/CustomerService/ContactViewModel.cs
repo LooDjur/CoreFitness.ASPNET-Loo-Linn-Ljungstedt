@@ -26,6 +26,6 @@ public class ContactViewModel
     public string Message { get; set; } = null!;
 
     [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms and conditions")]
-    [Display(Name = "I accept t´hat CoreFitness will save my information.")]
+    [Display(Name = "I accept that CoreFitness will save my information.")]
     public bool AcceptSavePersonalInformation { get; set; }
 }

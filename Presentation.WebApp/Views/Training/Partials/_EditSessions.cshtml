@@ -1,0 +1,52 @@
+﻿@model SessionFormViewModel
+
+<section class="section__session">
+    <form id="session-form" method="post" asp-action="Save" asp-controller="Sessions" novalidate>
+        <input type="hidden" asp-for="Id" />
+        <div data-id="title" class="title">
+            <h2>@(Model.IsEdit ? "Edit Session" : "Create New Session")</h2>
+            <hr />
+        </div>
+        <div class="form-grid-fields">
+            <div data-id="title-field" class="form-group">
+                <label class="form-label" asp-for="Title"></label>
+                <input class="form-input" asp-for="Title" />
+                <span class="field-validation" asp-validation-for="Title"></span>
+            </div>
+            <div data-id="instructor" class="form-group">
+                <label class="form-label" asp-for="Instructor"></label>
+                <input class="form-input" asp-for="Instructor" />
+                <span class="field-validation" asp-validation-for="Instructor"></span>
+            </div>
+            <div data-id="category" class="form-group">
+                <label class="form-label" asp-for="Category"></label>
+                <select class="form-input" asp-for="Category" asp-items="Html.GetEnumSelectList<Domain.Sessions.SessionCategory>()">
+                    <option value="">-- Select Category --</option>
+                </select>
+                <span class="field-validation" asp-validation-for="Category"></span>
+            </div>
+            <div data-id="capacity" class="form-group">
+                <label class="form-label" asp-for="MaxCapacity"></label>
+                <input class="form-input" asp-for="MaxCapacity" type="number" />
+                <span class="field-validation" asp-validation-for="MaxCapacity"></span>
+            </div>
+            <div data-id="starttime" class="form-group">
+                <label class="form-label" asp-for="StartTime"></label>
+                <input class="form-input" asp-for="StartTime" type="datetime-local" />
+                <span class="field-validation" asp-validation-for="StartTime"></span>
+            </div>
+        </div>
+        <hr />
+        <div data-id="description" class="form-group">
+            <label class="form-label" asp-for="Description"></label>
+            <textarea class="form-input" asp-for="Description" rows="5"></textarea>
+            <span class="field-validation" asp-validation-for="Description"></span>
+        </div>
+        <div class="form-button-container">
+            <button class="btn" type="submit">
+                @(Model.IsEdit ? "Update Session" : "Create Session")
+            </button>
+            <a asp-action="Index" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+</section>

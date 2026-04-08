@@ -1,8 +1,7 @@
 using Application;
 using Application.Faq;
 using Infrastructure.Extensions;
-using Infrastructure.Extensions.Persistence;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Infrastructure.Identit.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +16,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRouting(x => x.LowercaseUrls = true);
 
 var app = builder.Build();
+
+await IdentityInitializer.AddDefaultAdminAsync(app.Services);
 
 app.UseHsts();
 app.UseHttpsRedirection();

@@ -3,6 +3,7 @@ using Domain.Common;
 using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
 using Domain.Users.Entities;
+using Domain.Users.Enums;
 using MediatR;
 
 namespace Application.Users.Commands.Create.User;
@@ -22,8 +23,12 @@ public sealed class RegisterQuickHandler(
         if (identityResult.IsFailure)
             return identityResult;
 
+        var userRole = request.Role.Equals("Admin", StringComparison.OrdinalIgnoreCase)
+        ? UserRole.Admin
+        : UserRole.Member;
+
         var userId = UserId.Create(identityResult.Value);
-        var user = UserEntity.Register(userId.Value, emailRes.Value);
+        var user = UserEntity.Register(userId.Value, emailRes.Value, userRole);
 
         try
         {
@@ -32,7 +37,7 @@ public sealed class RegisterQuickHandler(
         }
         catch (Exception)
         {
-            return Result.Failure<Guid>(Error.Failure("Db.SaveError", "Kunde inte spara användaren i databasen."));
+            return Result.Failure<Guid>(DomainErrors.User.SaveError);
         }
 
         return Result.Success(user.Id.Value);

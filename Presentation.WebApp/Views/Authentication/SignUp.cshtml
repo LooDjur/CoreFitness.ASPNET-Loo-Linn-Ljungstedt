@@ -24,13 +24,13 @@
                 </div>
             </div>
 
-            <div data-id="TermsAndConditions" class="form-group">
+            <div data-id="terms" class="form-group">
                 <div class="checkbox-group">
-                    <input class="form-checkbox-input" asp-for="TermsAndConditions" id="TermsAndConditions" />
-                    <label class="checkbox-checkmark" for="TermsAndConditions"></label>
-                    <label class="form-label" asp-for="TermsAndConditions" for="TermsAndConditions"></label>
+                    <input class="form-checkbox-input" asp-for="TermsAndConditions" id="accept-terms" />
+                    <label class="checkbox-checkmark" for="accept-terms"></label>
+                    <label class="form-label" asp-for="TermsAndConditions"></label>
+                    <span asp-validation-for="TermsAndConditions" class="field-validation"></span>
                 </div>
-                <span class="field-validation" asp-validation-for="TermsAndConditions"></span>
             </div>
 
             <button class="btn" type="submit">Continue</button>
@@ -45,4 +45,5 @@
 
 @section Scripts {
     <partial name="~/Views/Shared/Partials/Globals/_ValidationScripts.cshtml" />
+    <script src="~/js/checkboxValidation.js" asp-append-version="true"></script>
 }

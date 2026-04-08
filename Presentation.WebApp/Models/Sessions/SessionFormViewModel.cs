@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.WebApp.Models.Sessions;
 
-public class SessionFormModel
+public class SessionFormViewModel
 {
     public Guid? Id { get; set; }
 
@@ -22,10 +22,12 @@ public class SessionFormModel
     [Required(ErrorMessage = "Ange starttid")]
     [Display(Name = "Starttid och datum")]
     [DataType(DataType.DateTime)]
-    [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
-    public DateTime StartTime { get; set; } = DateTime.Now.AddDays(1);
 
-    [Required(ErrorMessage = "Antal överstiger max-antal")]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
+    public DateTime StartTime { get; set; }
+
+    [Required(ErrorMessage = "Ange max antal platser")]
+    [Range(1, 100, ErrorMessage = "Antal platser måste vara mellan 1 och 100")]
     [Display(Name = "Max antal platser")]
     public int MaxCapacity { get; set; } = 10;
 

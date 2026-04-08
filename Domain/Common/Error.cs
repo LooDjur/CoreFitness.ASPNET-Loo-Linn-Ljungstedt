@@ -50,6 +50,7 @@ public static class DomainErrors
         public static readonly Error Ineligible = Error.Failure("User.Ineligible", "User status error.");
         public static readonly Error LimitReached = Error.Conflict("User.Limit", "Limit exceeded.");
         public static readonly Error EmailInvalid = Error.Validation("User.EmailInvalid", "Email is invalid.");
+        public static readonly Error SaveError = Error.Failure("User.SaveError", "Kunde inte spara användaren i databasen.");
     }
 
     public static class ContactRequest
