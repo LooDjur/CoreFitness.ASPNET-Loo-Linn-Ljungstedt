@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Presentation.WebApp.Models.Common.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.WebApp.Models.CustomerService;
 
@@ -25,7 +26,7 @@ public class ContactViewModel
     [Display(Name = "Message", Prompt = "Message")]
     public string Message { get; set; } = null!;
 
-    [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms and conditions")]
-    [Display(Name = "I accept that CoreFitness will save my information.")]
-    public bool AcceptSavePersonalInformation { get; set; }
+    [CheckboxRequired(ErrorMessage = "You must accept user terms & conditions.")]
+    [Display(Name = "I accept the user terms & conditions")]
+    public bool TermsAndConditions { get; set; }
 }

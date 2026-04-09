@@ -1,4 +1,4 @@
-﻿@model SessionFormViewModel
+﻿@model SessionsViewModel
 
 @{
     ViewData["Title"] = "Our Classes";
@@ -10,12 +10,59 @@
     </div>
 </section>
 
-<div class="container">
-    @if (User.IsInRole("Admin"))
-    {
-        <partial name="Partials/_EditSessions" model="Model" />
-    }
+<div class="training-page">
+    <div class="container">
+        
+        @if (User.IsInRole("Admin"))
+        {
+            <section class="admin-form-section">
+                <partial name="Partials/_EditSessions" model="Model.Form" />
+            </section>
+        }
 
-    @* <partial name="Partials/_EditSessions" model="Model" /> *@
+        <section class="sessions-section">
+            <div class="sessions-grid">
+                @foreach (var session in Model.Sessions)
+                {
+                    <article class="session-card">
+                        <div class="session-content">
+                            <span class="session-time">@session.StartTime.ToString("HH:mm")</span>
+                            
+                            <h3>@session.Title</h3>
+                            
+                            <div class="session-info-meta">
+                                <span>Coach: @session.Instructor</span>
+                                <span>Category: @session.Category</span>
+                            </div>
 
+                            <p>@session.Description</p>
+                        </div>
+
+                        <div class="session-actions">
+                            <form asp-action="Book" asp-route-id="@session.Id" method="post">
+                                <button type="submit" class="btn-book">Book Now</button>
+                            </form>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <div class="admin-buttons">
+                                    <form asp-action="Edit" asp-route-id="@session.Id" method="get">
+                                        <button type="submit">Edit</button>
+                                    </form>
+                                    
+                                    <form asp-action="Delete" asp-route-id="@session.Id" method="post">
+                                        <button type="submit">Delete</button>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    </article>
+                }
+            </div>
+        </section>
+    </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

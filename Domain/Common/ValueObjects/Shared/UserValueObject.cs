@@ -78,7 +78,7 @@ public record PhoneNumber : StringValueObject
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            return Result.Failure<PhoneNumber>(DomainErrors.Validation.Required);
+            return Result.Success(new PhoneNumber(string.Empty));
         }
 
         if (value.Length > Max)

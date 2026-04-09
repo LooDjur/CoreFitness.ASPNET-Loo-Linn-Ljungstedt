@@ -11,26 +11,16 @@ public sealed class CompleteOnboardingHandler(IUnitOfWork unitOfWork)
 {
     public async Task<Result> Handle(CompleteOnboardingCommand request, CancellationToken ct)
     {
-        var userIdResult = UserId.Create(request.UserId);
-        if (userIdResult.IsFailure) return Result.Failure(userIdResult.Error);
+        var user = await unitOfWork.Users.GetUserWithMembershipAsync(
+            UserId.Create(request.UserId).Value, ct);
 
-        var user = await unitOfWork.Users.GetUserWithMembershipAsync(userIdResult.Value, ct);
-        if (user is null) return Result.Failure(DomainErrors.User.NotFound);
+        if (user is null)
+            return Result.Failure(DomainErrors.User.NotFound);
 
-        var fnRes = FirstName.Create(request.FirstName);
-        var lnRes = LastName.Create(request.LastName);
-        var nameValidation = Result.FirstFailureOrSuccess(fnRes, lnRes);
-        if (nameValidation.IsFailure) return nameValidation;
-
-        PhoneNumber? phone = null;
-        if (!string.IsNullOrWhiteSpace(request.Phone))
-        {
-            var phoneRes = PhoneNumber.Create(request.Phone);
-            if (phoneRes.IsFailure) return Result.Failure(phoneRes.Error);
-            phone = phoneRes.Value;
-        }
-
-        user.CompleteProfile(fnRes.Value, lnRes.Value, phone);
+        user.CompleteProfile(
+            FirstName.Create(request.FirstName).Value,
+            LastName.Create(request.LastName).Value,
+            PhoneNumber.Create(request.Phone).Value);
 
         if (!Enum.TryParse<MembershipType>(request.PlanType, true, out var type))
         {
@@ -38,7 +28,8 @@ public sealed class CompleteOnboardingHandler(IUnitOfWork unitOfWork)
         }
 
         var membershipResult = user.StartMembership(type);
-        if (membershipResult.IsFailure) return membershipResult;
+        if (membershipResult.IsFailure)
+            return membershipResult;
 
         await unitOfWork.SaveChangesAsync(ct);
 

@@ -124,6 +124,10 @@
                 color: var(--gray-color);
             }
 
+            form {
+                display: contents;
+            }
+
             .btn-remove {
                 color: #d9534f;
                 font-weight: 700;
@@ -132,9 +136,18 @@
                 border: none;
                 cursor: pointer;
                 font-size: 0.75rem;
+                padding: 0;
+                display: inline-block;
+
+                &::after, &::before {
+                    display: none;
+                }
 
                 &:hover {
                     text-decoration: underline;
+                    background: transparent;
+                    box-shadow: none;
+                    transform: none;
                 }
             }
         }

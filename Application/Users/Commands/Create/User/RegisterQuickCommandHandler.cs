@@ -15,30 +15,26 @@ public sealed class RegisterQuickHandler(
 {
     public async Task<Result<Guid>> Handle(RegisterQuickCommand request, CancellationToken ct)
     {
-        var emailRes = Email.Create(request.Email);
-        if (emailRes.IsFailure)
-            return Result.Failure<Guid>(emailRes.Error);
+        var identityResult = await authService.RegisterIdentityAsync(
+            request.Email,
+            request.Password,
+            request.Role,
+            ct);
 
-        var identityResult = await authService.RegisterIdentityAsync(request.Email, request.Password, request.Role, ct);
         if (identityResult.IsFailure)
             return identityResult;
 
         var userRole = request.Role.Equals("Admin", StringComparison.OrdinalIgnoreCase)
-        ? UserRole.Admin
-        : UserRole.Member;
+            ? UserRole.Admin
+            : UserRole.Member;
 
-        var userId = UserId.Create(identityResult.Value);
-        var user = UserEntity.Register(userId.Value, emailRes.Value, userRole);
+        var user = UserEntity.Register(
+            UserId.Create(identityResult.Value).Value,
+            Email.Create(request.Email).Value,
+            userRole);
 
-        try
-        {
-            await unitOfWork.Users.AddAsync(user, ct);
-            await unitOfWork.SaveChangesAsync(ct);
-        }
-        catch (Exception)
-        {
-            return Result.Failure<Guid>(DomainErrors.User.SaveError);
-        }
+        await unitOfWork.Users.AddAsync(user, ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         return Result.Success(user.Id.Value);
     }

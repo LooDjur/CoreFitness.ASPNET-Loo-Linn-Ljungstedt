@@ -21,7 +21,7 @@
         <section class="account-main">
             @if (activeView == "about-me")
             {
-                <partial name="Partials/_AboutMeFormSection" model="Model.Profile" />
+                <partial name="Partials/_AboutMeFormSection" for="Profile" />
             }
             else if (activeView == "my-membership")
             {

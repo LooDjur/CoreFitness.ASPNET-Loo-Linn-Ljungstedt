@@ -5,7 +5,7 @@ namespace Domain.ContactReq.ValueObjects;
 
 public record MessageBody : StringValueObject
 {
-    private const int Min = 10;
+    private const int Min = 2;
     private const int Max = 2000;
 
     private MessageBody() : base() { }

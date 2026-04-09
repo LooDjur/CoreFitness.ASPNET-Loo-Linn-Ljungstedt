@@ -1,35 +1,49 @@
-﻿using Domain.Common;
+﻿using Application.Abstractions.Authentication;
+using Domain.Common;
 using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
 using MediatR;
 
 namespace Application.Users.Commands.Update;
 
-public sealed class UpdateProfileHandler(IUnitOfWork unitOfWork)
+public sealed class UpdateProfileHandler(
+    IUnitOfWork unitOfWork,
+    IAuthService authService)
     : IRequestHandler<UpdateProfileCommand, Result>
 {
     public async Task<Result> Handle(UpdateProfileCommand request, CancellationToken ct)
     {
-        var userId = UserId.Create(request.UserId).Value;
-        var user = await unitOfWork.Users.GetByIdAsync(userId, ct);
+        var user = await unitOfWork.Users.GetByIdAsync(UserId.Create(request.UserId).Value, ct);
         if (user is null) return Result.Failure(DomainErrors.User.NotFound);
 
-        var emailRes = Email.Create(request.Email);
-        var fnRes = FirstName.Create(request.FirstName);
-        var lnRes = LastName.Create(request.LastName);
+        var newEmail = Email.Create(request.Email).Value;
 
-        var validation = Result.FirstFailureOrSuccess(emailRes, fnRes, lnRes);
-        if (validation.IsFailure) return validation;
+        if (user.Email.Value != request.Email)
+        {
+            if (!await unitOfWork.Users.IsEmailUniqueAsync(newEmail, ct))
+                return Result.Failure(DomainErrors.User.EmailInvalid);
+        }
 
-        if (user.Email != emailRes.Value && !await unitOfWork.Users.IsEmailUniqueAsync(emailRes.Value, ct))
-            return Result.Failure(DomainErrors.User.EmailInvalid);
+        var identityResult = await authService.UpdateIdentityUserAsync(
+            request.UserId,
+            request.Email,
+            request.FirstName,
+            request.LastName,
+            request.Phone,
+            ct);
 
-        PhoneNumber? phone = !string.IsNullOrWhiteSpace(request.Phone)
-            ? PhoneNumber.Create(request.Phone).Value : null;
+        if (identityResult.IsFailure) return identityResult;
 
-        user.UpdateProfile(fnRes.Value, lnRes.Value, emailRes.Value, phone, request.ProfileImageUrl);
+        user.UpdateProfile(
+            FirstName.Create(request.FirstName).Value,
+            LastName.Create(request.LastName).Value,
+            newEmail,
+            PhoneNumber.Create(request.Phone).Value,
+            request.ProfileImageUrl);
 
+        unitOfWork.Users.Update(user);
         await unitOfWork.SaveChangesAsync(ct);
+
         return Result.Success();
     }
 }

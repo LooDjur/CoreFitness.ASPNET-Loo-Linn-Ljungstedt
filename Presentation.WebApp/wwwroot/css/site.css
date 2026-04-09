@@ -25,4 +25,6 @@
 @import "sections/customerservice/_contactForm.css";
 
 @import "sections/account/_accountLayout.css";
+@import "sections/account/_ourClasses.css";
+
 @import "sections/authentication/_signIn.css";

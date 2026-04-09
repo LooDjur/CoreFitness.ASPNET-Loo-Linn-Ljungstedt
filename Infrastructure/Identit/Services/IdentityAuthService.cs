@@ -14,7 +14,6 @@ public sealed class IdentityAuthService(
     {
         var appUser = AppUser.Create(email);
         var result = await userManager.CreateAsync(appUser, password);
-
         if (!result.Succeeded)
         {
             var error = result.Errors.First();
@@ -31,7 +30,6 @@ public sealed class IdentityAuthService(
         }
 
         var roleResult = await userManager.AddToRoleAsync(appUser, role);
-
         if (!roleResult.Succeeded)
         {
             var error = roleResult.Errors.First();
@@ -40,7 +38,47 @@ public sealed class IdentityAuthService(
 
         return Result.Success(Guid.Parse(appUser.Id));
     }
+    public async Task<Result> UpdateIdentityUserAsync(Guid userId, string newEmail, string firstName, string lastName, string? phoneNumber, CancellationToken ct = default)
+    {
+        var user = await userManager.FindByIdAsync(userId.ToString());
+        if (user == null)
+        {
+            return Result.Failure(DomainErrors.User.NotFound);
+        }
+        user.Email = newEmail;
+        user.UserName = newEmail;
+        user.FirstName = firstName;
+        user.LastName = lastName;
+        user.PhoneNumber = phoneNumber;
 
+        var result = await userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+        {
+            var error = result.Errors.First();
+            return Result.Failure(Error.Validation(error.Code, error.Description));
+        }
+
+        await signInManager.RefreshSignInAsync(user);
+        return Result.Success();
+    }
+
+    public async Task<Result> DeleteIdentityUserAsync(Guid userId, CancellationToken ct = default)
+    {
+        var user = await userManager.FindByIdAsync(userId.ToString());
+        if (user == null)
+        {
+            return Result.Failure(DomainErrors.User.NotFound);
+        }
+
+        var result = await userManager.DeleteAsync(user);
+        if (!result.Succeeded)
+        {
+            var error = result.Errors.First();
+            return Result.Failure(Error.Validation(error.Code, error.Description));
+        }
+
+        return Result.Success();
+    }
     public async Task<AuthResult> SignInUserAsync(string email, string password, bool rememberMe)
     {
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
@@ -51,7 +89,6 @@ public sealed class IdentityAuthService(
             return AuthResult.Failed(DomainErrors.Authentication.InvalidCredentials);
 
         var result = await signInManager.PasswordSignInAsync(user, password, rememberMe, false);
-
         if (result.Succeeded) return AuthResult.Ok();
 
         return AuthResult.Failed(result.IsLockedOut

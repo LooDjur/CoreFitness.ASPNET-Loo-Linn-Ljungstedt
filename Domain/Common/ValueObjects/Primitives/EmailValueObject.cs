@@ -7,10 +7,6 @@ namespace Domain.Common.ValueObjects.Primitives;
 
 public abstract record EmailValueObject
 {
-    private static readonly Regex EmailRegex = new(
-        @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
-        RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
     public string Value { get; init; } = null!;
 
     protected EmailValueObject() { }
@@ -18,8 +14,7 @@ public abstract record EmailValueObject
 
     protected static bool IsInvalidFormat(string value)
     {
-        if (string.IsNullOrWhiteSpace(value)) return true;
-        return !EmailRegex.IsMatch(value);
+        return string.IsNullOrWhiteSpace(value);
     }
 
     public static implicit operator string(EmailValueObject email) => email?.Value ?? string.Empty;

@@ -13,22 +13,18 @@ public sealed class DeleteSessionCommandHandler(IUnitOfWork unitOfWork)
 {
     public async Task<Result> Handle(DeleteSessionCommand request, CancellationToken ct)
     {
-        var sessionIdResult = SessionId.Create(request.Id);
-        if (sessionIdResult.IsFailure)
-            return Result.Failure(sessionIdResult.Error);
+        var sessionId = SessionId.Create(request.Id).Value;
 
-        var session = await unitOfWork.Sessions.GetByIdAsync(sessionIdResult.Value, ct);
+        var session = await unitOfWork.Sessions.GetByIdAsync(sessionId, ct);
 
         if (session is null)
             return Result.Failure(DomainErrors.Session.NotFound);
 
         var deleteResult = session.Delete();
-
         if (deleteResult.IsFailure)
             return deleteResult;
 
         unitOfWork.Sessions.Update(session);
-
         await unitOfWork.SaveChangesAsync(ct);
 
         return Result.Success();

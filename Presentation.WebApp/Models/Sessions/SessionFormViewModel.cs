@@ -7,34 +7,49 @@ public class SessionFormViewModel
 {
     public Guid? Id { get; set; }
 
-    [Required(ErrorMessage = "Titeln får inte vara tom")]
-    [Display(Name = "Passets Titel", Prompt = "t.ex. Morgonyoga")]
+    [Required(ErrorMessage = "Title cannot be empty")]
+    [Display(Name = "Session Title", Prompt = "e.g. Morning Yoga")]
     public string Title { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Välj en instruktör")]
-    [Display(Name = "Instruktör", Prompt = "Vem håller i passet?")]
+    [Required(ErrorMessage = "Please select an instructor")]
+    [Display(Name = "Instructor", Prompt = "Who is leading the session?")]
     public string Instructor { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Välj en kategori")]
-    [Display(Name = "Kategori")]
-    public SessionCategory Category { get; set; }
+    [Required(ErrorMessage = "Please select a category")]
+    [Display(Name = "Category")]
+    public SessionCategory? Category { get; set; }
 
-    [Required(ErrorMessage = "Ange starttid")]
-    [Display(Name = "Starttid och datum")]
+    [Required(ErrorMessage = "Please provide a start time")]
+    [Display(Name = "Start Time and Date")]
     [DataType(DataType.DateTime)]
-
+    [FutureDate(ErrorMessage = "Sessions must be scheduled at least one day in advance.")]
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
-    public DateTime StartTime { get; set; }
+    public DateTime StartTime { get; set; } = DateTime.Today.AddDays(1).AddHours(10);
 
-    [Required(ErrorMessage = "Ange max antal platser")]
-    [Range(1, 100, ErrorMessage = "Antal platser måste vara mellan 1 och 100")]
-    [Display(Name = "Max antal platser")]
+    [Required(ErrorMessage = "Please specify maximum capacity")]
+    [Range(10, 20, ErrorMessage = "Capacity must be between 10 and 20")]
+    [Display(Name = "Max Capacity")]
     public int MaxCapacity { get; set; } = 10;
 
-    [Required(ErrorMessage = "Beskriv passet")]
-    [Display(Name = "Beskrivning", Prompt = "Berätta lite om passet...")]
+    [Required(ErrorMessage = "Please provide a description")]
+    [Display(Name = "Description", Prompt = "Tell us a bit about the session...")]
     [DataType(DataType.MultilineText)]
     public string Description { get; set; } = string.Empty;
 
     public bool IsEdit => Id.HasValue;
+}
+
+public class FutureDateAttribute : ValidationAttribute
+{
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+    {
+        if (value is DateTime dateTime)
+        {
+            if (dateTime.Date <= DateTime.Today)
+            {
+                return new ValidationResult(ErrorMessage);
+            }
+        }
+        return ValidationResult.Success;
+    }
 }

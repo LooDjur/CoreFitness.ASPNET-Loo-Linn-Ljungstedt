@@ -1,6 +1,7 @@
 ﻿using Domain.Common.Abstractions;
 using Domain.ContactReq.Repositories;
 using Domain.Sessions;
+using Domain.Users.Repositories;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Context;
 using Infrastructure.Persistence.Repositories;
@@ -22,6 +23,7 @@ public static class PersistenceRegistrationExtension
             options.UseSqlServer(configuration.GetConnectionString("SqlConnection"));
         });
 
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IContactRequestRepository, ContactRequestRepository>();
         services.AddScoped<ISessionRepository, SessionRepository>();
 

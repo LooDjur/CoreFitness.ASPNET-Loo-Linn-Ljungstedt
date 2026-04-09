@@ -49,7 +49,7 @@ public record Description : StringValueObject
 public record Capacity : RangeValueObject
 {
     private const int Min = 10;
-    private const int Max = 40;
+    private const int Max = 20;
 
     private Capacity() : base() { }
     private Capacity(int value) : base(value) { }

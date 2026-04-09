@@ -41,9 +41,11 @@
 
             <div class="account-footer-info">
                 <p>If you'd like to cancel your account click below</p>
-                <a asp-action="DeleteAccount" asp-controller="Account" class="btn-remove">
-                    Remove Account
-                </a>
+                <form asp-action="DeleteAccount" asp-controller="Account" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-remove">
+                        Remove Account</button>
+                </form>
             </div>
         </div>
     </div>

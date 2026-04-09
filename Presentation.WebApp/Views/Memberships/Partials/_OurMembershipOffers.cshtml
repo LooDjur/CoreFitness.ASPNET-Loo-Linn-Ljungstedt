@@ -1,7 +1,10 @@
 ﻿@{
-    var currentPlan = ViewData["CurrentPlan"]?.ToString() ?? "";
+    var currentPlan = ViewData["CurrentPlan"]?.ToString()?.Trim() ?? "";
+
     var isStandard = currentPlan.Equals("Standard", StringComparison.OrdinalIgnoreCase);
     var isPremium = currentPlan.Equals("Premium", StringComparison.OrdinalIgnoreCase);
+
+    bool hasActiveMembership = isStandard || isPremium;
 }
 
 <section class="section__memberships">
@@ -36,7 +39,7 @@
                                asp-controller="Memberships"
                                asp-action="Select"
                                asp-route-plan="Standard">
-                            @(string.IsNullOrEmpty(currentPlan) ? "Join Now" : "Downgrade")
+                            @(!hasActiveMembership ? "Join Now" : "Downgrade")
                         </a>
                     }
                        
@@ -72,7 +75,7 @@
                                asp-controller="Memberships"
                                asp-action="Select"
                                asp-route-plan="Premium">
-                            @(string.IsNullOrEmpty(currentPlan) ? "Join Now" : "Upgrade")
+                            @(!hasActiveMembership ? "Join Now" : "Upgrade")
                         </a>
                     }
                        
