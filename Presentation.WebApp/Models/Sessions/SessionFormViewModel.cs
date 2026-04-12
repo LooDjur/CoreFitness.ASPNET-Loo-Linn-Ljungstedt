@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.WebApp.Models.Sessions;
 
-public class SessionFormViewModel
+public class SessionFormViewModel : IValidatableObject
 {
     public Guid? Id { get; set; }
 
@@ -24,7 +24,13 @@ public class SessionFormViewModel
     [DataType(DataType.DateTime)]
     [FutureDate(ErrorMessage = "Sessions must be scheduled at least one day in advance.")]
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
-    public DateTime StartTime { get; set; } = DateTime.Today.AddDays(1).AddHours(10);
+    public DateTime? StartTime { get; set; } = DateTime.Today.AddDays(1).AddHours(10);
+
+    [Required(ErrorMessage = "Please provide an end time")]
+    [Display(Name = "End Time")]
+    [DataType(DataType.DateTime)]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
+    public DateTime? EndTime { get; set; } = DateTime.Today.AddDays(1).AddHours(11);
 
     [Required(ErrorMessage = "Please specify maximum capacity")]
     [Range(10, 20, ErrorMessage = "Capacity must be between 10 and 20")]
@@ -37,6 +43,26 @@ public class SessionFormViewModel
     public string Description { get; set; } = string.Empty;
 
     public bool IsEdit => Id.HasValue;
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (StartTime.HasValue && EndTime.HasValue)
+        {
+            if (EndTime.Value <= StartTime.Value)
+            {
+                yield return new ValidationResult(
+                    "End time must be after start time.",
+                    [nameof(EndTime)]);
+            }
+
+            if (EndTime.Value > StartTime.Value.AddHours(4))
+            {
+                yield return new ValidationResult(
+                    "A session cannot be longer than 4 hours.",
+                    [nameof(EndTime)]);
+            }
+        }
+    }
 }
 
 public class FutureDateAttribute : ValidationAttribute
@@ -47,9 +73,10 @@ public class FutureDateAttribute : ValidationAttribute
         {
             if (dateTime.Date <= DateTime.Today)
             {
-                return new ValidationResult(ErrorMessage);
+                return new ValidationResult(ErrorMessage ?? "Date must be in the future.");
             }
         }
+
         return ValidationResult.Success;
     }
 }

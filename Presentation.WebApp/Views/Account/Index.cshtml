@@ -21,11 +21,15 @@
         <section class="account-main">
             @if (activeView == "about-me")
             {
-                <partial name="Partials/_AboutMeFormSection" for="Profile" />
+                <partial name="Partials/_AboutMeFormSection" model="Model.Profile" />
             }
             else if (activeView == "my-membership")
             {
                 <partial name="Partials/_MyMembership" model="Model.Membership" />
+            }
+            else if (activeView == "my-bookings")
+            {
+                <partial name="Partials/_MyBookings" model="Model.MyBookings" />
             }
             <partial name="Partials/_AccountStatistics" />
         </section>

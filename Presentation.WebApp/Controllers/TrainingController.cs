@@ -1,36 +1,93 @@
-﻿using Application.Sessions.Commands.Create;
-using Application.Sessions.Commands.Update;
+﻿using Application.Booking;
+using Application.Sessions.Commands.Create;
 using Application.Sessions.Commands.Delete;
-using Application.Sessions.Queries;
+using Application.Sessions.Commands.Update;
 using Application.Sessions.Output;
+using Application.Sessions.Queries;
+using Domain.Common.Abstractions;
+using Domain.Common.ValueObjects.Shared;
 using Domain.Sessions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.WebApp.Models.Sessions;
+using System.Security.Claims;
 
 namespace Presentation.WebApp.Controllers;
 
 [Authorize]
-public class TrainingController(ISender sender) : Controller
+public class TrainingController(IUnitOfWork unitOfWork, ISender sender) : Controller
 {
-    private async Task<List<SessionOutput>> GetSessionsListAsync(CancellationToken ct)
+    private async Task<List<SessionResponse>> GetSessionsListAsync(CancellationToken ct)
     {
-        var result = await sender.Send(new GetSessionsQuery(), ct);
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        Guid? userId = userIdClaim != null ? Guid.Parse(userIdClaim) : null;
+
+        var result = await sender.Send(new GetSessionsQuery(userId), ct);
+
         return result.IsSuccess ? result.Value : [];
     }
 
     [HttpGet]
-    [AllowAnonymous]
     public async Task<IActionResult> Index(CancellationToken ct)
     {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        Guid? userId = userIdClaim != null ? Guid.Parse(userIdClaim) : null;
+
+        var result = await sender.Send(new GetSessionsQuery(userId), ct);
+
+        var user = userId.HasValue
+            ? await unitOfWork.Users.GetByIdAsync(UserId.Create(userId.Value).Value, ct)
+            : null;
+
         var viewModel = new SessionsViewModel
         {
-            Sessions = await GetSessionsListAsync(ct),
-            Form = new SessionFormViewModel()
+            Sessions = result.IsSuccess ? result.Value : [],
+            Form = new SessionFormViewModel(),
+
+            IsMember = user?.Membership != null
         };
 
         return View(viewModel);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Book(Guid id, CancellationToken ct)
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdClaim)) return RedirectToAction("Login", "Account");
+
+        if (!Guid.TryParse(userIdClaim, out var userId)) return RedirectToAction("Login", "Account");
+
+        var command = new CreateBookingCommand(id, userId, DateTime.UtcNow);
+        var result = await sender.Send(command, ct);
+
+        if (result.IsFailure)
+            TempData["Error"] = result.Error.Description;
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Cancel(Guid id, bool fromAccount = false, CancellationToken ct = default)
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdClaim)) return RedirectToAction("Login", "Account");
+
+        var command = new CancelBookingCommand(id, Guid.Parse(userIdClaim));
+        var result = await sender.Send(command, ct);
+
+        if (result.IsFailure)
+            TempData["Error"] = "Kunde inte avboka: " + result.Error.Description;
+
+        if (fromAccount)
+        {
+            return RedirectToAction("Index", "Account", new { viewName = "my-bookings" });
+        }
+
+        return RedirectToAction(nameof(Index));
     }
 
     [HttpGet]
@@ -56,6 +113,7 @@ public class TrainingController(ISender sender) : Controller
                 Category = Enum.Parse<SessionCategory>(s.Category),
                 MaxCapacity = s.MaxCapacity,
                 StartTime = s.StartTime,
+                EndTime = s.EndTime,
                 Description = s.Description
             }
         };
@@ -87,7 +145,9 @@ public class TrainingController(ISender sender) : Controller
             });
         }
 
-        var endTime = form.StartTime.AddHours(1);
+        var startTime = form.StartTime!.Value;
+        var endTime = form.EndTime!.Value;
+        var utcNow = DateTime.UtcNow;
 
         if (form.Id is Guid sessionId && sessionId != Guid.Empty)
         {
@@ -97,9 +157,10 @@ public class TrainingController(ISender sender) : Controller
                 form.Description,
                 form.Instructor,
                 category,
-                form.StartTime,
+                startTime,
                 endTime,
-                form.MaxCapacity);
+                form.MaxCapacity,
+                utcNow);
 
             var result = await sender.Send(command, ct);
             if (result.IsFailure)
@@ -115,9 +176,10 @@ public class TrainingController(ISender sender) : Controller
                 form.Description,
                 form.Instructor,
                 category,
-                form.StartTime,
+                startTime,
                 endTime,
-                form.MaxCapacity);
+                form.MaxCapacity,
+                utcNow);
 
             var result = await sender.Send(command, ct);
             if (result.IsFailure)
@@ -125,6 +187,31 @@ public class TrainingController(ISender sender) : Controller
                 ModelState.AddModelError("", result.Error.Description);
                 return View("Index", new SessionsViewModel { Sessions = await GetSessionsListAsync(ct), Form = form });
             }
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+    {
+        var command = new DeleteSessionCommand(id, DateTime.UtcNow);
+
+        var result = await sender.Send(command, ct);
+
+        if (result.IsFailure)
+        {
+            ModelState.AddModelError("DeleteError", result.Error.Description);
+
+            var viewModel = new SessionsViewModel
+            {
+                Sessions = await GetSessionsListAsync(ct),
+                Form = new SessionFormViewModel()
+            };
+
+            return View("Index", viewModel);
         }
 
         return RedirectToAction(nameof(Index));

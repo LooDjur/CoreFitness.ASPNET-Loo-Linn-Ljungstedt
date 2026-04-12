@@ -3,27 +3,39 @@ using Domain.Common;
 using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Sessions.Queries;
 
 public sealed class GetSessionByIdHandler(IUnitOfWork unitOfWork)
-    : IRequestHandler<GetSessionByIdQuery, Result<SessionOutput>>
+    : IRequestHandler<GetSessionByIdQuery, Result<SessionResponse>>
 {
-    public async Task<Result<SessionOutput>> Handle(GetSessionByIdQuery request, CancellationToken ct)
+    public async Task<Result<SessionResponse>> Handle(GetSessionByIdQuery request, CancellationToken ct)
     {
         var sessionIdResult = SessionId.Create(request.Id);
         if (sessionIdResult.IsFailure)
-            return Result.Failure<SessionOutput>(sessionIdResult.Error);
+            return Result.Failure<SessionResponse>(sessionIdResult.Error);
 
         var s = await unitOfWork.Sessions.GetByIdAsync(sessionIdResult.Value, ct);
 
         if (s is null || s.IsDeleted)
-            return Result.Failure<SessionOutput>(DomainErrors.Session.NotFound);
+            return Result.Failure<SessionResponse>(DomainErrors.Session.NotFound);
 
-        return Result.Success(new SessionOutput(
+        bool isBooked = false;
+        if (request.UserId.HasValue)
+        {
+            var userId = UserId.Create(request.UserId.Value).Value;
+            var user = await unitOfWork.Users.GetByIdAsync(userId, ct);
+
+            if (user?.Membership != null)
+            {
+                isBooked = await unitOfWork.Bookings.IsAlreadyBookedAsync(
+                    s.Id,
+                    user.Membership.Id,
+                    ct);
+            }
+        }
+
+        return Result.Success(new SessionResponse(
             s.Id.Value,
             s.Title.Value,
             s.Description.Value,
@@ -31,7 +43,8 @@ public sealed class GetSessionByIdHandler(IUnitOfWork unitOfWork)
             s.Category.ToString(),
             s.Schedule.StartTime,
             s.Schedule.EndTime,
-            s.MaxCapacity.Value
+            s.MaxCapacity.Value,
+            isBooked
         ));
     }
 }

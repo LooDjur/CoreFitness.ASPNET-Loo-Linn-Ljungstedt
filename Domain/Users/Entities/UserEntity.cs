@@ -15,57 +15,67 @@ public sealed class UserEntity : BaseEntity<UserId>, IAggregateRoot
     public UserRole Role { get; private set; }
     public string? ProfileImageUrl { get; private set; }
 
-    public bool HasActiveMembership => Membership is { IsEligibleToBook: true };
+    public bool HasActiveMembership(DateTime utcNow) =>
+        Membership is not null && Membership.IsEligibleToBook(utcNow);
 
     private UserEntity() { }
 
-    private UserEntity(UserId id, Email email, UserRole role)
+    private UserEntity(UserId id, Email email, UserRole role, DateTime utcNow)
     {
-        Id = id;
+        Initialize(id, utcNow);
+
         Email = email;
         Role = role;
     }
 
-    public static UserEntity Register(UserId id, Email email, UserRole role = UserRole.Member)
+    public static UserEntity Register(UserId id, Email email, DateTime utcNow, UserRole role = UserRole.Member)
     {
-        return new UserEntity(id, email, role);
+        return new UserEntity(id, email, role, utcNow);
     }
 
-    public Result StartMembership(MembershipType type)
+    public Result StartMembership(MembershipType type, DateTime utcNow)
     {
         if (Membership != null)
         {
-            return Membership.ChangeType(type);
+            if (Membership.IsDeleted)
+            {
+                Membership.Reactivate(type, utcNow);
+                UpdateModified(utcNow);
+                return Result.Success();
+            }
+
+            return Membership.ChangeType(type, utcNow);
         }
 
-        var membershipResult = MembershipEntity.CreateInternal(this.Id, type);
+        var membershipResult = MembershipEntity.CreateInternal(this.Id, type, utcNow);
 
         if (membershipResult.IsFailure)
             return Result.Failure(membershipResult.Error);
 
         Membership = membershipResult.Value;
-        Modified = DateTime.UtcNow;
+        UpdateModified(utcNow);
 
         return Result.Success();
     }
 
-    public Result CancelMembership()
+    public Result CancelMembership(DateTime utcNow)
     {
         if (Membership == null)
             return Result.Failure(DomainErrors.User.Ineligible);
 
-        Membership = null;
-        Modified = DateTime.UtcNow;
+        Membership.Cancel(utcNow);
+        UpdateModified(utcNow);
 
         return Result.Success();
     }
 
-    public Result CompleteProfile(FirstName firstName, LastName lastName, PhoneNumber? phone)
+    public Result CompleteProfile(FirstName firstName, LastName lastName, PhoneNumber? phone, DateTime utcNow)
     {
         FirstName = firstName;
         LastName = lastName;
         Phone = phone;
-        Modified = DateTime.UtcNow;
+
+        UpdateModified(utcNow);
         return Result.Success();
     }
 
@@ -74,14 +84,16 @@ public sealed class UserEntity : BaseEntity<UserId>, IAggregateRoot
         LastName lastName,
         Email email,
         PhoneNumber? phone,
-        string? profileImageUrl)
+        string? profileImageUrl,
+        DateTime utcNow)
     {
         FirstName = firstName;
         LastName = lastName;
         Email = email;
         Phone = phone;
         ProfileImageUrl = profileImageUrl;
-        Modified = DateTime.UtcNow;
+
+        UpdateModified(utcNow);
     }
 
     public Result CanBePermanentlyDeleted()

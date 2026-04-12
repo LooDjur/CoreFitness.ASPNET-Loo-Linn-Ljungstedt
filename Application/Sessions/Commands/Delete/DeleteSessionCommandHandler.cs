@@ -2,9 +2,6 @@
 using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Sessions.Commands.Delete;
 
@@ -13,14 +10,18 @@ public sealed class DeleteSessionCommandHandler(IUnitOfWork unitOfWork)
 {
     public async Task<Result> Handle(DeleteSessionCommand request, CancellationToken ct)
     {
-        var sessionId = SessionId.Create(request.Id).Value;
+        var sessionIdResult = SessionId.Create(request.Id);
 
-        var session = await unitOfWork.Sessions.GetByIdAsync(sessionId, ct);
+        if (sessionIdResult.IsFailure)
+            return Result.Failure(sessionIdResult.Error);
+
+        var session = await unitOfWork.Sessions.GetByIdAsync(sessionIdResult.Value, ct);
 
         if (session is null)
             return Result.Failure(DomainErrors.Session.NotFound);
 
-        var deleteResult = session.Delete();
+        var deleteResult = session.Delete(request.UtcNow);
+
         if (deleteResult.IsFailure)
             return deleteResult;
 

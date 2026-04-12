@@ -1,15 +1,18 @@
 ﻿using Application.Abstractions.Authentication;
+using Application.Faq;
 using Infrastructure.Extensions.Persistence;
 using Infrastructure.Identit;
+using Infrastructure.Identit.Data;
 using Infrastructure.Identit.Services;
 using Infrastructure.Persistence.Context;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Extensions;
 
@@ -60,7 +63,26 @@ public static class InfrastructureServiceCollectionExtensions
         });
 
         services.AddScoped<IAuthService, IdentityAuthService>();
+        services.AddScoped<IFaqService, FaqService>();
 
         return services;
+    }
+
+    public static async Task UseDatabaseInitialization(this IApplicationBuilder app)
+    {
+        using var scope = app.ApplicationServices.CreateScope();
+        var services = scope.ServiceProvider;
+        try
+        {
+            var context = services.GetRequiredService<ApplicationDbContext>();
+
+            await context.Database.EnsureCreatedAsync();
+            await IdentityInitializer.AddDefaultAdminAsync(services);
+        }
+        catch (Exception ex)
+        {
+            var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger("DatabaseInit");
+            logger.LogError(ex, "Ett fel uppstod vid initiering av databasen.");
+        }
     }
 }

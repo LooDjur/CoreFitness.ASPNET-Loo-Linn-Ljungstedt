@@ -51,4 +51,12 @@ public sealed class UserRepository(ApplicationDbContext context) : IUserReposito
             .Include(u => u.Membership)
             .FirstOrDefaultAsync(u => u.Id == id, ct);
     }
+
+    public async Task<UserEntity?> GetWithMembershipIgnoringFiltersAsync(UserId id, CancellationToken ct)
+    {
+        return await context.DomainUsers
+            .IgnoreQueryFilters()
+            .Include(u => u.Membership)
+            .FirstOrDefaultAsync(u => u.Id == id, ct);
+    }
 }

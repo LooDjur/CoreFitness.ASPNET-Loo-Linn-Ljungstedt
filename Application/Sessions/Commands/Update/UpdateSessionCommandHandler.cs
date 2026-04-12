@@ -3,9 +3,6 @@ using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
 using Domain.Sessions;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Sessions.Commands.Update;
 
@@ -14,19 +11,42 @@ public sealed class UpdateSessionCommandHandler(IUnitOfWork unitOfWork)
 {
     public async Task<Result> Handle(UpdateSessionCommand request, CancellationToken ct)
     {
-        var session = await unitOfWork.Sessions.GetByIdAsync(
-            SessionId.Create(request.Id).Value, ct);
+        var sessionIdResult = SessionId.Create(request.Id);
+        if (sessionIdResult.IsFailure)
+            return Result.Failure(sessionIdResult.Error);
+
+        var session = await unitOfWork.Sessions.GetByIdAsync(sessionIdResult.Value, ct);
 
         if (session is null)
             return Result.Failure(DomainErrors.Session.NotFound);
 
-        session.UpdateDetails(
-            Title.Create(request.Title).Value,
-            Description.Create(request.Description).Value,
-            Instructor.Create(request.Instructor).Value,
+        var titleResult = Title.Create(request.Title);
+        var descriptionResult = Description.Create(request.Description);
+        var instructorResult = Instructor.Create(request.Instructor);
+        var timeSlotResult = TimeSlot.Create(request.StartTime, request.EndTime);
+        var capacityResult = Capacity.Create(request.MaxCapacity);
+
+        var validationResult = Result.FirstFailureOrSuccess(
+            titleResult,
+            descriptionResult,
+            instructorResult,
+            timeSlotResult,
+            capacityResult);
+
+        if (validationResult.IsFailure)
+            return Result.Failure(validationResult.Error);
+
+        var updateResult = session.UpdateDetails(
+            titleResult.Value,
+            descriptionResult.Value,
+            instructorResult.Value,
             request.Category,
-            TimeSlot.Create(request.StartTime, request.EndTime).Value,
-            Capacity.Create(request.MaxCapacity).Value);
+            timeSlotResult.Value,
+            capacityResult.Value,
+            request.UtcNow);
+
+        if (updateResult.IsFailure)
+            return updateResult;
 
         await unitOfWork.SaveChangesAsync(ct);
 

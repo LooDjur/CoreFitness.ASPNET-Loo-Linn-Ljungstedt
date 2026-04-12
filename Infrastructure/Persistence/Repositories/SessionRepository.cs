@@ -8,10 +8,13 @@ namespace Infrastructure.Persistence.Repositories;
 public sealed class SessionRepository(ApplicationDbContext context) : ISessionRepository
 {
     public async Task<SessionEntity?> GetByIdAsync(SessionId id, CancellationToken ct = default)
-        => await context.Sessions.FirstOrDefaultAsync(s => s.Id == id, ct);
+        => await context.Sessions
+            .FirstOrDefaultAsync(s => s.Id == id && !s.IsDeleted, ct);
 
     public async Task<IEnumerable<SessionEntity>> GetAllAsync(CancellationToken ct = default)
-        => await context.Sessions.ToListAsync(ct);
+        => await context.Sessions
+            .Where(s => !s.IsDeleted)
+            .ToListAsync(ct);
 
     public async Task AddAsync(SessionEntity entity, CancellationToken ct = default)
         => await context.Sessions.AddAsync(entity, ct);
@@ -20,12 +23,16 @@ public sealed class SessionRepository(ApplicationDbContext context) : ISessionRe
 
     public void Delete(SessionEntity entity) => context.Sessions.Remove(entity);
 
-    public async Task<IEnumerable<SessionEntity>> GetUpcomingSessionsAsync(CancellationToken ct = default)
-        => await context.Sessions
-            .Where(s => s.Schedule.StartTime > DateTime.UtcNow)
+    public async Task<IEnumerable<SessionEntity>> GetUpcomingSessionsAsync(DateTime utcNow, CancellationToken ct = default)
+    {
+        return await context.Sessions
+            .Where(s => !s.IsDeleted && s.Schedule.StartTime > utcNow)
             .OrderBy(s => s.Schedule.StartTime)
             .ToListAsync(ct);
+    }
 
     public async Task<IEnumerable<SessionEntity>> GetByCategoryAsync(SessionCategory category, CancellationToken ct = default)
-        => await context.Sessions.Where(s => s.Category == category).ToListAsync(ct);
+        => await context.Sessions
+            .Where(s => !s.IsDeleted && s.Category == category)
+            .ToListAsync(ct);
 }

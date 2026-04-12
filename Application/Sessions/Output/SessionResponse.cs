@@ -1,6 +1,6 @@
 ﻿namespace Application.Sessions.Output;
 
-public record SessionOutput(
+public record SessionResponse(
     Guid Id,
     string Title,
     string Description,
@@ -8,5 +8,6 @@ public record SessionOutput(
     string Category,
     DateTime StartTime,
     DateTime EndTime,
-    int MaxCapacity
+    int MaxCapacity,
+    bool IsBookedByCurrentUser
 );

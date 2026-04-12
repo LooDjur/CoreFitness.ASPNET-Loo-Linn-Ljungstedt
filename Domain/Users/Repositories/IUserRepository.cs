@@ -10,6 +10,7 @@ namespace Domain.Users.Repositories;
 public interface IUserRepository : IRepositoryBase<UserEntity, UserId>
 {
     Task<UserEntity?> GetUserWithMembershipAsync(UserId id, CancellationToken ct);
+    Task<UserEntity?> GetWithMembershipIgnoringFiltersAsync(UserId id, CancellationToken ct);
     Task<UserEntity?> GetByEmailAsync(Email email, CancellationToken cancellationToken = default);
     Task<bool> IsEmailUniqueAsync(Email email, CancellationToken ct);
 }

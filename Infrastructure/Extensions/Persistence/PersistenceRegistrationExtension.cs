@@ -1,4 +1,5 @@
-﻿using Domain.Common.Abstractions;
+﻿using Domain.Bookings.Repositories;
+using Domain.Common.Abstractions;
 using Domain.ContactReq.Repositories;
 using Domain.Sessions;
 using Domain.Users.Repositories;
@@ -18,14 +19,26 @@ public static class PersistenceRegistrationExtension
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
 
+        var useInMemory = configuration.GetValue<bool>("UseInMemoryDatabase");
+
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("SqlConnection"));
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            if (env == "Development")
+            {
+                options.UseSqlite("Data Source=CoreFitness.db");
+            }
+            else
+            {
+                options.UseSqlServer(configuration.GetConnectionString("SqlConnection"));
+            }
         });
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IContactRequestRepository, ContactRequestRepository>();
         services.AddScoped<ISessionRepository, SessionRepository>();
+        services.AddScoped<IBookingRepository, BookingRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 

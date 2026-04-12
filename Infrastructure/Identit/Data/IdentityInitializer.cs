@@ -12,7 +12,7 @@ public class IdentityInitializer
 
         var sender = scope.ServiceProvider.GetRequiredService<ISender>();
 
-        var command = new RegisterQuickCommand("admin@admin.com", "aA1!", "Admin");
+        var command = new RegisterQuickCommand("admin@admin.com", "aA1!", "Admin", DateTime.UtcNow);
 
         var result = await sender.Send(command);
     }

@@ -1,4 +1,5 @@
-﻿using Domain.ContactReq.Entities;
+﻿using Domain.Bookings.Entity;
+using Domain.ContactReq.Entities;
 using Domain.Sessions;
 using Domain.Users.Entities;
 using Infrastructure.Identit;
@@ -15,12 +16,18 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
     public DbSet<MembershipEntity> Memberships { get; set; }
     public DbSet<ContactRequestEntity> ContactRequests { get; set; }
     public DbSet<SessionEntity> Sessions { get; set; }
-    //public DbSet<BookingEntity> Bookings { get; set; }
-    // public DbSet<MembershipEntity> Memberships { get; set; }
+    public DbSet<BookingEntity> Bookings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<MembershipEntity>()
+            .HasQueryFilter(m => !m.IsDeleted);
+
+        //modelBuilder.Entity<BookingEntity>()
+        //    .HasQueryFilter(b => !b.IsDeleted);
+
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

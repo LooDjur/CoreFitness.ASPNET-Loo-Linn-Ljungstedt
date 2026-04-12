@@ -35,7 +35,7 @@ public record Instructor : StringValueObject
 }
 public record Description : StringValueObject
 {
-    private const int Min = 5;
+    private const int Min = 3;
     private const int Max = 500;
 
     private Description() : base() { }

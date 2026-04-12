@@ -84,7 +84,8 @@ public class AuthenticationController(
         if (!ModelState.IsValid)
             return View(form);
 
-        var command = new RegisterQuickCommand(email, form.Password, "Member");
+        var utcNow = DateTime.UtcNow;
+        var command = new RegisterQuickCommand(email, form.Password, "Member", utcNow);
         var result = await sender.Send(command);
 
         if (result.IsFailure)

@@ -37,6 +37,11 @@
                        min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-ddT00:00")" />
                 <span class="field-validation" asp-validation-for="StartTime"></span>
             </div>
+            <div data-id="end-time" class="form-group">
+                <label class="form-label" asp-for="EndTime"></label>
+                <input class="form-input" asp-for="EndTime" type="datetime-local" />
+                <span class="field-validation" asp-validation-for="EndTime"></span>
+            </div>
         </div>
         <hr />
         <div data-id="description" class="form-group">
@@ -52,3 +57,32 @@
         </div>
     </form>
 </section>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const startTimeInput = document.querySelector('input[name="StartTime"]');
+            const endTimeInput = document.querySelector('input[name="EndTime"]');
+
+            if (startTimeInput && endTimeInput) {
+                startTimeInput.addEventListener("change", function () {
+                    if (startTimeInput.value) {
+                        const startDate = new Date(startTimeInput.value);
+                        
+                        const endDate = new Date(startDate.getTime() + (60 * 60 * 1000));
+                        
+                        const formattedEndDate = endDate.toISOString().slice(0, 16);
+                        
+                        endTimeInput.value = formattedEndDate;
+                        
+                        endTimeInput.min = startTimeInput.value;
+                    }
+                });
+
+                startTimeInput.addEventListener("input", function() {
+                    endTimeInput.min = startTimeInput.value;
+                });
+            }
+        });
+    </script>
+}

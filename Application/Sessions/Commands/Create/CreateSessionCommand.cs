@@ -11,5 +11,6 @@ public sealed record CreateSessionCommand(
     SessionCategory Category,
     DateTime StartTime,
     DateTime EndTime,
-    int MaxCapacity
+    int MaxCapacity,
+    DateTime UtcNow
 ) : IRequest<Result<Guid>>;

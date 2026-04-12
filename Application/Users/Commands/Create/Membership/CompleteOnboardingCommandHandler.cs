@@ -11,23 +11,39 @@ public sealed class CompleteOnboardingHandler(IUnitOfWork unitOfWork)
 {
     public async Task<Result> Handle(CompleteOnboardingCommand request, CancellationToken ct)
     {
-        var user = await unitOfWork.Users.GetUserWithMembershipAsync(
-            UserId.Create(request.UserId).Value, ct);
+        var userIdResult = UserId.Create(request.UserId);
+        if (userIdResult.IsFailure)
+            return Result.Failure(userIdResult.Error);
+
+        var user = await unitOfWork.Users.GetWithMembershipIgnoringFiltersAsync(userIdResult.Value, ct);
 
         if (user is null)
             return Result.Failure(DomainErrors.User.NotFound);
 
+        var firstNameResult = FirstName.Create(request.FirstName);
+        var lastNameResult = LastName.Create(request.LastName);
+        var phoneResult = PhoneNumber.Create(request.Phone);
+
+        var validationResult = Result.FirstFailureOrSuccess(
+            firstNameResult,
+            lastNameResult,
+            phoneResult);
+
+        if (validationResult.IsFailure)
+            return Result.Failure(validationResult.Error);
+
         user.CompleteProfile(
-            FirstName.Create(request.FirstName).Value,
-            LastName.Create(request.LastName).Value,
-            PhoneNumber.Create(request.Phone).Value);
+            firstNameResult.Value,
+            lastNameResult.Value,
+            phoneResult.Value,
+            request.UtcNow);
 
         if (!Enum.TryParse<MembershipType>(request.PlanType, true, out var type))
         {
             type = MembershipType.Standard;
         }
 
-        var membershipResult = user.StartMembership(type);
+        var membershipResult = user.StartMembership(type, DateTime.UtcNow);
         if (membershipResult.IsFailure)
             return membershipResult;
 

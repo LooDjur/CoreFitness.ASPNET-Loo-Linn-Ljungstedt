@@ -9,5 +9,6 @@ public sealed record UpdateProfileCommand(
     string LastName,
     string Email,
     string? Phone,
-    string? ProfileImageUrl
+    string? ProfileImageUrl,
+    DateTime UtcNow
 ) : IRequest<Result>;

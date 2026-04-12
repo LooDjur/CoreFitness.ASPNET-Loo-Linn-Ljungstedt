@@ -1,4 +1,5 @@
-﻿using Domain.Common;
+﻿using Domain.Bookings.ValueObjects;
+using Domain.Common;
 using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
 
@@ -15,9 +16,10 @@ public sealed class SessionEntity : BaseEntity<SessionId>, IAggregateRoot
 
     private SessionEntity() { }
 
-    private SessionEntity(SessionId id, Title title, Description description, Instructor instructor, SessionCategory category, TimeSlot schedule, Capacity maxCapacity)
+    private SessionEntity(SessionId id, Title title, Description description, Instructor instructor, SessionCategory category, TimeSlot schedule, Capacity maxCapacity, DateTime utcNow)
     {
-        Id = id;
+        Initialize(id, utcNow);
+
         Title = title;
         Description = description;
         Instructor = instructor;
@@ -26,14 +28,28 @@ public sealed class SessionEntity : BaseEntity<SessionId>, IAggregateRoot
         MaxCapacity = maxCapacity;
     }
 
-    public static Result<SessionEntity> Create(Title title, Description description, Instructor instructor, SessionCategory category, TimeSlot schedule, Capacity maxCapacity)
+    public static Result<SessionEntity> Create(
+        Title title,
+        Description description,
+        Instructor instructor,
+        SessionCategory category,
+        TimeSlot schedule,
+        Capacity maxCapacity,
+        DateTime utcNow)
     {
         if (title is null || instructor is null || schedule is null || maxCapacity is null)
             return Result.Failure<SessionEntity>(DomainErrors.Validation.Required);
 
-        var newSessionId = SessionId.New();
+        var session = new SessionEntity(
+            SessionId.New(),
+            title,
+            description,
+            instructor,
+            category,
+            schedule,
+            maxCapacity,
+            utcNow);
 
-        var session = new SessionEntity(newSessionId, title, description, instructor, category, schedule, maxCapacity);
         return Result.Success(session);
     }
 
@@ -43,7 +59,8 @@ public sealed class SessionEntity : BaseEntity<SessionId>, IAggregateRoot
         Instructor instructor,
         SessionCategory category,
         TimeSlot schedule,
-        Capacity maxCapacity)
+        Capacity maxCapacity,
+        DateTime utcNow)
     {
         Title = title;
         Description = description;
@@ -52,24 +69,36 @@ public sealed class SessionEntity : BaseEntity<SessionId>, IAggregateRoot
         Schedule = schedule;
         MaxCapacity = maxCapacity;
 
-        Modified = DateTime.UtcNow;
+        UpdateModified(utcNow);
 
         return Result.Success();
     }
 
-    public Result Delete()
+    public Result Delete(DateTime utcNow)
     {
         if (IsDeleted)
             return Result.Failure(DomainErrors.Session.ActionNotAllowed);
 
-        var now = DateTime.UtcNow;
-
-        if (Schedule.StartTime < now)
+        if (Schedule.StartTime < utcNow)
             return Result.Failure(DomainErrors.Session.ActionNotAllowed);
 
         IsDeleted = true;
-        Modified = now;
+        UpdateModified(utcNow);
 
         return Result.Success();
+    }
+
+    public Result<BookingId> Book(int currentBookingsCount, DateTime utcNow)
+    {
+        if (IsDeleted)
+            return Result.Failure<BookingId>(DomainErrors.Session.NotFound);
+
+        if (Schedule.StartTime <= utcNow)
+            return Result.Failure<BookingId>(DomainErrors.Session.ActionNotAllowed);
+
+        if (currentBookingsCount >= MaxCapacity.Value)
+            return Result.Failure<BookingId>(DomainErrors.Session.InvalidCapacity);
+
+        return Result.Success(BookingId.New());
     }
 }

@@ -1,11 +1,8 @@
 ﻿using Application.Sessions.Output;
 using Domain.Common;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Sessions.Queries;
 
-public record GetSessionsQuery() : IRequest<Result<List<SessionOutput>>>;
-public record GetSessionByIdQuery(Guid Id) : IRequest<Result<SessionOutput>>;
+public record GetSessionsQuery(Guid? UserId = null) : IRequest<Result<List<SessionResponse>>>;
+public record GetSessionByIdQuery(Guid Id, Guid? UserId = null) : IRequest<Result<SessionResponse>>;

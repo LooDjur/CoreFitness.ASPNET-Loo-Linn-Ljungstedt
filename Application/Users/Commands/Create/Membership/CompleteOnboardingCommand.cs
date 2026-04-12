@@ -8,5 +8,6 @@ public sealed record CompleteOnboardingCommand(
     string FirstName,
     string LastName,
     string? Phone,
-    string? PlanType
+    string? PlanType,
+    DateTime UtcNow
 ) : IRequest<Result>;

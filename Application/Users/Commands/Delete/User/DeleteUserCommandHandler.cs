@@ -10,8 +10,11 @@ public sealed class DeleteUserCommandHandler(IUnitOfWork unitOfWork)
 {
     public async Task<Result> Handle(DeleteUserCommand request, CancellationToken ct)
     {
-        var userId = UserId.Create(request.UserId).Value;
-        var user = await unitOfWork.Users.GetByIdAsync(userId, ct);
+        var userIdResult = UserId.Create(request.UserId);
+        if (userIdResult.IsFailure)
+            return Result.Failure(userIdResult.Error);
+
+        var user = await unitOfWork.Users.GetByIdAsync(userIdResult.Value, ct);
 
         if (user is null)
             return Result.Failure(DomainErrors.User.NotFound);
@@ -19,6 +22,8 @@ public sealed class DeleteUserCommandHandler(IUnitOfWork unitOfWork)
         var canDeleteResult = user.CanBePermanentlyDeleted();
         if (canDeleteResult.IsFailure)
             return canDeleteResult;
+
+        await unitOfWork.Bookings.DeleteAllByUserIdAsync(user.Id, ct);
 
         unitOfWork.Users.Delete(user);
         await unitOfWork.SaveChangesAsync(ct);

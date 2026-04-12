@@ -26,7 +26,7 @@
                 {
                     <article class="session-card">
                         <div class="session-content">
-                            <span class="session-time">@session.StartTime.ToString("HH:mm")</span>
+                            <span class="session-time">@session.StartTime.ToString("yyyy-MM-dd HH:mm")</span>
                             
                             <h3>@session.Title</h3>
                             
@@ -39,9 +39,28 @@
                         </div>
 
                         <div class="session-actions">
-                            <form asp-action="Book" asp-route-id="@session.Id" method="post">
-                                <button type="submit" class="btn-book">Book Now</button>
-                            </form>
+                            @if (!Model.IsMember)
+                            {
+                                <div class="no-membership">
+                                    <p>Active membership required.</p>
+                                    <a asp-controller="Memberships" asp-action="Index" class="btn-book">Join Membership</a>
+                                </div>
+                            }
+                            else
+                            {
+                                @if (session.IsBookedByCurrentUser)
+                                {
+                                    <form asp-action="Cancel" asp-route-id="@session.Id" method="post">
+                                        <button type="submit" class="btn-cancel">Cancel Booking</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form asp-action="Book" asp-route-id="@session.Id" method="post">
+                                        <button type="submit" class="btn-book">Book Now</button>
+                                    </form>
+                                }
+                            }
 
                             @if (User.IsInRole("Admin"))
                             {

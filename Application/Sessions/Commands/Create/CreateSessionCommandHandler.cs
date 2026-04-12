@@ -10,16 +10,30 @@ public sealed class CreateSessionCommandHandler(IUnitOfWork unitOfWork)
 {
     public async Task<Result<Guid>> Handle(CreateSessionCommand request, CancellationToken ct)
     {
-        var sessionResult = SessionEntity.Create(
-        Title.Create(request.Title).Value,
-        Description.Create(request.Description).Value,
-        Instructor.Create(request.Instructor).Value,
-        request.Category,
-        TimeSlot.Create(request.StartTime, request.EndTime).Value,
-        Capacity.Create(request.MaxCapacity).Value);
+        var titleResult = Title.Create(request.Title);
+        var descriptionResult = Description.Create(request.Description);
+        var instructorResult = Instructor.Create(request.Instructor);
+        var timeSlotResult = TimeSlot.Create(request.StartTime, request.EndTime);
+        var capacityResult = Capacity.Create(request.MaxCapacity);
 
-        if (sessionResult.IsFailure)
-            return Result.Failure<Guid>(sessionResult.Error);
+        var validationResult = Result.FirstFailureOrSuccess(
+            titleResult,
+            descriptionResult,
+            instructorResult,
+            timeSlotResult,
+            capacityResult);
+
+        if (validationResult.IsFailure)
+            return Result.Failure<Guid>(validationResult.Error);
+
+        var sessionResult = SessionEntity.Create(
+            titleResult.Value,
+            descriptionResult.Value,
+            instructorResult.Value,
+            request.Category,
+            timeSlotResult.Value,
+            capacityResult.Value,
+            request.UtcNow);
 
         await unitOfWork.Sessions.AddAsync(sessionResult.Value, ct);
         await unitOfWork.SaveChangesAsync(ct);

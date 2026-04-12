@@ -41,7 +41,7 @@ public static class DomainErrors
         public static readonly Error NotFound = Error.NotFound("Session.NotFound", "The session was not found.");
         public static readonly Error InvalidDate = Error.Validation("Session.InvalidDate", "Date is invalid.");
         public static readonly Error ActionNotAllowed = Error.Failure("Session.NotAllowed", "Action not allowed.");
-        public static readonly Error InvalidCapacity = Error.Validation("Session.InvalidCapacity", "Capacity 10-40.");
+        public static readonly Error InvalidCapacity = Error.Validation("Session.InvalidCapacity", "Capacity 10-20.");
     }
 
     public static class User
@@ -53,8 +53,8 @@ public static class DomainErrors
         public static readonly Error SaveError = Error.Failure("User.SaveError", "Kunde inte spara användaren i databasen.");
     }
 
-    public static class ContactRequest
+    public static class Booking
     {
-        public static readonly Error ActionNotAllowed = Error.Failure("ContactRequest.NotAllowed", "Action not allowed.");
+        public static readonly Error NotFound = Error.Failure("Booking.NotFound", "The booking was not found.");
     }
 }

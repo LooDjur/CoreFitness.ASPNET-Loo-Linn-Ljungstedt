@@ -13,14 +13,31 @@ public sealed class UpdateProfileHandler(
 {
     public async Task<Result> Handle(UpdateProfileCommand request, CancellationToken ct)
     {
-        var user = await unitOfWork.Users.GetByIdAsync(UserId.Create(request.UserId).Value, ct);
-        if (user is null) return Result.Failure(DomainErrors.User.NotFound);
+        var userIdResult = UserId.Create(request.UserId);
+        if (userIdResult.IsFailure)
+            return Result.Failure(userIdResult.Error);
 
-        var newEmail = Email.Create(request.Email).Value;
+        var user = await unitOfWork.Users.GetByIdAsync(userIdResult.Value, ct);
+        if (user is null)
+            return Result.Failure(DomainErrors.User.NotFound);
+
+        var firstNameResult = FirstName.Create(request.FirstName);
+        var lastNameResult = LastName.Create(request.LastName);
+        var emailResult = Email.Create(request.Email);
+        var phoneResult = PhoneNumber.Create(request.Phone);
+
+        var validationResult = Result.FirstFailureOrSuccess(
+            firstNameResult,
+            lastNameResult,
+            emailResult,
+            phoneResult);
+
+        if (validationResult.IsFailure)
+            return Result.Failure(validationResult.Error);
 
         if (user.Email.Value != request.Email)
         {
-            if (!await unitOfWork.Users.IsEmailUniqueAsync(newEmail, ct))
+            if (!await unitOfWork.Users.IsEmailUniqueAsync(emailResult.Value, ct))
                 return Result.Failure(DomainErrors.User.EmailInvalid);
         }
 
@@ -32,14 +49,16 @@ public sealed class UpdateProfileHandler(
             request.Phone,
             ct);
 
-        if (identityResult.IsFailure) return identityResult;
+        if (identityResult.IsFailure)
+            return identityResult;
 
         user.UpdateProfile(
-            FirstName.Create(request.FirstName).Value,
-            LastName.Create(request.LastName).Value,
-            newEmail,
-            PhoneNumber.Create(request.Phone).Value,
-            request.ProfileImageUrl);
+            firstNameResult.Value,
+            lastNameResult.Value,
+            emailResult.Value,
+            phoneResult.Value,
+            request.ProfileImageUrl,
+            request.UtcNow);
 
         unitOfWork.Users.Update(user);
         await unitOfWork.SaveChangesAsync(ct);

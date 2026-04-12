@@ -10,57 +10,72 @@ public sealed class MembershipEntity : BaseEntity<MemberId>
     public MembershipStatus Status { get; private set; }
     public MembershipType Type { get; private set; }
     public DateTime ExpiryDate { get; private set; }
-    public bool IsEligibleToBook => Status == MembershipStatus.Active && ExpiryDate > DateTime.UtcNow;
+
+    public bool IsEligibleToBook(DateTime utcNow) =>
+        Status == MembershipStatus.Active && ExpiryDate > utcNow;
 
     private MembershipEntity() { }
 
-    private MembershipEntity(MemberId memberId, UserId userId, MembershipType type)
+    private MembershipEntity(MemberId memberId, UserId userId, MembershipType type, DateTime utcNow)
     {
-        Id = memberId;
+        Initialize(memberId, utcNow);
+
         UserId = userId;
         Status = MembershipStatus.Active;
         Type = type;
-        ExpiryDate = DateTime.UtcNow.AddYears(1);
+        ExpiryDate = utcNow.AddYears(1);
     }
 
-    internal static Result<MembershipEntity> CreateInternal(UserId userId, MembershipType type)
+    internal static Result<MembershipEntity> CreateInternal(UserId userId, MembershipType type, DateTime utcNow)
     {
         if (userId == null || userId.Value == Guid.Empty)
             return Result.Failure<MembershipEntity>(DomainErrors.Validation.Required);
 
-        var membership = new MembershipEntity(MemberId.New(), userId, type);
-
-        return Result.Success(membership);
+        return Result.Success(new MembershipEntity(MemberId.New(), userId, type, utcNow));
     }
 
-    public Result ChangeType(MembershipType newType)
+    public void Cancel(DateTime utcNow)
+    {
+        IsDeleted = true;
+        Status = MembershipStatus.Cancelled;
+        UpdateModified(utcNow);
+    }
+    public void Reactivate(MembershipType newType, DateTime utcNow)
+    {
+        IsDeleted = false;
+        Status = MembershipStatus.Active;
+        Type = newType;
+        ExpiryDate = utcNow.AddYears(1);
+        UpdateModified(utcNow);
+    }
+    public Result ChangeType(MembershipType newType, DateTime utcNow)
     {
         if (Type == newType) return Result.Failure(DomainErrors.User.Ineligible);
 
         Type = newType;
-        Modified = DateTime.UtcNow;
+        UpdateModified(utcNow);
         return Result.Success();
     }
 
-    public Result AdminExtend(int months)
+    public Result AdminExtend(int months, DateTime utcNow)
     {
         if (months <= 0) return Result.Failure(DomainErrors.Validation.InvalidFormat);
         if (months > 2) return Result.Failure(DomainErrors.User.LimitReached);
 
-        ExpiryDate = ExpiryDate < DateTime.UtcNow
-            ? DateTime.UtcNow.AddMonths(months)
+        ExpiryDate = ExpiryDate < utcNow
+            ? utcNow.AddMonths(months)
             : ExpiryDate.AddMonths(months);
 
-        Modified = DateTime.UtcNow;
+        UpdateModified(utcNow);
         return Result.Success();
     }
 
-    public Result AdminUpdateStatus(MembershipStatus newStatus)
+    public Result AdminUpdateStatus(MembershipStatus newStatus, DateTime utcNow)
     {
         if (Status == newStatus) return Result.Failure(DomainErrors.User.Ineligible);
 
         Status = newStatus;
-        Modified = DateTime.UtcNow;
+        UpdateModified(utcNow);
         return Result.Success();
     }
 }

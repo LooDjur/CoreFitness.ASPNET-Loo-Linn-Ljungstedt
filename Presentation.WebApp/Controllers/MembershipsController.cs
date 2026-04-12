@@ -21,7 +21,7 @@ public class MembershipsController(ISender sender) : BaseController
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (Guid.TryParse(userIdClaim, out var userId))
         {
-            var result = await sender.Send(new GetUserProfileQuery(userId));
+            var result = await sender.Send(new GetUserProfileQuery(userId, DateTime.UtcNow));
             if (result.IsSuccess)
             {
                 ViewData["CurrentPlan"] = result.Value.MembershipPlan;
@@ -58,7 +58,7 @@ public class MembershipsController(ISender sender) : BaseController
 
         var model = new AboutMeViewModel();
 
-        var result = await sender.Send(new GetUserProfileQuery(userId));
+        var result = await sender.Send(new GetUserProfileQuery(userId, DateTime.UtcNow));
 
         if (result.IsSuccess)
         {
@@ -93,12 +93,14 @@ public class MembershipsController(ISender sender) : BaseController
         if (!Guid.TryParse(userIdClaim, out var userId))
             return RedirectToAction("SignIn", "Authentication");
 
+        var utcNow = DateTime.UtcNow;
         var command = new CompleteOnboardingCommand(
             userId,
             model.FirstName!,
             model.LastName!,
             model.Phone,
-            plan
+            plan,
+            utcNow
         );
 
         var result = await sender.Send(command);

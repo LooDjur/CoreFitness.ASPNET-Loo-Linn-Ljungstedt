@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Authentication;
+using Application.Booking;
 using Application.Users.Commands.Delete.Membership;
 using Application.Users.Commands.Delete.User;
 using Application.Users.Commands.Update;
@@ -19,16 +20,25 @@ public class AccountController(
 {
     private async Task PopulateAccountViewModel(AccountViewModel viewModel, Guid userId)
     {
-        var result = await sender.Send(new GetUserProfileQuery(userId));
+        var utcNow = DateTime.UtcNow;
+        var result = await sender.Send(new GetUserProfileQuery(userId, utcNow));
 
         if (result.IsSuccess)
         {
             var user = result.Value;
 
-            viewModel.Profile.FirstName ??= user.FirstName;
-            viewModel.Profile.LastName ??= user.LastName;
-            viewModel.Profile.Email ??= user.Email;
-            viewModel.Profile.Phone ??= user.Phone;
+            if (string.IsNullOrEmpty(viewModel.Profile.FirstName))
+                viewModel.Profile.FirstName = user.FirstName;
+
+            if (string.IsNullOrEmpty(viewModel.Profile.LastName))
+                viewModel.Profile.LastName = user.LastName;
+
+            if (string.IsNullOrEmpty(viewModel.Profile.Email))
+                viewModel.Profile.Email = user.Email;
+
+            if (string.IsNullOrEmpty(viewModel.Profile.Phone))
+                viewModel.Profile.Phone = user.Phone;
+
             viewModel.Profile.ProfileImageUrl = user.ProfileImageUrl;
 
             viewModel.Membership.HasMembership = user.MemberId.HasValue;
@@ -72,17 +82,19 @@ public class AccountController(
             return View("Index", model);
         }
 
+        var utcNow = DateTime.UtcNow;
+
         var result = await sender.Send(new UpdateProfileCommand(
             userId,
             model.Profile.FirstName!,
             model.Profile.LastName!,
             model.Profile.Email!,
             model.Profile.Phone,
-            model.Profile.ProfileImageUrl));
+            model.Profile.ProfileImageUrl,
+            utcNow));
 
         if (result.IsSuccess)
         {
-            TempData["SuccessMessage"] = "Profilen har uppdaterats!";
             return RedirectToAction("Index", new { viewName = "about-me" });
         }
 
@@ -106,7 +118,7 @@ public class AccountController(
         if (!Guid.TryParse(userIdClaim, out var userId))
             return RedirectToAction("Logout");
 
-        await sender.Send(new CancelMembershipCommand(userId));
+        await sender.Send(new CancelMembershipCommand(userId, DateTime.UtcNow));
 
         return RedirectToAction("Index", new { viewName = "my-membership" });
     }
@@ -132,6 +144,38 @@ public class AccountController(
 
         return RedirectToAction("Index", "Home", new { status = "account-deleted" });
     }
+
+    [HttpGet]
+    [Route("account/my-bookings")]
+    public async Task<IActionResult> Index(string viewName = "about-me", CancellationToken ct = default)
+    {
+        if (string.Equals(viewName, "bookings", StringComparison.OrdinalIgnoreCase))
+            viewName = "my-bookings";
+
+        ViewData["ActiveView"] = viewName.ToLower();
+
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userIdClaim, out var userId))
+        {
+            await authService.SignOutUserAsync();
+            return RedirectToAction("SignIn", "Authentication");
+        }
+
+        var viewModel = new AccountViewModel();
+        await PopulateAccountViewModel(viewModel, userId);
+
+        if (ViewData["ActiveView"]?.ToString() == "my-bookings")
+        {
+            var result = await sender.Send(new GetMyBookingsQuery(userId), ct);
+            if (result.IsSuccess)
+            {
+                viewModel.MyBookings = result.Value;
+            }
+        }
+
+        return View("Index", viewModel);
+    }
+
 
     [HttpGet]
     [Route("/sign-out")]

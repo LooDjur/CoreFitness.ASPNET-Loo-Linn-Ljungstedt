@@ -12,9 +12,11 @@ public sealed class GetUserProfileHandler(IUnitOfWork unitOfWork)
 {
     public async Task<Result<UserResponse>> Handle(GetUserProfileQuery request, CancellationToken ct)
     {
-        var userId = UserId.Create(request.UserId).Value;
+        var userIdResult = UserId.Create(request.UserId);
+        if (userIdResult.IsFailure)
+            return Result.Failure<UserResponse>(userIdResult.Error);
 
-        var user = await unitOfWork.Users.GetUserWithMembershipAsync(userId, ct);
+        var user = await unitOfWork.Users.GetUserWithMembershipAsync(userIdResult.Value, ct);
 
         if (user is null)
             return Result.Failure<UserResponse>(DomainErrors.User.NotFound);
@@ -29,7 +31,7 @@ public sealed class GetUserProfileHandler(IUnitOfWork unitOfWork)
             user.ProfileImageUrl,
             user.Membership?.Type.ToString() ?? "No active plan",
             user.Membership?.ExpiryDate,
-            user.Membership?.IsEligibleToBook ?? false 
+            user.Membership?.IsEligibleToBook(request.UtcNow) ?? false
         );
 
         return Result.Success(response);
