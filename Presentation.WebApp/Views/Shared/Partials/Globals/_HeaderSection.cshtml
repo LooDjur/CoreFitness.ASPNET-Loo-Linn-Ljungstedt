@@ -1,56 +1,82 @@
 ﻿<section class="header-section">
     <div class="logotype">
         <a class="logotype-link" href="/">
-            <img src="~/images/logotype.png" alt="CoreFitness">
+        <img src="~/images/logotype.png" alt="CoreFitness">
         </a>
     </div>
-    <nav class="main-menu">
-        <ul class="menu">
-            <li class="menu-item">
-                <a class="menu-item-link" asp-action="Index" asp-controller="FitnessCenters">Fitness Centers</a>
-            </li>
-            <li class="menu-item">
-                <a class="menu-item-link" asp-action="Index" asp-controller="Memberships">Memberships</a>
-            </li>
-            <li class="menu-item dropdown">
-                <a class="menu-item-link" asp-action="Index" asp-controller="Training">
-                    Training
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a asp-action="SPersonalTraining" asp-controller="Training">Personal Training</a></li>
-                    <li><a asp-action="GroupTraining" asp-controller="Training">Group Training</a></li>
-                    <li><a asp-action="Padel" asp-controller="Training">Padel</a></li>
-                </ul>
-            </li>
-            <li class="menu-item">
-                <a class="menu-item-link" asp-action="Index" asp-controller="CustomerService">Customer Service</a>
-            </li>
-            <li class="menu-item">
-                <a class="menu-item-link" asp-action="Index" asp-controller="Store">Store</a>
-            </li>
-        </ul>
-    </nav>
-    <nav class="account-menu">
-        <ul class="menu">
-            @if (User.Identity!.IsAuthenticated)
-            {
+
+        <button class="hamburger-btn" id="mobile-menu-btn" aria-label="Toggle menu">
+            <span class="hamburger-icon"></span>
+        </button>
+
+        <nav class="main-menu" id="main-nav">
+            <ul class="menu">
+                <li class="menu-item">
+                    <a class="menu-item-link" asp-action="Index" asp-controller="FitnessCenters">Fitness Centers</a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-item-link" asp-action="Index" asp-controller="Memberships">Memberships</a>
+                </li>
+                <li class="menu-item dropdown">
+                    <a class="menu-item-link" asp-action="Index" asp-controller="Training">Training</a>
+                    <ul class="dropdown-menu">
+                        <li><a asp-action="PersonalTraining" asp-controller="Training">Personal Training</a></li>
+                        <li><a asp-action="GroupTraining" asp-controller="Training">Group Training</a></li>
+                        <li><a asp-action="Padel" asp-controller="Training">Padel</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-item-link" asp-action="Index" asp-controller="CustomerService">Customer Service</a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-item-link" asp-action="Index" asp-controller="Store">Store</a>
+                </li>
+            </ul>
+        </nav>
+
+        <nav class="account-menu">
+            <ul class="menu">
+                @if (User.Identity!.IsAuthenticated)
+                {
                     <li class="menu-item">
-                        <a class="menu-item-link" asp-action="Index" asp-controller="Training">Our Classes</a>
+                        <a class="menu-item-link" asp-action="Index" asp-controller="OurClasses">Our Classes</a>
                     </li>
                     <li class="menu-item">
                         <a class="btn" asp-action="Index" asp-controller="Account">My Account</a>
                     </li>
-            }
-            else
-            {
-                <li class="menu-item">
-                    <a class="menu-item-link" asp-action="SignUp" asp-controller="Authentication">Become Member</a>
-                </li>
-                <li class="menu-item">
-                    <a class="btn" asp-action="SignIn" asp-controller="Authentication">Sign In</a>
-                </li>
-                
-            }
-        </ul>
-    </nav>
+                }
+                else
+                {
+                    <li class="menu-item">
+                        <a class="menu-item-link" asp-action="SignUp" asp-controller="Authentication">Become Member</a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="btn" asp-action="SignIn" asp-controller="Authentication">Sign In</a>
+                    </li>
+                }
+            </ul>
+        </nav>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mainNav = document.getElementById('main-nav');
+    const dropdownToggle = document.querySelector('.dropdown > a');
+
+    menuBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        menuBtn.classList.toggle('open');
+        mainNav.classList.toggle('open');
+    });
+
+    if (dropdownToggle) {
+        dropdownToggle.addEventListener('click', (e) => {
+            if (window.innerWidth < 1200) {
+                e.preventDefault();
+                dropdownToggle.parentElement.classList.toggle('open');
+            }
+        });
+    }
+});
+</script>

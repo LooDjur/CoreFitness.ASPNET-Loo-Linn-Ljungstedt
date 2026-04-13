@@ -16,7 +16,7 @@ using System.Security.Claims;
 namespace Presentation.WebApp.Controllers;
 
 [Authorize]
-public class TrainingController(IUnitOfWork unitOfWork, ISender sender) : Controller
+public class OurClassesController(IUnitOfWork unitOfWork, ISender sender) : Controller
 {
     private async Task<List<SessionResponse>> GetSessionsListAsync(CancellationToken ct)
     {

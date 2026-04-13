@@ -1,5 +1,7 @@
 ﻿using Domain.Common;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.WebApp.Models.Error;
+using System.Diagnostics;
 
 namespace Presentation.WebApp.Controllers.Common;
 
@@ -10,7 +12,6 @@ public abstract class BaseController : Controller
         if (result.Error.Type == ErrorType.Validation)
         {
             ModelState.AddModelError(string.Empty, result.Error.Description);
-
             return View(model);
         }
 
@@ -23,10 +24,6 @@ public abstract class BaseController : Controller
             _ => 500
         };
 
-        return RedirectToAction("HandleErrorCode", "Errors", new
-        {
-            statusCode,
-            message = result.Error.Description
-        });
+        return RedirectToAction("HandleErrorCode", "Error", new { statusCode });
     }
 }

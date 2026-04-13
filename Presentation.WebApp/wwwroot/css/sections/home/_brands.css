@@ -22,6 +22,10 @@
         gap: 3rem;
         flex: 1;
 
+        @media (max-width: 767px) {
+            display: none;
+        }
+
         img {
             height: auto;
             filter: brightness(0);

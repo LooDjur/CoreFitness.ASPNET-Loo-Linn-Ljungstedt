@@ -12,7 +12,7 @@
         <div class="empty-bookings-state">
             <div class="info-card">
                 <p>You haven't booked any sessions yet.</p>
-                <a asp-controller="Training" asp-action="Index" class="btn-book">
+                <a asp-controller="OurClasses" asp-action="Index" class="btn-book">
                     Find a Class
                 </a>
             </div>
@@ -37,7 +37,7 @@
                     </div>
 
                     <div class="session-actions">
-                        <form asp-controller="Training" asp-action="Cancel" asp-route-id="@session.Id" asp-route-fromAccount="true" method="post">
+                        <form asp-controller="OurClasses" asp-action="Cancel" asp-route-id="@session.Id" asp-route-fromAccount="true" method="post">
                             <button type="submit" class="btn-cancel"> Cancel Booking </button>
                         </form>
                     </div>

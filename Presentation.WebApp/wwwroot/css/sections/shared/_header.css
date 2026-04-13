@@ -23,46 +23,161 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
+    position: relative;
+    padding: 0 1rem;
 
-.main-menu {
-    display: flex;
-    justify-content: center;
-    flex: 1;
-}
-
-.account-menu {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.menu {
-    list-style: none;
-
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-.menu-item-link {
-    color: var(--menu-item-link-text-color);
-    text-decoration: none;
-    font-weight: 600;
-    white-space: nowrap;
-    transition: color 0.15s ease-in-out;
-
-    &:hover {
-        color: var(--primary-color);
-    }
-}
-
-@media (max-width: 1200px) {
     .main-menu {
-        display: none;
+        display: flex;
+        justify-content: center;
+        flex: 1;
     }
 
-    .header-section {
+    .account-menu {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
+    }
+
+    .menu {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .menu-item-link {
+        color: var(--menu-item-link-text-color);
+        text-decoration: none;
+        font-weight: 600;
+        white-space: nowrap;
+        transition: color 0.15s ease-in-out;
+
+        &:hover {
+            color: var(--primary-color);
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+    }
+
+    .hamburger-btn {
+        display: none;
+        background: transparent;
+        border: none;
+        padding: 0;
+        margin: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 0;
+        box-shadow: none;
+        transform: none;
+        cursor: pointer;
+        position: relative;
+        align-items: center;
+        justify-content: center;
+
+        &::after, &::before {
+            display: none;
+            content: none;
+        }
+
+        &:hover {
+            background: transparent;
+            transform: none;
+            box-shadow: none;
+        }
+    }
+
+    .hamburger-icon {
+        display: block;
+        position: relative;
+        width: 25px;
+        height: 2px;
+        background-color: var(--header-text-color);
+        transition: background-color 0.2s;
+
+        &::before, &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--header-text-color);
+            transition: all 0.3s ease;
+        }
+
+        &::before {
+            top: -8px;
+        }
+
+        &::after {
+            top: 8px;
+        }
+    }
+
+    .hamburger-btn.open {
+        .hamburger-icon {
+            background-color: transparent;
+        }
+
+            .hamburger-icon::before {
+                top: 0;
+                transform: rotate(45deg);
+            }
+
+            .hamburger-icon::after {
+                top: 0;
+                transform: rotate(-45deg);
+            }
+    }
+
+    @media (max-width: 1200px) {
+        .hamburger-btn {
+            display: flex;
+        }
+
+        .main-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--header-bg-color);
+            padding: 2rem;
+            flex-direction: column;
+            z-index: 1000;
+            border-bottom: 1px solid var(--color-gray-extra-light);
+            border-bottom-left-radius: 1.25rem;
+            border-bottom-right-radius: 1.25rem;
+
+            &.open {
+                display: flex;
+            }
+        }
+
+            .main-menu .menu {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+
+        .dropdown-menu {
+            display: none;
+            position: static;
+            padding-left: 1.5rem;
+            padding-top: 1rem;
+            box-shadow: none;
+            background: transparent;
+            list-style: none;
+
+            .dropdown.open & {
+                display: block;
+            }
+        }
     }
 }

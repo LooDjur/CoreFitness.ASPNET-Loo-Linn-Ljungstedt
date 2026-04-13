@@ -1,14 +1,13 @@
 ﻿.dropdown {
     position: relative;
     display: flex;
+    flex-direction: column;
     align-items: center;
     cursor: pointer;
 
     > a {
         display: flex;
         align-items: center;
-        text-decoration: none;
-        color: inherit;
         transition: color 0.15s ease-in-out;
         padding: 0.5rem 0;
 
@@ -25,17 +24,11 @@
 
     .dropdown-menu {
         display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        z-index: 1000;
-        min-width: 200px;
         list-style: none;
         background-color: var(--primary-color);
-        background-clip: padding-box;
         border-radius: 15px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         padding: 1rem;
+        z-index: 1000;
 
         li a {
             color: var(--dark-color);
@@ -48,23 +41,63 @@
 
             &:hover {
                 color: var(--white-color);
-                text-decoration: none;
             }
         }
     }
 
-    &:hover {
-        > a {
-            color: var(--primary-color);
+    @media (min-width: 1201px) {
+        align-items: center;
 
-            &::after {
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 200px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        &:hover {
+            > a:after {
                 transform: rotate(180deg);
-                color: var(--primary-color);
             }
+
+            .dropdown-menu {
+                display: block;
+            }
+        }
+    }
+
+    @media (max-width: 1200px) {
+        width: 100%;
+
+        > a {
+            width: 100%;
         }
 
         .dropdown-menu {
-            display: block;
+            position: static;
+            width: 100%;
+            box-shadow: none;
+            padding: 0.5rem 0 0 1rem;
+            background-color: transparent;
+
+            li a {
+                color: var(--white-color);
+
+                &:hover {
+                    color: var(--primary-color);
+                }
+            }
+        }
+
+        &.open {
+            > a::after {
+                transform: rotate(180deg);
+            }
+
+            .dropdown-menu {
+                display: block;
+            }
         }
     }
 }

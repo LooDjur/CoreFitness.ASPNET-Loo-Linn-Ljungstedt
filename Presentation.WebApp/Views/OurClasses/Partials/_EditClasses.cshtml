@@ -1,7 +1,7 @@
 ﻿@model SessionFormViewModel
 
 <section class="section__session">
-    <form id="session-form" method="post" asp-action="Save" asp-controller="Training" novalidate>
+    <form id="session-form" method="post" asp-action="Save" asp-controller="OurClasses" novalidate>
         <input type="hidden" asp-for="Id" />
         <div data-id="title" class="title">
             <h2>@(Model.IsEdit ? "Edit Session" : "Create New Session")</h2>
