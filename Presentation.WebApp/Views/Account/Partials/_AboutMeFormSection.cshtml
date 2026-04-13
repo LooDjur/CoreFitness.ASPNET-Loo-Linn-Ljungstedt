@@ -31,10 +31,12 @@
         <hr />
         <div data-id="file-upload" class="form-group">
             <label class="form-label" asp-for="ProfileImage"></label>
-            <div class="form-input-validation">
-                <input class="form-input" asp-for="ProfileImage" />
-                <span asp-validation-for="ProfileImage"></span>
+            <div class="upload-display">
+                <input type="file" id="profileUpload" asp-for="ProfileImage" hidden />
+                <span id="fileName" class="file-name">No file chosen</span>
+                <label for="profileUpload" class="upload-btn">Browse</label>
             </div>
+            <span class="field-validation" asp-validation-for="ProfileImage"></span>
         </div>
         <button class="btn" type="submit"> Save </button>
     </form>

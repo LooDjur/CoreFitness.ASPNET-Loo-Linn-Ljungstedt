@@ -171,8 +171,94 @@
     }
 }
 
+.upload-display {
+    width: 100%;
+    border: 1px solid var(--form-input-border-color);
+    background-color: var(--form-input-bg-color);
+    border-radius: 0.625rem;
+    transition: border-color 0.15s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.3rem 0.3rem 0.3rem 1rem;
+    gap: 1rem;
+}
+
+.file-name {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    opacity: 0.7;
+}
+
+.upload-btn {
+    display: inline-block;
+    padding: 0.7rem 1.9rem;
+    border-radius: 8px;
+    background-color: #e5e5e5;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+    .upload-btn:hover {
+        background-color: #d4d4d4;
+    }
+
 .membership-section {
     p {
         margin: 0.2rem 0;
     }
+}
+
+.my-statistics-section {
+    background-color: var(--white-color);
+    margin: 4rem 0 0 0;
+    padding: 1.5rem 2rem;
+    border-radius: 20px;
+}
+
+.my-statistics-graph {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.statistic {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .stat-header h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+.stat-value {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.stat-bar {
+    width: 100%;
+    height: 12px;
+    background-color: var(--light-color);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.stat-bar-fill {
+    height: 100%;
+    background-color: var(--primary-color);
+    width: var(--value, 0%);
+    border-radius: 10px;
+    transition: width 0.8s ease-in-out;
 }
