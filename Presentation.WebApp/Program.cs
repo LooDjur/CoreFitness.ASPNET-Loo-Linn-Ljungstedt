@@ -18,6 +18,7 @@ await app.UseDatabaseInitialization();
 
 app.UseHsts();
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
 
 app.UseSession();

@@ -1,5 +1,6 @@
 ﻿using Domain.Common.ValueObjects.Shared;
 using Domain.Sessions;
+using Domain.Users.Entities;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,4 +36,24 @@ public sealed class SessionRepository(ApplicationDbContext context) : ISessionRe
         => await context.Sessions
             .Where(s => !s.IsDeleted && s.Category == category)
             .ToListAsync(ct);
+
+    public async Task<IEnumerable<SessionEntity>> GetBookedSessionsForUserAsync(
+    UserId userId,
+    DateTime utcNow,
+    CancellationToken ct = default)
+    {
+        var memberIdQuery = context.Set<UserEntity>()
+            .Where(u => u.Id == userId)
+            .Select(u => u.Membership!.Id);
+
+        return await context.Sessions
+            .AsNoTracking()
+            .Where(s => !s.IsDeleted && s.Schedule.StartTime >= utcNow)
+            .Where(s => context.Bookings.Any(b =>
+                b.SessionId == s.Id &&
+                !b.IsDeleted &&
+                b.MemberId == memberIdQuery.FirstOrDefault()))
+            .OrderBy(s => s.Schedule.StartTime)
+            .ToListAsync(ct);
+    }
 }

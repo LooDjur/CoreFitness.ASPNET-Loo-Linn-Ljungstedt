@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Application.CustomerSupport.Handler;
 
-public sealed class RegisterContactHandler(
+public sealed class RegisterContactCommandHandler(
     IContactRequestRepository repository,
     IUnitOfWork unitOfWork)
     : IRequestHandler<RegisterContactCommand, Result>

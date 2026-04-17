@@ -62,6 +62,9 @@ public sealed class SessionEntity : BaseEntity<SessionId>, IAggregateRoot
         Capacity maxCapacity,
         DateTime utcNow)
     {
+        if (Schedule.StartTime < utcNow)
+            return Result.Failure(DomainErrors.Session.ActionNotAllowed);
+
         Title = title;
         Description = description;
         Instructor = instructor;

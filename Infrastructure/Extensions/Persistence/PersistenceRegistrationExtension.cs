@@ -19,19 +19,22 @@ public static class PersistenceRegistrationExtension
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
 
-        var useInMemory = configuration.GetValue<bool>("UseInMemoryDatabase");
+        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development" ;
+        Console.WriteLine($"DEBUG: Variabeln innehåller: '{env}'");
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-            if (env == "Development")
+            if (env.Equals("Development", StringComparison.OrdinalIgnoreCase))
             {
-                options.UseSqlite("Data Source=CoreFitness.db");
+                var sqliteConn = configuration.GetConnectionString("SQLiteConnection");
+                options.UseSqlite(sqliteConn);
+                Console.WriteLine($"DATABASE: Using SQLite");
             }
             else
             {
-                options.UseSqlServer(configuration.GetConnectionString("SqlConnection"));
+                var sqlConn = configuration.GetConnectionString("ProductionConnection");
+                options.UseSqlServer(sqlConn);
+                Console.WriteLine($"DATABASE: Using SQL Server");
             }
         });
 

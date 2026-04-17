@@ -25,9 +25,6 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
         modelBuilder.Entity<MembershipEntity>()
             .HasQueryFilter(m => !m.IsDeleted);
 
-        //modelBuilder.Entity<BookingEntity>()
-        //    .HasQueryFilter(b => !b.IsDeleted);
-
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

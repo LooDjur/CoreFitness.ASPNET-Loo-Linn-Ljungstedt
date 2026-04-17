@@ -29,8 +29,13 @@ public sealed class GetSessionsHandler(IUnitOfWork unitOfWork)
             }
         }
 
+        var utcNow = DateTime.UtcNow;
+
         var dtos = sessions
-            .Where(s => !s.IsDeleted)
+            .Where(s =>
+                !s.IsDeleted &&
+                s.Schedule.StartTime >= utcNow)
+            .OrderBy(s => s.Schedule.StartTime)
             .Select(s => new SessionResponse(
                 s.Id.Value,
                 s.Title.Value,

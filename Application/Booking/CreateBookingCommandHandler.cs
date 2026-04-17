@@ -1,10 +1,7 @@
 ﻿using Domain.Bookings.Entity;
-using Domain.Bookings.Repositories;
 using Domain.Common;
 using Domain.Common.Abstractions;
 using Domain.Common.ValueObjects.Shared;
-using Domain.Sessions;
-using Domain.Users.Repositories;
 using MediatR;
 
 namespace Application.Booking;

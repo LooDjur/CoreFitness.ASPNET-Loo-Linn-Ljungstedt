@@ -45,6 +45,11 @@ public sealed class UserRepository(ApplicationDbContext context) : IUserReposito
     {
         context.DomainUsers.Remove(user);
     }
+
+    public void DeleteMembership(MembershipEntity membership)
+    {
+        context.Set<MembershipEntity>().Remove(membership);
+    }
     public async Task<UserEntity?> GetUserWithMembershipAsync(UserId id, CancellationToken ct)
     {
         return await context.DomainUsers

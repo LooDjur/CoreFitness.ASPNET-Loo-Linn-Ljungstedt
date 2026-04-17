@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Application.Faq;
 
-internal sealed class FaqQueryHandler(IFaqService faqService)
+public sealed class FaqQueryHandler(IFaqService faqService)
     : IRequestHandler<FaqQuery, Result<IReadOnlyList<FaqItem>>>
 {
     public async Task<Result<IReadOnlyList<FaqItem>>> Handle(

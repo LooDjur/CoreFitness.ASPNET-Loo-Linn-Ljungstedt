@@ -1,7 +1,4 @@
 ﻿using Domain.Common.ValueObjects.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.Common.ValueObjects.Shared;
 
@@ -56,7 +53,7 @@ public record Email : EmailValueObject
 
     public static Result<Email> Create(string value)
     {
-        if (IsInvalidFormat(value))
+        if (string.IsNullOrWhiteSpace(value) || !value.Contains('@') || IsInvalidFormat(value))
         {
             return Result.Failure<Email>(DomainErrors.Validation.InvalidFormat);
         }

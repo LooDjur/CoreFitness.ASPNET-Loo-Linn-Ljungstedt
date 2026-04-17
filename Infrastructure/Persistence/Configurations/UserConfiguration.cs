@@ -56,7 +56,7 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.HasOne(u => u.Membership)
             .WithOne()
             .HasForeignKey<MembershipEntity>(m => m.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(u => u.Role).HasConversion<string>();
         builder.Property(u => u.ProfileImageUrl).HasMaxLength(500);
