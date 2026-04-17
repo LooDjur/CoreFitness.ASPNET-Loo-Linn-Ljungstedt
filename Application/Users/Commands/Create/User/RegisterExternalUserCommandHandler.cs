@@ -8,42 +8,35 @@ using MediatR;
 
 namespace Application.Users.Commands.Create.User;
 
-public sealed class RegisterQuickHandler(
+public sealed class RegisterExternalUserCommandHandler(
     IUnitOfWork unitOfWork,
     IAuthService authService)
-    : IRequestHandler<RegisterQuickCommand, Result<Guid>>
+    : IRequestHandler<RegisterExternalUserCommand, Result<Guid>>
 {
-    public async Task<Result<Guid>> Handle(RegisterQuickCommand request, CancellationToken ct)
+    public async Task<Result<Guid>> Handle(RegisterExternalUserCommand request, CancellationToken ct)
     {
-        var emailResult = Email.Create(request.Email);
-        if (emailResult.IsFailure)
-            return Result.Failure<Guid>(emailResult.Error);
-
-        var identityResult = await authService.RegisterIdentityAsync(
+        var identityResult = await authService.RegisterExternalIdentityAsync(
             request.Email,
-            request.Password,
-            request.Role,
+            request.Provider,
+            request.ProviderKey,
             ct);
 
         if (identityResult.IsFailure)
             return Result.Failure<Guid>(identityResult.Error);
 
         var userId = identityResult.Value;
-
         var existingUser = await unitOfWork.Users.GetByIdAsync(UserId.Create(userId).Value, ct);
 
         if (existingUser is not null)
+        {
             return Result.Success(existingUser.Id.Value);
-
-        var userRole = request.Role.Equals("Admin", StringComparison.OrdinalIgnoreCase)
-            ? UserRole.Admin
-            : UserRole.Member;
+        }
 
         var user = UserEntity.Register(
             UserId.Create(userId).Value,
-            emailResult.Value,
-            request.UtcNow,
-            userRole);
+            Email.Create(request.Email).Value,
+            DateTime.UtcNow,
+            UserRole.Member);
 
         await unitOfWork.Users.AddAsync(user, ct);
         await unitOfWork.SaveChangesAsync(ct);

@@ -38,6 +38,35 @@ public sealed class IdentityAuthService(
 
         return Result.Success(Guid.Parse(appUser.Id));
     }
+
+    public async Task<Result<Guid>> RegisterExternalIdentityAsync(string email, string provider, string providerKey, CancellationToken ct)
+    {
+        var appUser = await userManager.FindByEmailAsync(email);
+
+        if (appUser is null)
+        {
+            appUser = AppUser.Create(email);
+            appUser.EmailConfirmed = true;
+
+            var createResult = await userManager.CreateAsync(appUser);
+            if (!createResult.Succeeded)
+            {
+                return Result.Failure<Guid>(Error.Validation("Auth.Error", createResult.Errors.First().Description));
+            }
+        }
+
+        var logins = await userManager.GetLoginsAsync(appUser);
+        if (!logins.Any(l => l.LoginProvider == provider))
+        {
+            var addLoginResult = await userManager.AddLoginAsync(appUser, new UserLoginInfo(provider, providerKey, provider));
+
+            if (!addLoginResult.Succeeded)
+                return Result.Failure<Guid>(DomainErrors.Authentication.ExternalLoginFailed);
+        }
+
+        return Result.Success(Guid.Parse(appUser.Id));
+    }
+
     public async Task<Result> UpdateIdentityUserAsync(Guid userId, string newEmail, string firstName, string lastName, string? phoneNumber, CancellationToken ct = default)
     {
         var user = await userManager.FindByIdAsync(userId.ToString());
@@ -95,6 +124,10 @@ public sealed class IdentityAuthService(
             ? DomainErrors.Authentication.LockedOut
             : DomainErrors.Authentication.InvalidCredentials);
     }
-
+    public async Task<bool> UserExistsAsync(string email)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+        return user != null;
+    }
     public Task SignOutUserAsync() => signInManager.SignOutAsync();
 }

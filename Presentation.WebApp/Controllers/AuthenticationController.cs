@@ -1,17 +1,69 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Users.Commands.Create.User;
 using Domain.Common;
+using Infrastructure.Identit;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.WebApp.Controllers.Common;
 using Presentation.WebApp.Models.Authentication;
+using System.Security.Claims;
 
 namespace Presentation.WebApp.Controllers;
 
 public class AuthenticationController(
     IAuthService authService,
-    ISender sender) : BaseController
+    ISender sender,
+    SignInManager<AppUser> signInManager) : BaseController
 {
+    [HttpGet]
+    [Route("/github-login")]
+    public IActionResult GitHubLogin(string? returnUrl = null)
+    {
+        var redirectUrl = Url.Action(nameof(GitHubCallback), new { returnUrl });
+        var properties = signInManager.ConfigureExternalAuthenticationProperties("GitHub", redirectUrl);
+
+        return Challenge(properties, "GitHub");
+    }
+
+    [HttpGet]
+    [Route("/github-callback")]
+    public async Task<IActionResult> GitHubCallback(string? returnUrl = null, string? remoteError = null)
+    {
+        if (remoteError != null)
+            return RedirectToAction("SignIn");
+
+        var info = await signInManager.GetExternalLoginInfoAsync();
+        if (info == null)
+            return RedirectToAction("SignIn");
+
+        var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+        if (string.IsNullOrEmpty(email))
+            return RedirectToAction("SignIn");
+
+        var command = new RegisterExternalUserCommand(email, info.LoginProvider, info.ProviderKey);
+        var result = await sender.Send(command);
+
+        if (result.IsFailure)
+            return HandleFailure(result, new SignInFormViewModel());
+
+        var signInResult = await signInManager.ExternalLoginSignInAsync(
+            info.LoginProvider,
+            info.ProviderKey,
+            isPersistent: false);
+
+        if (signInResult.Succeeded)
+        {
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+
+            return RedirectToAction("Index", "Home");
+        }
+        return RedirectToAction("SignIn");
+    }
+
     [HttpGet]
     [Route("/sign-in")]
     public IActionResult SignIn(string? returnUrl = null)
@@ -25,7 +77,10 @@ public class AuthenticationController(
     public async Task<IActionResult> SignIn(SignInFormViewModel form, string? returnUrl = null)
     {
         if (!ModelState.IsValid)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
             return View(form);
+        }
 
         var result = await authService.SignInUserAsync(form.Email, form.Password, form.RememberMe);
 
@@ -37,6 +92,7 @@ public class AuthenticationController(
             return RedirectToAction("Index", "Home");
         }
 
+        ViewData["ReturnUrl"] = returnUrl;
         return HandleFailure(Result.Failure(DomainErrors.Authentication.InvalidCredentials), form);
     }
 
@@ -50,13 +106,17 @@ public class AuthenticationController(
 
     [HttpPost]
     [Route("/sign-up")]
-    public IActionResult SignUp(SignUpFormViewModel form, string? returnUrl = null)
+    public async Task<IActionResult> SignUpAsync(SignUpFormViewModel form, string? returnUrl = null)
     {
         if (!ModelState.IsValid)
             return View(form);
 
+        if (await authService.UserExistsAsync(form.Email))
+        {
+            ModelState.AddModelError("Email", "This email is already registered.");
+            return View(form);
+        }
         HttpContext.Session.SetString("reg_email", form.Email);
-
         return RedirectToAction("SetPassword", new { returnUrl });
     }
 

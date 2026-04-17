@@ -18,7 +18,10 @@ namespace Infrastructure.Extensions;
 
 public static class InfrastructureServiceCollectionExtensions
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IHostEnvironment environment)
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
@@ -30,32 +33,46 @@ public static class InfrastructureServiceCollectionExtensions
         {
             options.User.RequireUniqueEmail = true;
             options.Password.RequiredLength = 4;
+            options.Password.RequireNonAlphanumeric = false;
         })
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
 
-        services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(options =>
-            {
-                options.LoginPath = "/authentication/signin";
-                options.Cookie.Name = ".CoreFitness.Auth";
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-                options.Cookie.SameSite = SameSiteMode.Lax;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        services.AddAuthentication(options =>
+        {
+            options.DefaultScheme = IdentityConstants.ApplicationScheme;
+            options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+        })
+        .AddCookie(options =>
+        {
+            options.LoginPath = "/authentication/signin";
+            options.Cookie.Name = ".CoreFitness.Auth";
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+            options.Cookie.SameSite = SameSiteMode.Lax;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 
-                options.Events = new CookieAuthenticationEvents
+            options.Events = new CookieAuthenticationEvents
+            {
+                OnSigningIn = context =>
                 {
-                    OnSigningIn = context =>
+                    if (!context.Properties.IsPersistent)
                     {
-                        if (!context.Properties.IsPersistent)
-                        {
-                            context.CookieOptions.Expires = null;
-                        }
-                        return Task.CompletedTask;
+                        context.CookieOptions.Expires = null;
                     }
-                };
-            });
+                    return Task.CompletedTask;
+                }
+            };
+        })
+        .AddGitHub(options =>
+        {
+            options.ClientId = configuration["Authentication:GitHub:ClientId"] ?? "DIN_ID";
+            options.ClientSecret = configuration["Authentication:GitHub:ClientSecret"] ?? "DIN_SECRET";
+
+            options.CallbackPath = new PathString("/signin-github");
+
+            options.Scope.Add("user:email");
+        });
 
         services.Configure<SecurityStampValidatorOptions>(options =>
         {
@@ -82,7 +99,7 @@ public static class InfrastructureServiceCollectionExtensions
         catch (Exception ex)
         {
             var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger("DatabaseInit");
-            logger.LogError(ex, "Ett fel uppstod vid initiering av databasen.");
+            logger.LogError(ex, "An error occurred while initializing the database.");
         }
     }
 }
