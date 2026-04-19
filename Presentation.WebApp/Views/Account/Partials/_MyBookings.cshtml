@@ -1,0 +1,48 @@
+﻿@using Application.Sessions.Output
+@model List<SessionResponse>
+
+<div class="my-bookings-container">
+    <div data-id="title" class="title">
+        <h2>My Booked Sessions</h2>
+        <p>Here you can see all your upcoming classes and manage your bookings.</p>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="empty-bookings-state">
+            <div class="info-card">
+                <p>You haven't booked any sessions yet.</p>
+                <a asp-controller="OurClasses" asp-action="Index" class="btn-book">
+                    Find a Class
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="sessions-grid">
+            @foreach (var session in Model)
+            {
+                <article class="session-card">
+                    <div class="session-content">
+                        <span class="session-time">
+                            @session.StartTime.ToString("MMM dd, HH:mm") - @session.EndTime.ToString("HH:mm")
+                        </span>
+                        <h3>@session.Title</h3>
+                        <div class="session-info-meta">
+                            <span> @session.Instructor</span>
+                            <span> @session.Category</span>
+                        </div>
+                        <p>@session.Description</p>
+                    </div>
+
+                    <div class="session-actions">
+                        <form asp-controller="OurClasses" asp-action="Cancel" asp-route-id="@session.Id" asp-route-fromAccount="true" method="post">
+                            <button type="submit" class="btn-cancel"> Cancel Booking </button>
+                        </form>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</div>

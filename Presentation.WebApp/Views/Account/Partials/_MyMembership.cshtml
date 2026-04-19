@@ -1,0 +1,39 @@
+﻿@model MyMembershipViewModel
+
+<section class="membership-section">
+    <form asp-action="CancelMembership" asp-controller="Account" method="post">
+        @Html.AntiForgeryToken()
+
+        <div data-id="title" class="title">
+            <h2>My Membership</h2>
+            <hr />
+        </div>
+
+        @if (Model.HasMembership)
+        {
+            <div class="membership-content-grid">
+                <div class="membership-info">
+                    <p>Current Plan</p>
+                    <h3>@Model.MembershipPlan</h3>
+                    <p><strong>Status:</strong> @(Model.IsActive ? "Active" : "Inactive")</p>
+                    <p><strong>Valid until:</strong> @Model.ExpiryDate.ToShortDateString()</p>
+                </div>
+
+                <hr />
+
+                <div class="button-group">
+                    <a asp-controller="Memberships" asp-action="Index" class="btn-gray">Change Plan</a>
+                    
+                    <button type="submit" class="btn-remove">Cancel Membership</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="no-membership">
+                <p>You don't have an active membership yet.</p>
+                <a asp-controller="Memberships" asp-action="Index" class="btn">View Plans & Join</a>
+            </div>
+        }
+    </form>
+</section>

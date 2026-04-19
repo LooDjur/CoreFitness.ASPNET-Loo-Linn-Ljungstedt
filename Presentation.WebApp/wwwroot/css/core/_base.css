@@ -1,4 +1,5 @@
-﻿*, *::before, *::after {
+﻿/* --- RESET & BASE --- */
+*, *::before, *::after {
     box-sizing: border-box;
 }
 
@@ -7,62 +8,91 @@ html, body {
     line-height: 1.5;
     font-size: 16px;
     font-weight: 400;
-    font-style: normal;
     font-family: var(--font-default);
-    background-color: var(--body-background-color);
+    background-color: var(--body-bg-color);
     color: var(--text-color);
     min-height: 100dvh;
 }
 
+a {
+    color: inherit;
+}
+
+/* --- GLOBAL PAGE HEADER (Centrerad + Spacing + Tunnare Titel) --- */
+.page-header {
+    padding: 3rem 0;
+    background-color: var(--body-bg-color);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 3rem;
+        line-height: 1.2;
+    }
+}
+
+/* --- ERROR PAGE (Centrerad layout för 404/500) --- */
+.page_error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6rem 0;
+    min-height: 50vh;
+
+    .error-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        max-width: 600px;
+
+        p {
+            margin-bottom: 4rem;
+        }
+    }
+}
+
+/* --- TYPOGRAPHY --- */
 h1, h2, h3, h4, h5, h6 {
     color: var(--heading-color);
     font-family: var(--font-heading);
-    font-weight: 500;
-    margin: 1rem 0 1rem;
+    font-weight: 600; /* Sänkt från 600 globalt för ett lättare utseende */
+    margin: 0;
 }
 
 h1 {
     font-size: 3rem;
-    line-height: 4.25rem;
+    line-height: 1.2;
     text-align: center;
 }
 
 h2 {
     font-size: 3rem;
-    line-height: 3.75rem;
+    line-height: 1.2;
 }
 
 h3 {
     font-size: 1.75rem;
-    font-weight: 600;
-    line-height: 4.25rem;
+    line-height: 1.3;
 }
 
-img, svg {
-    display: block;
-    max-width: 100%;
-    height: auto;
-    object-fit: cover;
-}
-
-hr {
-    width: 100%;
-    opacity: 0.3;
-    margin: 2rem 0;
-
-    &.minimal {
-        margin: 0;
-    }
-}
-
+/* --- CONTAINERS --- */
 .container {
     width: 100%;
-    max-width: 100%;
     margin-inline: auto;
-    padding-inline: 2rem;
 
     @media (width >= 768px) {
         max-width: 720px;
+        padding-inline: 2rem;
     }
 
     @media (width >= 992px) {
@@ -82,17 +112,41 @@ hr {
     }
 }
 
+/* --- FORMS & GRIDS --- */
+form, .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+
+    @media (width >= 768px) {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* --- LAYOUT UTILS --- */
 .app-layout {
     display: grid;
     grid-template-rows: auto 1fr auto;
     min-height: 100dvh;
+
+    &.auth-layout main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }
 
 .layout-with-sidebar {
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
-    margin-top: 2rem;
+    margin-top: 4rem;
 
     @media (width >= 992px) {
         grid-template-columns: 300px 1fr;
@@ -101,19 +155,51 @@ hr {
     }
 }
 
-.layout-stacked {
-    display: flex;
-    flex-direction: column;
-    gap: 4rem;
-    margin-top: 2rem;
+/* --- COMPONENTS --- */
+.section-title {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--dark-color);
+    padding: 0.4rem 1.2rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--white-color);
+    width: fit-content;
+    margin-bottom: 1rem;
+
+    &::before {
+        content: "\e7d1";
+        color: var(--primary-color);
+        font-family: var(--font-fa);
+        font-weight: 900;
+        margin-right: 8px;
+    }
+
+    @media (width < 1200px) {
+        margin-inline: auto;
+    }
 }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
+hr {
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    margin: 2rem 0;
+    width: 100%;
 
-    @media (width >= 768px) {
-        grid-template-columns: 1fr 1fr;
+    &.minimal {
+        margin: 0;
     }
+}
+
+.accent {
+    color: var(--primary-color);
+}
+
+img, svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
 }

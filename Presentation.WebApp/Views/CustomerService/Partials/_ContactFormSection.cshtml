@@ -1,56 +1,63 @@
-﻿@using Presentation.WebApp.Models.ContactForm
+﻿@model ContactViewModel
 
-@model ContactFormSection
+<section class="section__contact">
+    <div class="container">
+        <div class="contact-container">
+            <div class="contact-image">
+                <img src="/images/contact-us-image.png" alt="Woman working out at the gym" />
+            </div>
 
-<section>
-    <div class="contact-container">
-        <div class="contact-image">
-            <img src="/images/contact-us-image.png" alt="Woman working out at the gym" />
+            <form id="contact-form" method="post" asp-action="HandleSubmit" asp-controller="CustomerService" novalidate>
+                <div data-id="title" class="title">
+                    <h3>Contact Us Today</h3>
+                    <p>Ready to begin your fitness journey? Contact GymPro today and let our expert trainers guide you.</p>
+                </div>
+
+                <div class="form-grid-fields">
+                    <div data-id="firstname" class="form-group">
+                        <label class="form-label" asp-for="FirstName"></label>
+                        <input class="form-input" asp-for="FirstName" />
+                        <span asp-validation-for="FirstName" class="field-validation"></span>
+                    </div>
+                    <div data-id="lastname" class="form-group">
+                        <label class="form-label" asp-for="LastName"></label>
+                        <input class="form-input" asp-for="LastName" />
+                        <span asp-validation-for="LastName" class="field-validation"></span>
+                    </div>
+                </div>
+
+                <div class="form-grid-fields">
+                    <div data-id="email" class="form-group">
+                        <label class="form-label" asp-for="Email"></label>
+                        <input class="form-input" asp-for="Email" />
+                        <span asp-validation-for="Email" class="field-validation"></span>
+                    </div>
+                    <div data-id="phone" class="form-group">
+                        <label class="form-label" asp-for="Phone"></label>
+                        <input class="form-input" asp-for="Phone" />
+                        <span asp-validation-for="Phone" class="field-validation"></span>
+                    </div>
+                </div>
+
+                <div data-id="message" class="form-group">
+                    <label class="form-label" asp-for="Message"></label>
+                    <textarea class="form-textarea" asp-for="Message"></textarea>
+                    <span asp-validation-for="Message" class="field-validation"></span>
+                </div>
+
+                <div data-id="terms" class="form-group">
+                    <div class="checkbox-group">
+                        <input class="form-checkbox-input" asp-for="TermsAndConditions" id="accept-terms" />
+                        <label class="checkbox-checkmark" for="accept-terms"></label>
+                        <label class="form-label" asp-for="TermsAndConditions" for="accept-terms"></label>
+                        <span asp-validation-for="TermsAndConditions" class="field-validation"></span>
+                    </div>
+                </div>
+
+                <div class="form-button">
+                    <button class="btn" type="submit">Submit Request</button>
+                </div>
+            </form>
         </div>
-        <form id="contact-form" method="post" asp-action="HandleSubmit" asp-controller="CustomerService" novalidate>
-            <div data-id="title" class="title">
-                <h3>Contact Us Today</h3>
-                <p>Ready to begin your fitness journey? Contact GymPro today and let our expert trainers guide you.</p>
-            </div>
-            <div class="form-grid-fields">
-                <div data-id="firstname" class="form-group">
-                    <label class="form-label" asp-for="FirstName"></label>
-                    <input class="form-input" asp-for="FirstName" />
-                    <span class="field-validation" asp-validation-for="FirstName"></span>
-                </div>
-                <div data-id="lastname" class="form-group">
-                    <label class="form-label" asp-for="LastName"></label>
-                    <input class="form-input" asp-for="LastName" />
-                    <span class="field-validation" asp-validation-for="LastName"></span>
-                </div>
-            </div>
-            <div class="form-grid-fields">
-                <div data-id="email" class="form-group">
-                    <label class="form-label" asp-for="Email"></label>
-                    <input class="form-input" asp-for="Email" />
-                    <span class="field-validation" asp-validation-for="Email"></span>
-                </div>
-                <div data-id="phone" class="form-group">
-                    <label class="form-label" asp-for="Phone"></label>
-                    <input class="form-input" asp-for="Phone" />
-                    <span class="field-validation" asp-validation-for="Phone"></span>
-                </div>
-            </div>
-            <div data-id="message" class="form-group">
-                <label class="form-label" asp-for="Message">Message</label>
-                <textarea class="form-textarea" asp-for="Message" rows="5"></textarea>
-                <span class="field-validation" asp-validation-for="Message"></span>
-            </div>
-            <div data-id="terms" class="form-group">
-                <div class="checkbox-group">
-                    <input class="form-checkbox-input" asp-for="AcceptSavePersonalInformation" id="accept-terms" />
-                    <label class="checkbox-checkmark" for="accept-terms"></label>
-                    <label class="form-label" asp-for="AcceptSavePersonalInformation" for="accept-terms"></label>
-                    <span class="field-validation-error" asp-validation-for="AcceptSavePersonalInformation"></span>
-                </div>
-            </div>
-            <button class="btn" type="submit">Submit Request</button>
-        </form>
     </div>
 </section>
-

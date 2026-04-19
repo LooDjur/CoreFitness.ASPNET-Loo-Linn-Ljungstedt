@@ -1,0 +1,14 @@
+﻿<section class="page-header">
+    <div class="container">
+        <partial name="Partials/Globals/_PageTitleSection" />
+    </div>
+</section>
+
+<partial name="Partials/_OurMembershipOffers" />
+<div class="container">
+    @await Component.InvokeAsync("Faq")
+</div>
+
+@section Scripts {
+    <script src="~/js/faqAccordion.js" asp-append-version="true"></script>
+}

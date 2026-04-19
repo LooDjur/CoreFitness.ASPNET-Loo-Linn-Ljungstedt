@@ -1,9 +1,11 @@
-﻿using Domain.Common.Abstractions;
+﻿using Domain.Bookings.Repositories;
+using Domain.Common.Abstractions;
 using Domain.ContactReq.Repositories;
-using Domain.Sessions.Repositories;
+using Domain.Sessions;
+using Domain.Users.Repositories;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Context;
-using Infrastructure.Repositories;
+using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,13 +19,29 @@ public static class PersistenceRegistrationExtension
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
 
+        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development" ;
+        Console.WriteLine($"DEBUG: Variabeln innehåller: '{env}'");
+
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("SqlConnection"));
+            if (env.Equals("Development", StringComparison.OrdinalIgnoreCase))
+            {
+                var sqliteConn = configuration.GetConnectionString("SQLiteConnection");
+                options.UseSqlite(sqliteConn);
+                Console.WriteLine($"DATABASE: Using SQLite");
+            }
+            else
+            {
+                var sqlConn = configuration.GetConnectionString("ProductionConnection");
+                options.UseSqlServer(sqlConn);
+                Console.WriteLine($"DATABASE: Using SQL Server");
+            }
         });
 
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IContactRequestRepository, ContactRequestRepository>();
         services.AddScoped<ISessionRepository, SessionRepository>();
+        services.AddScoped<IBookingRepository, BookingRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 

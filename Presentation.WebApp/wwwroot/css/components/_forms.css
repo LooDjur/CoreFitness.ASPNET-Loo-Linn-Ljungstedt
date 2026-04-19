@@ -1,21 +1,23 @@
 ﻿form {
-    border: 1px solid var(--form-border-color);
+    border: 1px solid var(--color-gray-extra-light);
     background-color: var(--form-bg-color);
-    color: var(--form-text-color);
-    padding: 2rem;
+    color: var(--text-color);
+    padding: 4rem;
     border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .form-group {
     display: grid;
     gap: 0.1rem;
-    margin-bottom: 1rem;
 }
 
 .form-label {
     font-size: 0.9em;
     font-weight: 600;
-    font-family: var(--font-heading);
+    color: var(--heading-color);
 }
 
 .form-input, .form-textarea {
@@ -39,20 +41,13 @@
     }
 }
 
-.field-validation-error,
-.field-validation-valid {
+.field-validation,
+.field-validation-valid,
+.field-validation-error {
     display: block;
     color: var(--form-validation-error-text-color);
     font-size: 0.8em;
+    line-height: 1.2em;
     min-height: 1.2em;
-    line-height: 1.2;
-    transition: opacity 0.2s ease;
-}
-    .field-validation-error:empty,
-    .field-validation-valid:empty {
-        visibility: hidden;
-    }
-
-.input-validation-error {
-    border-color: var(--form-validation-error-text-color);
+    visibility: visible;
 }

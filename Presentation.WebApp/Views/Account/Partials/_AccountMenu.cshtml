@@ -1,14 +1,52 @@
-﻿@{
-    ViewData["Title"] = "Menu Options";
+﻿@model AccountViewModel
+
+@{
+    var activeView = ViewData["ActiveView"]?.ToString() ?? "about-me";
 }
-<section>
+
+<section class="account-menu">
     <div class="account-container">
+        
         <div class="account-image">
-            <img src="/images/account-image.png" alt="Profile" />
+            <img src="/images/profile-image-avatar.png" alt="Profile" />
         </div>
 
         <div class="account-menu-content">
-            <h3>Menu Options</h3>
+            
+            <div data-id="title"  class="title">
+                <h4>Menu Options</h4>
+            </div>
+
+            <div class="menu-button-group">
+                <a asp-action="Index" asp-route-viewName="about-me"
+                       class="btn @(activeView == "about-me" ? "btn-primary" : "")">
+                    About Me
+                </a>
+                <hr />
+                <a asp-action="Index" asp-route-viewName="my-membership"
+                       class="btn @(activeView == "my-membership" ? "btn-primary" : "")">
+                    My Membership
+                </a>
+                <hr />
+                <a asp-action="Index" asp-route-viewName="bookings"
+                       class="btn @(activeView == "bookings" ? "btn-primary" : "")">
+                    My Bookings
+                </a>
+                <hr />
+
+                <a asp-action="Logout" asp-controller="Account" class="btn">
+                    Sign Out
+                </a>
+            </div>
+
+            <div class="account-footer-info">
+                <p>If you'd like to cancel your account click below</p>
+                <form asp-action="DeleteAccount" asp-controller="Account" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-remove">
+                        Remove Account</button>
+                </form>
+            </div>
         </div>
     </div>
 </section>

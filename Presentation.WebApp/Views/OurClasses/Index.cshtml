@@ -1,0 +1,87 @@
+﻿@model SessionsViewModel
+
+@{
+    ViewData["Title"] = "Our Classes";
+}
+
+<section class="page-header">
+    <div class="container">
+        <partial name="Partials/Globals/_PageTitleSection" />
+    </div>
+</section>
+
+<div class="training-page">
+    <div class="container">
+        
+        @if (User.IsInRole("Admin"))
+        {
+            <section class="admin-form-section">
+                <partial name="Partials/_editClasses" model="Model.Form" />
+            </section>
+        }
+
+        <section class="sessions-section">
+            <div class="sessions-grid">
+                @foreach (var session in Model.Sessions)
+                {
+                    <article class="session-card">
+                        <div class="session-content">
+                            <span class="session-time">@session.StartTime.ToString("yyyy-MM-dd HH:mm")</span>
+                            
+                            <h3>@session.Title</h3>
+                            
+                            <div class="session-info-meta">
+                                <span>Coach: @session.Instructor</span>
+                                <span>Category: @session.Category</span>
+                            </div>
+
+                            <p>@session.Description</p>
+                        </div>
+
+                        <div class="session-actions">
+                            @if (!Model.IsMember)
+                            {
+                                <div class="no-membership">
+                                    <p>Active membership required.</p>
+                                    <a asp-controller="Memberships" asp-action="Index" class="btn-book">Join Membership</a>
+                                </div>
+                            }
+                            else
+                            {
+                                @if (session.IsBookedByCurrentUser)
+                                {
+                                    <form asp-action="Cancel" asp-route-id="@session.Id" method="post">
+                                        <button type="submit" class="btn-cancel">Cancel Booking</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form asp-action="Book" asp-route-id="@session.Id" method="post">
+                                        <button type="submit" class="btn-book">Book Now</button>
+                                    </form>
+                                }
+                            }
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <div class="admin-buttons">
+                                    <form asp-action="Edit" asp-route-id="@session.Id" method="get">
+                                        <button type="submit">Edit</button>
+                                    </form>
+                                    
+                                    <form asp-action="Delete" asp-route-id="@session.Id" method="post">
+                                        <button type="submit">Delete</button>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    </article>
+                }
+            </div>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

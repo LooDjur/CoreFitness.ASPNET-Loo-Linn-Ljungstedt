@@ -1,0 +1,43 @@
+﻿@model FaqViewModel
+
+@if (Model.Items != null && Model.Items.Any())
+{
+    <section class="section__faq">
+        <div class="container">
+            <div class="faq-area">
+                <div class="title">
+                    <div class="section-title">@Model.SectionTitle</div>
+                    <h2>@Model.Title</h2>
+                </div>
+
+                <img src="~/images/faq-image.png" alt="Gym FAQ" />
+
+                <div class="accordion" data-accordion>
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="accordion-item">
+                            <div class="accordion-title">
+                                <button type="button"
+                                        class="accordion-trigger"
+                                        aria-expanded="false"
+                                        aria-controls="accordion-panel-@item.Id"
+                                        id="accordion-trigger-@item.Id">
+                                    @item.Title
+                                </button>
+                            </div>
+                            <div id="accordion-panel-@item.Id"
+                                 class="accordion-panel"
+                                 role="region"
+                                 aria-labelledby="accordion-trigger-@item.Id"
+                                 style="display: none;">
+                                <div class="accordion-content">
+                                    @item.Description
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+}

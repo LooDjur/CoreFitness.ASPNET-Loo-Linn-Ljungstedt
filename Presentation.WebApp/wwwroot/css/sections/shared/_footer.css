@@ -1,6 +1,84 @@
-﻿namespace Presentation.WebApp.wwwroot.css.sections
-{
-    public class _footer
-    {
+﻿.section__footer {
+    background: var(--header-bg-color) url('/images/dark-section-img.png') no-repeat center / cover;
+    color: var(--footer-text-color);
+    border-radius: 20px;
+    padding: 3rem 1rem 1rem;
+    margin-bottom: 1rem;
+
+    hr {
+        border: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 2rem 0;
+
+        &.accent {
+            border-top-color: var(--text-accent-color);
+            opacity: 0.3;
+        }
+    }
+
+    .footer-top {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        text-align: center;
+
+        @media (width >= 768px) {
+            flex-direction: row;
+            justify-content: space-between;
+            text-align: left;
+        }
+    }
+
+    .footer-tagline h3 {
+        max-width: 500px;
+        font-size: 1.25rem;
+    }
+
+    .footer-content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 3rem;
+
+        @media (width >= 768px) {
+            grid-template-columns: 1fr 1fr;
+            align-items: start;
+        }
+
+        @media (width >= 1200px) {
+            grid-template-columns: 2fr 1fr;
+        }
+    }
+
+    .footer-location {
+        margin-top: 1.5rem;
+
+        img {
+            width: 100%;
+            max-width: 250px;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+    }
+
+    .footer-right {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+
+        h5 {
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (width >= 768px) {
+            text-align: right;
+        }
+    }
+
+    .footer-bottom {
+        text-align: center;
+        opacity: 0.6;
     }
 }

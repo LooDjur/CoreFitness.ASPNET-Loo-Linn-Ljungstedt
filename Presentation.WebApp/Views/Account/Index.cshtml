@@ -1,10 +1,19 @@
-﻿@{
+﻿@model AccountViewModel
+
+@{
+    var activeView = ViewData["ActiveView"]?.ToString()?.ToLower() ?? "about-me";
+
     ViewData["Title"] = "My Account";
-    var activeView = ViewData["ActiveView"]?.ToString() ?? "about-me";
     ViewData["PageClass"] = "about-me-page";
 }
-<div class="page_account">
-    <partial name="Partials/Globals/_PageTitleSection" />
+
+<section class="page-header">
+    <div class="container">
+        <partial name="Partials/Globals/_PageTitleSection" />
+    </div>
+</section>
+
+<div class="about-me-page">
     <div class="container account-layout">
         <aside class="account-sidebar">
             <partial name="Partials/_AccountMenu" />
@@ -12,12 +21,17 @@
         <section class="account-main">
             @if (activeView == "about-me")
             {
-                <partial name="Partials/_AboutMeFormSection" />
+                <partial name="Partials/_AboutMeFormSection" model="Model.Profile" />
             }
-            else if (activeView == "statistics")
+            else if (activeView == "my-membership")
             {
-                <partial name="Partials/_AccountStatistics" />
+                <partial name="Partials/_MyMembership" model="Model.Membership" />
             }
+            else if (activeView == "my-bookings")
+            {
+                <partial name="Partials/_MyBookings" model="Model.MyBookings" />
+            }
+            <partial name="Partials/_AccountStatistics" />
         </section>
     </div>
 </div>

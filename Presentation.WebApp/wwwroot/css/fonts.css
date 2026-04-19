@@ -42,14 +42,14 @@
 
 /* Font Awesome */
 @font-face {
-    font-family: "Font Awesome 7 Pro Regular";
+    font-family: "Font Awesome 7 Pro";
     src: url("../fonts/fa-regular-400.woff2") format("woff2");
     font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
-    font-family: "Font Awesome 7 Pro Solid";
+    font-family: "Font Awesome 7 Pro";
     src: url("../fonts/fa-solid-900.woff2") format("woff2");
     font-weight: 900;
     font-style: normal;

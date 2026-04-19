@@ -1,13 +1,9 @@
-﻿@using Presentation.WebApp.Models.Account
-@model AboutMeFormSection
+﻿@model AboutMeViewModel
 
-@{
-    ViewData["Title"] = "About Me";
-}
 <section class="aboutme-details">
     <form id="aboutme-form" method="post" enctype="multipart/form-data" asp-action="UpdateDetails" asp-controller="Account" novalidate>
         <div data-id="title" class="title">
-            <h3>About Me</h3>
+            <h2>About Me</h2>
             <hr />
         </div>
         <div class="form-grid-fields">
@@ -21,8 +17,6 @@
                 <input class="form-input" asp-for="LastName" />
                 <span class="field-validation" asp-validation-for="LastName"></span>
             </div>
-        </div>
-        <div class="form-grid-fields">
             <div data-id="email" class="form-group">
                 <label class="form-label" asp-for="Email"></label>
                 <input class="form-input" asp-for="Email" />
@@ -37,10 +31,12 @@
         <hr />
         <div data-id="file-upload" class="form-group">
             <label class="form-label" asp-for="ProfileImage"></label>
-            <div class="form-input-validation">
-                <input class="form-input" asp-for="ProfileImage" />
-                <span asp-validation-for="ProfileImage"></span>
+            <div class="upload-display">
+                <input type="file" id="profileUpload" asp-for="ProfileImage" hidden />
+                <span id="fileName" class="file-name">No file chosen</span>
+                <label for="profileUpload" class="upload-btn">Browse</label>
             </div>
+            <span class="field-validation" asp-validation-for="ProfileImage"></span>
         </div>
         <button class="btn" type="submit"> Save </button>
     </form>

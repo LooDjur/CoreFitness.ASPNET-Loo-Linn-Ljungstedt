@@ -1,0 +1,88 @@
+﻿@model SessionFormViewModel
+
+<section class="section__session">
+    <form id="session-form" method="post" asp-action="Save" asp-controller="OurClasses" novalidate>
+        <input type="hidden" asp-for="Id" />
+        <div data-id="title" class="title">
+            <h2>@(Model.IsEdit ? "Edit Session" : "Create New Session")</h2>
+            <hr />
+        </div>
+        <div class="form-grid-fields">
+            <div data-id="session-title" class="form-group">
+                <label class="form-label" asp-for="Title"></label>
+                <input class="form-input" asp-for="Title" placeholder="@Html.DisplayNameFor(m => m.Title)" />
+                <span class="field-validation" asp-validation-for="Title"></span>
+            </div>
+            <div data-id="instructor" class="form-group">
+                <label class="form-label" asp-for="Instructor"></label>
+                <input class="form-input" asp-for="Instructor" />
+                <span class="field-validation" asp-validation-for="Instructor"></span>
+            </div>
+            <div data-id="category" class="form-group">
+                <label class="form-label" asp-for="Category"></label>
+                <select class="form-input" asp-for="Category"
+                        asp-items="Html.GetEnumSelectList<Domain.Sessions.SessionCategory>()">
+                    <option value="">-- Select Category --</option>
+                </select>
+                <span class="field-validation" asp-validation-for="Category"></span>
+            </div>
+            <div data-id="max-capacity" class="form-group">
+                <label class="form-label" asp-for="MaxCapacity"></label>
+                <input class="form-input" asp-for="MaxCapacity" type="number" min="10" max="20" />
+                <span class="field-validation" asp-validation-for="MaxCapacity"></span>
+            </div>
+            <div data-id="start-time" class="form-group">
+                <label class="form-label" asp-for="StartTime"></label>
+                <input class="form-input" asp-for="StartTime" type="datetime-local"
+                       min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-ddT00:00")" />
+                <span class="field-validation" asp-validation-for="StartTime"></span>
+            </div>
+            <div data-id="end-time" class="form-group">
+                <label class="form-label" asp-for="EndTime"></label>
+                <input class="form-input" asp-for="EndTime" type="datetime-local" />
+                <span class="field-validation" asp-validation-for="EndTime"></span>
+            </div>
+        </div>
+        <hr />
+        <div data-id="description" class="form-group">
+            <label class="form-label" asp-for="Description"></label>
+            <textarea class="form-input" asp-for="Description" placeholder="Write a short summary of the session..."></textarea>
+            <span class="field-validation" asp-validation-for="Description"></span>
+        </div>
+
+        <div class="form-button-container">
+            <button class="btn" type="submit">
+                @(Model.IsEdit ? "Update Session" : "Create Session")
+            </button>
+        </div>
+    </form>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const startTimeInput = document.querySelector('input[name="StartTime"]');
+            const endTimeInput = document.querySelector('input[name="EndTime"]');
+
+            if (startTimeInput && endTimeInput) {
+                startTimeInput.addEventListener("change", function () {
+                    if (startTimeInput.value) {
+                        const startDate = new Date(startTimeInput.value);
+                        
+                        const endDate = new Date(startDate.getTime() + (60 * 60 * 1000));
+                        
+                        const formattedEndDate = endDate.toISOString().slice(0, 16);
+                        
+                        endTimeInput.value = formattedEndDate;
+                        
+                        endTimeInput.min = startTimeInput.value;
+                    }
+                });
+
+                startTimeInput.addEventListener("input", function() {
+                    endTimeInput.min = startTimeInput.value;
+                });
+            }
+        });
+    </script>
+}

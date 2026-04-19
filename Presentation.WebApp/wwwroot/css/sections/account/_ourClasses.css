@@ -1,0 +1,64 @@
+﻿.sessions-section {
+    padding: 2rem 0;
+}
+
+.sessions-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.session-card {
+    background-color: var(--white-color);
+    border-radius: 1rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.session-content {
+    flex: 1;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.session-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 180px;
+
+    form {
+        display: contents;
+    }
+}
+
+.btn-book {
+    padding: 0.8rem 1.5rem;
+    font-weight: 600;
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+}
+
+.admin-buttons {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+    padding-top: 0.8rem;
+
+    button {
+        background: transparent;
+        border: none;
+        font-size: 0.8rem;
+        text-align: center;
+        text-decoration: underline;
+        cursor: pointer;
+        opacity: 0.7;
+    }
+}
